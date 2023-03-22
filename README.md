@@ -18,7 +18,7 @@ DBMS系统的主要功能包括：数据定义、数据操作、数据库的运�
 ### 组员:  
 ####            AppleGrey
 
-####            LWJ2214555838
+####            virgiling
 
 ####            chenlinyixiao123
 

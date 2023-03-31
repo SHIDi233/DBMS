@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     basic_data.cpp \
+    boolstat.cpp \
     column.cpp \
     db.cpp \
     file.cpp \
@@ -20,6 +21,7 @@ SOURCES += \
 
 HEADERS += \
     basic_data.h \
+    boolstat.h \
     column.h \
     db.h \
     file.h \

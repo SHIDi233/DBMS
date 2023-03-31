@@ -1,6 +1,10 @@
-#include "db.h"
+﻿#include "db.h"
 
 DB::DB()
 {
+
+}
+
+bool CreateTable(){
 
 }

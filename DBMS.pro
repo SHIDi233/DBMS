@@ -10,18 +10,22 @@ CONFIG += c++11
 
 SOURCES += \
     basic_data.cpp \
+    column.cpp \
     db.cpp \
     file.cpp \
     main.cpp \
     mainwindow.cpp \
-    table.cpp
+    table.cpp \
+    tableinfo.cpp
 
 HEADERS += \
     basic_data.h \
+    column.h \
     db.h \
     file.h \
     mainwindow.h \
-    table.h
+    table.h \
+    tableinfo.h
 
 FORMS += \
     mainwindow.ui

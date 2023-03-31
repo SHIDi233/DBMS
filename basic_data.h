@@ -5,42 +5,62 @@
 #ifndef BASIC_DATA_H
 #define BASIC_DATA_H
 
+#include "QString"
+
+enum TYPE
+{
+    INTEGER,
+    BOOL,
+    VARCHAR,
+    DOUBLE,
+    DATETIME
+};
 
 class Basic_Data
 {
 private:
     int _size;//字节长度
-
+    TYPE _type;//数据类型
 public:
-    Basic_Data();
-    virtual void setValue();
+    Basic_Data(int size, TYPE type);
+    virtual void setValue(QString);
+    virtual QString getValue();
 };
 
 //各种数据类型子类
-class Number : public Basic_Data
+//浮点数类型
+class Double : public Basic_Data
 {
 public:
-    Number();
-    Number(int len);
-    Number(int len, int pre);//pre:精度
+    Double(int len);
 };
 
-class Char : public Basic_Data
-{
-public:
-    Char(int len);
-};
-
+//变长字符串
 class Varchar : public Basic_Data
 {
 public:
     Varchar(int len);
 };
 
+//整数类型
 class Integer : public Basic_Data
 {
 public:
     Integer();
+};
+
+//日期时间
+class DateTime : public Basic_Data
+{
+public:
+    DateTime();
+};
+
+//布尔类型
+class Bool : public Basic_Data
+{
+public:
+    Bool();
 };
 
 #endif // BASIC_DATA_H

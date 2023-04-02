@@ -14,10 +14,13 @@ SOURCES += \
     column.cpp \
     db.cpp \
     file.cpp \
+    index.cpp \
+    integrity.cpp \
     main.cpp \
     mainwindow.cpp \
     table.cpp \
-    tableinfo.cpp
+    tableinfo.cpp \
+    user.cpp
 
 HEADERS += \
     basic_data.h \
@@ -25,9 +28,12 @@ HEADERS += \
     column.h \
     db.h \
     file.h \
+    index.h \
+    integrity.h \
     mainwindow.h \
     table.h \
-    tableinfo.h
+    tableinfo.h \
+    user.h
 
 FORMS += \
     mainwindow.ui

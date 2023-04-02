@@ -8,6 +8,7 @@
 #include "QString"
 #include "table.h"
 #include "QVector"
+#include "boolstat.h"
 
 class DB
 {
@@ -23,13 +24,12 @@ public:
     bool getType();
     const char* getFilePath();
 
-    QString createTable();//创建表
-    QString dropTable();//删除表
-    QString alterTable();//更新表
-    Table* select(Table* table, bool isAll = false,
-                   const QVector<QString*>* column_names = nullptr,
-                   QString* table_names = nullptr);//查询表
-
+    QString createTable(QString tableName);//创建表
+    QString dropTable(QString tableName);//删除表
+    Table* select(bool isAll, //如果查询的是*则isAll为true, 此时column_name直接传空数组即可
+                   const QVector<QString>& column_names, //所有查询的列名
+                   QString table_names, //表名
+                   const QVector<BoolStat>& boolStats);//查询表
 };
 
 #endif // DB_H

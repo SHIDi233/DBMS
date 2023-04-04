@@ -15,14 +15,17 @@ class DB
 private:
     char _name[128];//名字
     bool _type;//类型: true:系统数据库 false:用户数据库
-    char _file_path[265];//文件路径
-    QString _crtime;//创建时间
+    char _filePath[265];//文件路径
+    char _crtime[32];//创建时间
 public:
-    DB();
 
-    const char* getName();
+    DB(QString name, bool type, QString filePath, QString crtime);//创建数据库时调用
+
+    DB(QString name);//读取数据库时调用
+
+    QString getName();
     bool getType();
-    const char* getFilePath();
+    QString getFilePath();
 
 
     //字段管理

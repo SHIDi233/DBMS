@@ -23,6 +23,7 @@ SOURCES += \
     user.cpp
 
 HEADERS += \
+    Control.h \
     basic_data.h \
     boolstat.h \
     column.h \

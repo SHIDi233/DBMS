@@ -20,10 +20,10 @@ private:
     char _trd[256];//表格记录文件路径
     char _tid[256];//表格索引文件路径
 
-    QString _crtime;//创建时间
-    QString _mtime;//最后修改时间
+    char _crtime[32];//创建时间
+    char _mtime[32];//最后修改时间
 public:
-    Table();
+    Table(QString name, QString tdf, QString tic, QString trd, QString tid, QString crtime);//创建表时调用这个函数
 
 };
 

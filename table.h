@@ -25,8 +25,6 @@ private:
 public:
     Table();
 
-
-
 };
 
 #endif // TABLE_H

@@ -8,6 +8,7 @@
 #include"Basic_Data.h"
 #include"waittodo.h"
 #include<QList>
+#include"row.h"
 
 
 class Table
@@ -28,7 +29,7 @@ private:
 
 
     //缓存技术-待办列表
-    QList<WaitToDo> doList;
+    QList<WaitToDo_Table> doList;
 
 public:
     Table(QString name, QString tdf, QString tic, QString trd, QString tid);//创建表时调用这个函数
@@ -37,10 +38,17 @@ public:
     int insert();//插入
     int insert(int,Basic_Data);//键值对方式插入(废弃)
     int insert(bool[],Basic_Data[]);//整行方式插入
+    int insert(Row input);//行类插入
 
     int del();
 
+    //查找
+    Row* selectAll();
+    Row select();
+
+    int commit();//表的缓存提交
 
 };
 
 #endif // TABLE_H
+

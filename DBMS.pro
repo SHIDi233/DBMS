@@ -18,6 +18,7 @@ SOURCES += \
     integrity.cpp \
     main.cpp \
     mainwindow.cpp \
+    row.cpp \
     table.cpp \
     tableinfo.cpp \
     user.cpp \
@@ -33,6 +34,7 @@ HEADERS += \
     index.h \
     integrity.h \
     mainwindow.h \
+    row.h \
     table.h \
     tableinfo.h \
     user.h \

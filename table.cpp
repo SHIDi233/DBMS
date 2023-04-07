@@ -31,6 +31,12 @@ int Table::insert(bool no[],Basic_Data input[]){
     for(int i=0;i<_fieldNum;i++){
         if(no[i]){
             //Basic_Data类型检测
+
+
         }
     }
+}
+
+int Table::insert(Row input){
+    doList.append(WaitToDo_Table(WaitToDo_Table::INSERT,input));//将加入行放入缓存
 }

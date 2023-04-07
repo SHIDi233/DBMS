@@ -5,6 +5,9 @@
 #ifndef TABLE_H
 #define TABLE_H
 #include<QString>
+#include"Basic_Data.h"
+#include"waittodo.h"
+#include<QList>
 
 
 class Table
@@ -22,8 +25,21 @@ private:
 
     char _crtime[32];//创建时间
     char _mtime[32];//最后修改时间
+
+
+    //缓存技术-待办列表
+    QList<WaitToDo> doList;
+
 public:
-    Table(QString name, QString tdf, QString tic, QString trd, QString tid, QString crtime);//创建表时调用这个函数
+    Table(QString name, QString tdf, QString tic, QString trd, QString tid);//创建表时调用这个函数
+
+    //对表数据进行操作
+    int insert();//插入
+    int insert(int,Basic_Data);//键值对方式插入(废弃)
+    int insert(bool[],Basic_Data[]);//整行方式插入
+
+    int del();
+
 
 };
 

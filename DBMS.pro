@@ -20,7 +20,8 @@ SOURCES += \
     mainwindow.cpp \
     table.cpp \
     tableinfo.cpp \
-    user.cpp
+    user.cpp \
+    waittodo.cpp
 
 HEADERS += \
     Control.h \
@@ -34,7 +35,8 @@ HEADERS += \
     mainwindow.h \
     table.h \
     tableinfo.h \
-    user.h
+    user.h \
+    waittodo.h
 
 FORMS += \
     mainwindow.ui

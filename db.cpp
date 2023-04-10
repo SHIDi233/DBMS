@@ -3,6 +3,7 @@
 #include "QDir"
 #include "table.h"
 #include "QDateTime"
+#include "QDataStream"
 
 DB::DB(QString name, bool type, QString filePath, QString crtime)
 {
@@ -46,6 +47,14 @@ QString DB::createTable(QString tableName){
                 path.absoluteFilePath(tableName + ".trd"),
                 path.absoluteFilePath(tableName + ".tic"),
                 path.absoluteFilePath(tableName + ".tid"), current_date);
+
+    //将表信息写入[数据库名].db文件中
+    char buf[TABLEBYTE];
+    int cnt = table.serialize(buf);
+    QFile dbFile(path.absoluteFilePath(tableName + ".db"));
+    dbFile.open(QIODevice::Append);
+    QDataStream dbOut(&dbFile);
+    dbOut.writeRawData(buf, cnt);
 
     return "表格创建成功";
 }

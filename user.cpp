@@ -38,11 +38,11 @@ QString User::createDb(QString name)
     if(!logFile.open(QIODevice::WriteOnly)) { return "日志文件创建失败"; };
     logFile.close();
 
-//    //写入文件
-//    QFile dbFile(path.absoluteFilePath(name + ".log"));
-//    dbFile.open(QIODevice::WriteOnly);
-//    QDataStream dbOut(&dbFile);
-//    dbOut.writeRawData((char*)&database, sizeof(database));
+    //写入文件
+    QFile dbFile(rootPath.absoluteFilePath("ruanko.db"));
+    dbFile.open(QIODevice::Append);
+    QDataStream dbOut(&dbFile);
+    dbOut.writeRawData((char*)&database, sizeof(database));
 
     return "数据库创建成功";
 }

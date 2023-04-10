@@ -10,13 +10,12 @@
 #include<QList>
 #include"row.h"
 
+const int TABLEBYTE = 128 + 4 + 4 + 256 + 256 + 256 + 256 + 32 + 32;
 
 class Table
 {
 private:
     char _name[128];//表格名称
-    int n;
-
     int _recordNum;//记录数
     int _fieldNum;//字段数
     char _tdf[256];//表格定义文件路径
@@ -32,7 +31,7 @@ private:
     QList<WaitToDo_Table> doList;
 
 public:
-    Table(QString name, QString tdf, QString tic, QString trd, QString tid);//创建表时调用这个函数
+    Table(QString name, QString tdf, QString tic, QString trd, QString tid, QString crtime);//创建表时调用这个函数
 
     //对表数据进行操作
     int insert();//插入
@@ -47,6 +46,10 @@ public:
     Row select();
 
     int commit();//表的缓存提交
+
+    //序列化与反序列化
+    int serialize(char buf[]);
+    int deSerialize(char buf[]);
 
 };
 

@@ -1,4 +1,7 @@
 ﻿#include "table.h"
+#include "QDataStream"
+#include "QDir"
+#include "QDateTime"
 
 Table::Table(QString name, QString tdf, QString tic, QString trd, QString tid, QString crtime)
     : _recordNum(0), _fieldNum(0)
@@ -78,3 +81,26 @@ int Table::deSerialize(char buf[]) {
 
     return 0;
 }
+
+QString Table::addColumn(QString columnName, TYPE type, int typeLen, int integrity) {
+    //创建column类
+    Column column(columnName, type, typeLen, integrity);
+
+    //将字段信息写入[数据库名].db文件中
+    char buf[COLUMNBYTE];
+    int cnt = column.serialize(buf);
+    QFile dbFile(_tdf);
+    dbFile.open(QIODevice::Append);
+    QDataStream dbOut(&dbFile);
+    dbOut.writeRawData(buf, cnt);
+
+    //获取当前时间
+    QDateTime current_date_time =QDateTime::currentDateTime();
+    QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz ddd");
+
+    //修改其他内容
+    _fieldNum++;
+    strcpy(_mtime, current_date.toLatin1().data());
+}
+
+QString Table::getName() { return QString(_name); }

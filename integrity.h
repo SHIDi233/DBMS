@@ -6,13 +6,16 @@
 #define INTEGRITY_H
 #include "QString"
 
-const int PRIMARYKEY = 10001,//主键约束
-          FOREIGNKEY = 10002,//外键约束
-          CHECK = 10003,//检查约束
-          UNIQUE = 10004,//唯一约束
-          NOTNULL = 10005,//非空约束
-          DEFAULT = 10006,//默认约束
-          IDENTITY = 10007;//自增
+enum ITGTYPE{
+    NO = 10000,
+    PRIMARYKEY = 10001,//主键约束
+    FOREIGNKEY = 10002,//外键约束
+    CHECK = 10003,//检查约束
+    UNIQUE = 10004,//唯一约束
+    NOTNULL = 10005,//非空约束
+    DEFAULT = 10006,//默认约束
+    IDENTITY = 10007//自增
+};
 
 class Integrity
 {

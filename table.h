@@ -9,6 +9,8 @@
 #include"waittodo.h"
 #include<QList>
 #include"row.h"
+#include "integrity.h"
+#include "column.h"
 
 const int TABLEBYTE = 128 + 4 + 4 + 256 + 256 + 256 + 256 + 32 + 32;
 
@@ -32,6 +34,7 @@ private:
 
 public:
     Table(QString name, QString tdf, QString tic, QString trd, QString tid, QString crtime);//创建表时调用这个函数
+    Table(QString name);//修改表时调用这个函数
 
     //对表数据进行操作
     int insert();//插入
@@ -47,10 +50,19 @@ public:
 
     int commit();//表的缓存提交
 
+
+    //字段管理
+    QString addColumn(QString columnName, TYPE type, int typeLen, int integrity);//增加列
+
+    //文件写入
+    bool writeToFile();
+
     //序列化与反序列化
     int serialize(char buf[]);
     int deSerialize(char buf[]);
 
+    //获取私有参数
+    QString getName();
 };
 
 #endif // TABLE_H

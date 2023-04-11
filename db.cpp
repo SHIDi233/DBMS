@@ -1,7 +1,6 @@
 ﻿#include "db.h"
 #include "cstring"
 #include "QDir"
-#include "table.h"
 #include "QDateTime"
 #include "QDataStream"
 
@@ -12,6 +11,18 @@ DB::DB(QString name, bool type, QString filePath, QString crtime)
     _type = type;
     strcpy(_filePath, filePath.toLatin1().data());
     strcpy(_crtime, crtime.toLatin1().data());
+}
+
+bool DB::writeTable(Table& t) {
+
+    QDir path(_filePath);
+
+    char buf[TABLEBYTE];
+    int cnt = t.serialize(buf);
+    QFile dbFile(path.absoluteFilePath(t.getName() + ".db"));
+    dbFile.open(QIODevice::Append);
+    QDataStream dbOut(&dbFile);
+    dbOut.writeRawData(buf, cnt);
 }
 
 QString DB::createTable(QString tableName){
@@ -49,12 +60,7 @@ QString DB::createTable(QString tableName){
                 path.absoluteFilePath(tableName + ".tid"), current_date);
 
     //将表信息写入[数据库名].db文件中
-    char buf[TABLEBYTE];
-    int cnt = table.serialize(buf);
-    QFile dbFile(path.absoluteFilePath(tableName + ".db"));
-    dbFile.open(QIODevice::Append);
-    QDataStream dbOut(&dbFile);
-    dbOut.writeRawData(buf, cnt);
+    writeTable(table);
 
     return "表格创建成功";
 }

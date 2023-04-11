@@ -9,6 +9,7 @@
 #include "QVector"
 #include "boolstat.h"
 #include "integrity.h"
+#include "table.h"
 
 class DB
 {
@@ -29,7 +30,7 @@ public:
 
 
     //字段管理
-    QString addColumn(QString tableName, QString columnName, TYPE type, Integrity *integrity = nullptr);//增加列
+    QString addColumn(QString tableName, QString columnName, TYPE type, int typeLen = 0, Integrity *integrity = nullptr);//增加列
 
     QString modifyColumn(QString tableName, QString columnName, TYPE type, Integrity *integrity = nullptr);//修改列类型
 
@@ -55,6 +56,8 @@ public:
                    const QVector<BoolStat>& boolStats);//查询记录
 
     QString deleteRecord(QString tableName, const QVector<BoolStat>& boolStats);
+
+    bool writeTable(Table& t);
 };
 
 #endif // DB_H

@@ -32,10 +32,13 @@ private:
     //缓存技术-待办列表
     QList<WaitToDo_Table> doList;
 
+    QVector<Column*> columns;//字段列表
 public:
     Table(QString name, QString tdf, QString tic, QString trd, QString tid, QString crtime);//创建表时调用这个函数
     Table(QString name);//修改表时调用这个函数
-
+//    Table(char buf[]);//读取表时调用这个函数
+    Table();
+    ~Table();
     //对表数据进行操作
     int insert();//插入
     int insert(int,Basic_Data);//键值对方式插入(废弃)
@@ -60,6 +63,11 @@ public:
     //序列化与反序列化
     int serialize(char buf[]);
     int deSerialize(char buf[]);
+
+    //字段文件读写
+    bool writeColumn(Column* c);
+    bool writeColumns();
+    bool readColumns();
 
     //获取私有参数
     QString getName();

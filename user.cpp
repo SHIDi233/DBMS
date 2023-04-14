@@ -42,7 +42,9 @@ QString User::createDb(QString name)
     QFile dbFile(rootPath.absoluteFilePath("ruanko.db"));
     dbFile.open(QIODevice::Append);
     QDataStream dbOut(&dbFile);
-    dbOut.writeRawData((char*)&database, sizeof(database));
+    char buf[DBBYTE];
+    int len = database.serialize(buf);
+    dbOut.writeRawData(buf, len);
 
     return "数据库创建成功";
 }

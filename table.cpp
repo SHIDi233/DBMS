@@ -82,17 +82,67 @@ int Table::deSerialize(char buf[]) {
     return 0;
 }
 
-QString Table::addColumn(QString columnName, TYPE type, int typeLen, int integrity) {
-    //创建column类
-    Column column(columnName, type, typeLen, integrity);
+bool Table::writeColumn(Column* c) {
 
-    //将字段信息写入[数据库名].db文件中
     char buf[COLUMNBYTE];
-    int cnt = column.serialize(buf);
+    int cnt = c->serialize(buf);
+
     QFile dbFile(_tdf);
-    dbFile.open(QIODevice::Append);
+    if(!dbFile.open(QIODevice::Append)) { return false; };
     QDataStream dbOut(&dbFile);
     dbOut.writeRawData(buf, cnt);
+
+    return true;
+}
+
+bool Table::writeColumns() {
+
+    char buf[COLUMNBYTE];
+
+    QFile dbFile(_tdf);
+    if(!dbFile.open(QIODevice::Append)) { return false; };
+    QDataStream dbOut(&dbFile);
+
+    //循环写入
+    for(auto &c : columns) {
+        c->serialize(buf);
+        dbOut.writeRawData(buf, COLUMNBYTE);
+    }
+
+    return true;
+}
+
+bool Table::readColumns() {
+
+    //清空表并释放空间
+    for(auto &c : columns) { delete c; }
+    columns.clear();
+
+    //创建文件操作对象
+    QFile dbFile(_tdf);
+    if(!dbFile.open(QIODevice::ReadOnly)) { return false; }
+    QDataStream dbOut(&dbFile);
+
+    //循环将表信息读入列表中
+    char buf[TABLEBYTE];
+    while(!dbOut.atEnd()) {
+        dbOut.readRawData(buf, TABLEBYTE);
+        Column *c = new Column();
+        c->deSerialize(buf);
+        columns.append(c);
+    }
+
+    return true;
+}
+
+QString Table::addColumn(QString columnName, TYPE type, int typeLen, int integrity) {
+
+    //创建column类
+    Column *column = new Column(columnName, type, typeLen, integrity);
+    columns.append(column);
+
+    //将字段信息写入[数据库名].db文件中
+    writeColumn(column);
 
     //获取当前时间
     QDateTime current_date_time =QDateTime::currentDateTime();

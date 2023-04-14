@@ -19,6 +19,8 @@ private:
     int _integrities;//完整性约束信息
 public:
     Column(QString name, TYPE bd, int typeLen, int integrities);
+    Column();
+
     int serialize(char buf[]);//序列化
     int deSerialize(char buf[]);//反序列化
 };

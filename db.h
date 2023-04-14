@@ -10,14 +10,19 @@
 #include "boolstat.h"
 #include "integrity.h"
 #include "table.h"
+#include "QList"
+
+const int DBBYTE = 128 + 1 + 256 + 32;
 
 class DB
 {
 private:
     char _name[128];//名字
     bool _type;//类型: true:系统数据库 false:用户数据库
-    char _filePath[265];//文件路径
+    char _filePath[256];//文件路径
     char _crtime[32];//创建时间
+
+    QList<Table*> tables;
 public:
 
     DB(QString name, bool type, QString filePath, QString crtime);//创建数据库时调用
@@ -57,7 +62,13 @@ public:
 
     QString deleteRecord(QString tableName, const QVector<BoolStat>& boolStats);
 
-    bool writeTable(Table& t);
+    bool writeTable(Table* t, QString filePath);//将表描述信息写入文件
+    bool readTables(QString filePath);//从文件中读取表描述信息
+    bool writeTables(QString filePath);//将表描述信息覆盖原信息
+
+    //序列化与反序列化
+    int serialize(char buf[]);
+    int deSerialize(char buf[]);
 };
 
 #endif // DB_H

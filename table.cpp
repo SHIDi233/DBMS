@@ -16,6 +16,14 @@ Table::Table(QString name, QString tdf, QString tic, QString trd, QString tid, Q
 
 }
 
+Table::Table() {
+
+}
+
+Table::~Table() {
+    // TODO: 完成函数
+}
+
 int Table::insert(int no,Basic_Data input){
 
 }
@@ -30,9 +38,9 @@ int Table::insert(bool no[],Basic_Data input[]){
     }
 }
 
-int Table::insert(Row input){
-    doList.append(WaitToDo_Table(WaitToDo_Table::INSERT,input));//将加入行放入缓存
-}
+//int Table::insert(Row input){
+//    doList.append(WaitToDo_Table(WaitToDo_Table::INSERT,input));//将加入行放入缓存
+//}
 
 int Table::serialize(char buf[]) {
     int offset = 0;
@@ -203,11 +211,11 @@ QString Table::insertRecord(const QVector<QString>& columnNameList, const QVecto
     //创建新的插入
     Row *newRow = new Row();
     for(int i = 0; i < columns.size(); i++) {
-        if(!isRead[i]) {
-            Basic_Data *data = new NullData(columns[i]->getTypeLen());
-            newRow->addData(data);
-            continue;
-        }
+//        if(!isRead[i]) {
+//            Basic_Data *data = new NullData(columns[i]->getTypeLen());
+//            newRow->addData(data);
+//            continue;
+//        }
 
         Basic_Data *data = nullptr;
         if(columns[i]->getType() == TYPE::BOOL) {

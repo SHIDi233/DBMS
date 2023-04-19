@@ -68,8 +68,8 @@
    <widget class="QPushButton" name="pushButton_5">
     <property name="geometry">
      <rect>
-      <x>450</x>
-      <y>30</y>
+      <x>620</x>
+      <y>60</y>
       <width>51</width>
       <height>41</height>
      </rect>
@@ -139,6 +139,16 @@
      <string notr="true">background-image:url(:/link.png)</string>
     </property>
    </widget>
+   <widget class="QTextEdit" name="textEdit_3">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>10</y>
+      <width>551</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -146,7 +156,7 @@
      <x>0</x>
      <y>0</y>
      <width>771</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

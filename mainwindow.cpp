@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
 }
 
 MainWindow::~MainWindow()
@@ -13,5 +14,8 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-//ceshi
-//test from shi
+void MainWindow::on_pushButton_5_clicked()
+{
+
+}
+

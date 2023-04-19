@@ -4,13 +4,14 @@
 *  Description:Sql语句分析
 *  Date: 2023-4-19
 */
-
-
 #include "sqlanalysis.h"
 #include <iostream>
 #include <regex>
 #include <string>
 #include "control.h"
+#include "basic_data.h"
+
+#include<qDebug>
 
 using namespace std;
 
@@ -58,6 +59,18 @@ void SqlAnalysis::parse_sql(QString qsql) {
 
         //......调用CREATE函数操作
         db->createTable(QString(QString::fromLocal8Bit(table_name.data())));//根据表名创建表
+        QVector<QString>* output = new QVector<QString>;
+        trim_create(QString(QString::fromLocal8Bit(columns_str.data())),output);
+        qDebug()<<output;
+
+        //重复调用添加列
+//        for(QString &s : *output){
+//            db->addColumn(table_name,s);
+//        }
+//        for(int i=0;i<output->count()-1;i++){
+//            db->addColumn(table_name,(*output)[i++]);
+//        }
+
 
     } else if (regex_match(sql, match, insert_into_pattern)) {
         // 匹配 INSERT INTO 语句
@@ -218,5 +231,27 @@ void SqlAnalysis::trim_create(QString input,QVector<QString>* output){
         if(s=="")
             continue;
         output->append(s);
+    }
+}
+
+Basic_Data get_type(QString input){
+    //Basic_Data
+    if(input.contains(QRegExp("INT"))){
+
+    }
+    else if(input.contains(QRegExp("BOOL"))){
+
+    }
+    else if(input.contains(QRegExp("VARCHAR"))){
+
+    }
+    else if(input.contains(QRegExp("DOUBLE"))){
+
+    }
+    else if(input.contains(QRegExp("DATETIME"))){
+
+    }
+    else if(input.contains(QRegExp("NULLDATA"))){
+
     }
 }

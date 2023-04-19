@@ -1,8 +1,8 @@
 #include "column.h"
 #include "cstring"
 
-Column::Column(QString name, TYPE bd, int typeLen, int integrities) :
-    _bd(bd), _typeLen(typeLen), _integrities(integrities)
+Column::Column(QString name, TYPE type, int typeLen, int integrities) :
+    _type(type), _typeLen(typeLen), _integrities(integrities)
 {
     strcpy(_name, name.toLatin1().data());
 }
@@ -14,7 +14,7 @@ int Column::serialize(char buf[]) {
     offset += 4;
     memcpy(buf + offset, _name, 128);
     offset += 128;
-    memcpy(buf + offset, &_bd, 4);
+    memcpy(buf + offset, &_type, 4);
     offset += 4;
     memcpy(buf + offset, &_typeLen, 4);
     offset += 4;
@@ -31,7 +31,7 @@ int Column::deSerialize(char buf[]) {
     offset += 4;
     memcpy(_name, buf + offset, 128);
     offset += 128;
-    memcpy(&_bd, buf + offset, 4);
+    memcpy(&_type, buf + offset, 4);
     offset += 4;
     memcpy(&_typeLen, buf + offset, 4);
     offset += 4;
@@ -40,3 +40,7 @@ int Column::deSerialize(char buf[]) {
 
     return offset;
 }
+
+TYPE Column::getType() { return _type; }
+
+int Column::getTypeLen() { return _typeLen; }

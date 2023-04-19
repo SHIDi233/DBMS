@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/new/icon">
+        <file>image/link.png</file>
+        <file>image/list.png</file>
+        <file>image/lookfor.png</file>
+        <file>image/view.png</file>
+    </qresource>
+</RCC>

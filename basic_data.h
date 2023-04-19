@@ -13,7 +13,8 @@ enum TYPE
     BOOL = 1,
     VARCHAR = 2,
     DOUBLE = 3,
-    DATETIME = 4
+    DATETIME = 4,
+    NULLDATA = 5
 };
 
 class Basic_Data
@@ -23,11 +24,14 @@ private:
     TYPE _type;//数据类型
 public:
     Basic_Data(int size, TYPE type);
+    ~Basic_Data();
     int getSize();//获取字节大小
     TYPE getType();//获取类型
 
-    virtual void setValue(QString);
+    virtual bool setValue(QString);
     virtual QString getValue();
+    virtual int getCharArray(char buf[]);
+    virtual int readCharArray(char buf[]);
     virtual bool operator==(const QString& r);
     virtual bool operator>=(const QString& r);
     virtual bool operator>(const QString& r);
@@ -45,6 +49,7 @@ public:
     Double();
     Double(double value);
     QString getValue();
+    int getCharArray(char buf[]);
     bool operator==(const QString& r);
     bool operator>=(const QString& r);
     bool operator>(const QString& r);
@@ -53,7 +58,7 @@ public:
 };
 
 //变长字符串
-class Varchar : private Basic_Data
+class Varchar : public Basic_Data
 {
 private:
     char* _value;
@@ -103,6 +108,19 @@ private:
 public:
     Bool();
     Bool(bool value);
+    bool operator==(const QString& r);
+    bool operator>=(const QString& r);
+    bool operator>(const QString& r);
+    bool operator<=(const QString& r);
+    bool operator<(const QString& r);
+};
+
+class NullData : public Basic_Data
+{
+private:
+public:
+    NullData();
+    NullData(int len);
     bool operator==(const QString& r);
     bool operator>=(const QString& r);
     bool operator>(const QString& r);

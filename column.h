@@ -12,17 +12,23 @@ private:
     char _name[128];//字段名称
 //    int type;//字段类型
 //    int param;//字段类型参数
-    TYPE _bd;
+    TYPE _type;
     int _typeLen;//数据类型及长度
 
     char _mtime[32];//最后修改时间
     int _integrities;//完整性约束信息
 public:
-    Column(QString name, TYPE bd, int typeLen, int integrities);
+    Column(QString name, TYPE type, int typeLen, int integrities);
     Column();
 
     int serialize(char buf[]);//序列化
     int deSerialize(char buf[]);//反序列化
+
+    //set与get函数
+    bool setOrder();
+    TYPE getType();
+    int getTypeLen();
+    QString getName();
 };
 
 #endif // COLUMN_H

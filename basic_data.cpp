@@ -28,6 +28,11 @@ QString Double::getValue() {
     return QString::number(_value);
 }
 
+int Double::getCharArray(char buf[]) {
+    memcpy(buf, &_value, 8);
+    return 8;
+}
+
 bool Double::operator==(const QString& r) {
     bool isOk;
     double b = r.toDouble(&isOk);//把数组转为数字

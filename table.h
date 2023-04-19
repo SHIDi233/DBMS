@@ -11,6 +11,7 @@
 #include"row.h"
 #include "integrity.h"
 #include "column.h"
+#include "boolstat.h"
 
 const int TABLEBYTE = 128 + 4 + 4 + 256 + 256 + 256 + 256 + 32 + 32;
 
@@ -32,7 +33,8 @@ private:
     //缓存技术-待办列表
     QList<WaitToDo_Table> doList;
 
-    QVector<Column*> columns;//字段列表
+    QVector<Column*> columns;//字段容器
+    QList<Row*> rows;//记录列表
 public:
     Table(QString name, QString tdf, QString tic, QString trd, QString tid, QString crtime);//创建表时调用这个函数
     Table(QString name);//修改表时调用这个函数
@@ -56,6 +58,15 @@ public:
 
     //字段管理
     QString addColumn(QString columnName, TYPE type, int typeLen, int integrity);//增加列
+
+    //数据管理
+    QString insertRecord(const QVector<QString>& columnNameList, const QVector<QString>& valueList);//插入记录
+
+    QString updateRecord(QString columnName, QString value, const QVector<BoolStat>& boolStats);//更新记录
+
+    QVector<QVector<QString>> select(bool isAll, //如果查询的是*则isAll为true, 此时column_name直接传空数组即可
+                   const QVector<QString>& column_names, //所有查询的列名
+                   const QVector<BoolStat>& boolStats);//查询记录
 
     //文件写入
     bool writeToFile();

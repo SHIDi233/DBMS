@@ -172,3 +172,23 @@ int DB::deSerialize(char buf[]) {
 
     return 0;
 }
+
+QString DB::insertRecord(QString tableName, const QVector<QString>& columnNameList, const QVector<QString>& valueList) {
+    for(auto &t : tables) {
+        if(tableName.compare(t->getName()) == 0) {
+            return t->insertRecord(columnNameList, valueList);
+        }
+    }
+    return "未找到表";
+}
+
+QVector<QVector<QString>> DB::select(bool isAll, const QVector<QString>& column_names,
+                                     QString tableName, const QVector<BoolStat>& boolStats) {
+    for(auto &t : tables) {
+        if(tableName.compare(t->getName()) == 0) {
+            return t->select(isAll, column_names, boolStats);
+        }
+    }
+    QVector<QVector<QString>> res;
+    return res;
+}

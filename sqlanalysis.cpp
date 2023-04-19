@@ -1,6 +1,6 @@
 ﻿/**
 *  Name:SqlAnalysis
-*  Author: Li Wenjie
+*  Author: Li Wenjie, Shi haoyuan
 *  Description:Sql语句分析
 *  Date: 2023-4-19
 */
@@ -208,3 +208,15 @@ void SqlAnalysis::parse_sql(QString qsql) {
 //*/
 //    return 0;
 //}
+
+
+//sql语句处理
+void SqlAnalysis::trim_create(QString input,QVector<QString>* output){
+    input = input.replace(QRegExp(",")," ");
+    QStringList list = input.split(" ");
+    for(auto &s : list){
+        if(s=="")
+            continue;
+        output->append(s);
+    }
+}

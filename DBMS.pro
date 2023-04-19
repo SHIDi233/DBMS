@@ -19,6 +19,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     row.cpp \
+    sqlanalysis.cpp \
     table.cpp \
     tableinfo.cpp \
     user.cpp \
@@ -35,6 +36,7 @@ HEADERS += \
     integrity.h \
     mainwindow.h \
     row.h \
+    sqlanalysis.h \
     table.h \
     tableinfo.h \
     user.h \

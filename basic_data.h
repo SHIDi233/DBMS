@@ -27,11 +27,13 @@ public:
     ~Basic_Data();
     int getSize();//获取字节大小
     TYPE getType();//获取类型
+    void setType(TYPE type);
 
     virtual bool setValue(QString);
     virtual QString getValue();
-    virtual int getCharArray(char buf[]);
-    virtual int readCharArray(char buf[]);
+    virtual int getCharArray(char buf[]);//序列化
+    virtual int readCharArray(char buf[]);//反序列化
+
     virtual bool operator==(const QString& r);
     virtual bool operator>=(const QString& r);
     virtual bool operator>(const QString& r);
@@ -48,8 +50,12 @@ private:
 public:
     Double();
     Double(double value);
+
     QString getValue();
     int getCharArray(char buf[]);
+    int readCharArray(char buf[]);
+    bool setValue(QString);
+
     bool operator==(const QString& r);
     bool operator>=(const QString& r);
     bool operator>(const QString& r);
@@ -65,7 +71,12 @@ private:
 public:
     Varchar(int len);
     Varchar(QString value);
+
     QString getValue();
+    int getCharArray(char buf[]);
+    int readCharArray(char buf[]);
+    bool setValue(QString);
+
     bool operator==(const QString& r);
     bool operator>=(const QString& r);
     bool operator>(const QString& r);
@@ -80,7 +91,12 @@ class Integer : public Basic_Data
 public:
     Integer();
     Integer(int value);
+
     QString getValue();
+    int getCharArray(char buf[]);
+    int readCharArray(char buf[]);
+    bool setValue(QString);
+
     bool operator==(const QString& r);
     bool operator>=(const QString& r);
     bool operator>(const QString& r);
@@ -93,6 +109,12 @@ class DateTime : public Basic_Data
 {
 public:
     DateTime();
+
+    QString getValue();
+    int getCharArray(char buf[]);
+    int readCharArray(char buf[]);
+    bool setValue(QString);
+
     bool operator==(const QString& r);
     bool operator>=(const QString& r);
     bool operator>(const QString& r);
@@ -108,6 +130,12 @@ private:
 public:
     Bool();
     Bool(bool value);
+
+    QString getValue();
+    int getCharArray(char buf[]);
+    int readCharArray(char buf[]);
+    bool setValue(QString);
+
     bool operator==(const QString& r);
     bool operator>=(const QString& r);
     bool operator>(const QString& r);
@@ -115,17 +143,22 @@ public:
     bool operator<(const QString& r);
 };
 
-class NullData : public Basic_Data
-{
-private:
-public:
-    NullData();
-    NullData(int len);
-    bool operator==(const QString& r);
-    bool operator>=(const QString& r);
-    bool operator>(const QString& r);
-    bool operator<=(const QString& r);
-    bool operator<(const QString& r);
-};
+//class NullData : public Basic_Data
+//{
+//private:
+//public:
+//    NullData(int len);
+
+//    QString getValue();
+//    int getCharArray(char buf[]);
+//    int readCharArray(char buf[]);
+//    bool setValue(QString);
+
+//    bool operator==(const QString& r);
+//    bool operator>=(const QString& r);
+//    bool operator>(const QString& r);
+//    bool operator<=(const QString& r);
+//    bool operator<(const QString& r);
+//};
 
 #endif // BASIC_DATA_H

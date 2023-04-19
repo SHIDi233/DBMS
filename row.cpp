@@ -49,3 +49,12 @@ int Row::deSerialize(char buf[], const QVector<Column*>& columns) {
 
     return offset;
 }
+
+bool Row::addData(Basic_Data *data) {
+    datas.push_back(data);
+    return true;
+}
+
+QString Row::getValue(int index) {
+    return datas[index]->getValue();
+}

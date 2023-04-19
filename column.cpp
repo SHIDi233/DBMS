@@ -7,6 +7,10 @@ Column::Column(QString name, TYPE type, int typeLen, int integrities) :
     strcpy(_name, name.toLatin1().data());
 }
 
+Column::Column() {
+
+}
+
 int Column::serialize(char buf[]) {
 
     int offset = 0;
@@ -44,3 +48,7 @@ int Column::deSerialize(char buf[]) {
 TYPE Column::getType() { return _type; }
 
 int Column::getTypeLen() { return _typeLen; }
+
+QString Column::getName() {
+    return _name;
+}

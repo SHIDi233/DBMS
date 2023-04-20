@@ -4,6 +4,7 @@
 #include <QMovie>
 #include<QMouseEvent>
 #include<QGraphicsDropShadowEffect>
+#include"mainwindow.h"
 
 
 QString button_start = "QPushButton{color:white;background-color:rgb(14 , 150 , 254);border-radius:5px;}";
@@ -25,6 +26,11 @@ Login::Login(QWidget *parent) :
     ui->label->setPixmap(pix);
     ui->label->setScaledContents(true);
 
+    QPixmap pix1("://image/user.png");
+    pix1.scaled(ui->label_2->size(), Qt::KeepAspectRatio);
+    ui->label_2->setPixmap(pix1);
+    ui->label_2->setScaledContents(true);
+
     QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(this);
     shadow->setOffset(-3, 0);
     shadow->setColor(QColor("#888888"));
@@ -44,7 +50,9 @@ Login::~Login()
 
 void Login::on_pushButton_clicked()
 {
-    //ui->pushButton->setStyleSheet(button_press);
+    MainWindow* mw = new MainWindow;
+    mw->show();
+    this->hide();
 }
 
 

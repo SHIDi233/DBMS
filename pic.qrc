@@ -9,5 +9,6 @@
         <file>image/blue.png</file>
         <file>image/top.png</file>
         <file>image/exit.png</file>
+        <file>image/user.png</file>
     </qresource>
 </RCC>

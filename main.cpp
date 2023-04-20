@@ -20,9 +20,9 @@ int main(int argc, char *argv[])
             break;
         }
     }
-    MainWindow w;
-    w.show();
-//    Login l;
-//    l.show();
+//    MainWindow w;
+//    w.show();
+    Login l;
+    l.show();
     return a.exec();
 }

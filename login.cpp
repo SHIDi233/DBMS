@@ -3,6 +3,7 @@
 #include<QString>
 #include <QMovie>
 #include<QMouseEvent>
+#include<QGraphicsDropShadowEffect>
 
 
 QString button_start = "QPushButton{color:white;background-color:rgb(14 , 150 , 254);border-radius:5px;}";
@@ -17,6 +18,23 @@ Login::Login(QWidget *parent) :
     ui->setupUi(this);
 
     this->setWindowFlags(Qt::FramelessWindowHint);
+
+
+    QPixmap pix("://image/top.png");
+    pix.scaled(ui->label->size(), Qt::KeepAspectRatio);
+    ui->label->setPixmap(pix);
+    ui->label->setScaledContents(true);
+
+    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(this);
+    shadow->setOffset(-3, 0);
+    shadow->setColor(QColor("#888888"));
+    shadow->setBlurRadius(30);
+    ui->label_4->setGraphicsEffect(shadow);
+    ui->label_6->setGraphicsEffect(shadow);
+    //QRect()
+    ui->label_6->setGeometry(QRect(ui->label_6->geometry().left()+1,ui->label_6->geometry().top(),
+                                   ui->label_6->geometry().width()-1,ui->label_6->geometry().height()));
+
 }
 
 Login::~Login()
@@ -58,4 +76,16 @@ void Login::mouseMoveEvent(QMouseEvent *e)
     }
 }
 
+
+
+void Login::on_label_5_linkActivated(const QString &link)
+{
+
+}
+
+
+void Login::on_pushButton_2_clicked()
+{
+    qApp->quit();
+}
 

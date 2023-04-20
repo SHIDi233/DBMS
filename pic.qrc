@@ -5,5 +5,7 @@
         <file>image/lookfor.png</file>
         <file>image/view.png</file>
     </qresource>
-    <qresource prefix="/"/>
+    <qresource prefix="/">
+        <file>image/blue.png</file>
+    </qresource>
 </RCC>

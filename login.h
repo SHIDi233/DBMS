@@ -15,6 +15,10 @@ public:
     explicit Login(QWidget *parent = nullptr);
     ~Login();
 
+protected:
+    void mousePressEvent(QMouseEvent *e);
+    void mouseMoveEvent(QMouseEvent *e);
+
 private slots:
     void on_pushButton_clicked();
 
@@ -24,6 +28,9 @@ private slots:
 
 private:
     Ui::Login *ui;
+
+    int boundaryWidth;
+    QPoint clickPos;
 
 };
 

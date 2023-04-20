@@ -5,6 +5,7 @@
 #include<QDateTime>
 #include<QStandardItemModel>
 #include<QVector>
+#include<QMouseEvent>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -18,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     showList();
 
-    //db = user.getDB("testDB");
+    db = user.getDB("testDB");
 
 
 
@@ -82,6 +83,24 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+//void MainWindow::mousePressEvent(QMouseEvent *e)
+//{
+//    if(e->button()==Qt::LeftButton)
+//        clickPos=e->pos();
+//}
+//void MainWindow::mouseMoveEvent(QMouseEvent *e)
+//{
+//    if(e->buttons()&Qt::LeftButton  //左键点击并且移动
+//            && e->pos().x()>=0      //范围在窗口的上面部分
+//            && e->pos().y()>=0
+//            && e->pos().x()<= geometry().width()
+//            && e->pos().y() <= geometry().height()/10)
+//    {
+//        move(e->pos()+pos()-clickPos);  //移动窗口
+//    }
+//}
+
+
 void MainWindow::on_pushButton_5_clicked()
 {
     QString tableName = ui->lineEdit->text();
@@ -134,5 +153,11 @@ void MainWindow::showList(){
 
     //设置model
     ui->treeView->setModel(model);
+}
+
+
+void MainWindow::on_pushButton_7_clicked()
+{
+
 }
 

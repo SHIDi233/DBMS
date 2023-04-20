@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 255, 255);</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="label">
     <property name="geometry">
@@ -36,8 +39,19 @@
       <height>51</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <family>Microsoft YaHei UI</family>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:white;
+	background-color:rgb(14 , 150 , 254);
+	border-radius:5px;</string>
+    </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>登  录</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit">
@@ -68,6 +82,16 @@
       <width>271</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:white;
+    padding-left:5px ;
+	padding-top:1px ;
+    border-bottom-left-radius:3px;
+    border-bottom-right-radius:3px;
+	border: 1px solid rgb(209 , 209 , 209);
+    border-top:transparent;
+</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">

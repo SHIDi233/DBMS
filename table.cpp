@@ -164,6 +164,7 @@ QString Table::addColumn(QString columnName, TYPE type, int typeLen, int integri
     //修改其他内容
     _fieldNum++;
     strcpy_s(_mtime, current_date.toLatin1().data());
+    return "增加列成功";
 }
 
 QString Table::dropColumn(QString columnName) {

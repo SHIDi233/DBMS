@@ -95,7 +95,7 @@ int Table::deSerialize(char buf[]) {
 
 bool Table::writeColumn(Column* c) {
 
-    char buf[COLUMNBYTE];
+    char buf[COLUMNBYTE + 128];
     int cnt = c->serialize(buf);
 
     QFile dbFile(_tdf);
@@ -108,7 +108,7 @@ bool Table::writeColumn(Column* c) {
 
 bool Table::writeColumns() {
 
-    char buf[COLUMNBYTE];
+    char buf[COLUMNBYTE + 128];
 
     QFile dbFile(_tdf);
     if(!dbFile.open(QIODevice::Append)) { return false; };
@@ -136,7 +136,7 @@ bool Table::readColumns() {
     QDataStream dbOut(&dbFile);
 
     //循环将表信息读入列表中
-    char buf[TABLEBYTE];
+    char buf[TABLEBYTE + 128];
     while(!dbOut.atEnd()) {
         dbOut.readRawData(buf, TABLEBYTE);
         Column *c = new Column();
@@ -163,7 +163,7 @@ QString Table::addColumn(QString columnName, TYPE type, int typeLen, int integri
 
     //修改其他内容
     _fieldNum++;
-    strcpy(_mtime, current_date.toLatin1().data());
+    strcpy_s(_mtime, current_date.toLatin1().data());
 }
 
 QString Table::dropColumn(QString columnName) {

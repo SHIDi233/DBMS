@@ -5,6 +5,7 @@
 #ifndef USER_H
 #define USER_H
 #include "QString"
+#include "db.h"
 
 //权限
 enum Permission
@@ -22,11 +23,16 @@ private:
     char _pwd[128];//密码
     bool _UserType;//用户类型, true:管理员, false:普通用户
     bool _permission[10];//权限
+
+    QVector<DB*> dbs;
 public:
     User();
     QString createDb(QString name);//创建数据库
     QString createUser(QString name, QString pwd);//创建普通用户
     QString grant(Permission);//给予权限
+
+    DB* getDB(QString dbName);
+    bool loadDB();//加载数据库
 };
 
 #endif // USER_H

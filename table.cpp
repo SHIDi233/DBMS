@@ -87,6 +87,9 @@ int Table::deSerialize(char buf[]) {
     memcpy(_mtime, buf + offset, 32);
     offset += 32;
 
+    // TODO: 加载字段信息和数据记录
+    readColumns();
+
     return 0;
 }
 

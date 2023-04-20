@@ -16,6 +16,10 @@ DB::DB(QString name, bool type, QString filePath, QString crtime)
 DB::DB() {
 }
 
+QString DB::getName() {
+    return _name;
+}
+
 bool DB::writeTable(Table* t, QString filePath) {
 
     char buf[TABLEBYTE];
@@ -33,8 +37,8 @@ bool DB::writeTable(Table* t, QString filePath) {
 bool DB::readTables(QString filePath) {
 
     //清空表并释放空间
-    for(auto &t : tables) { delete t; }
-    tables.clear();
+    //for(auto &t : tables) { delete t; }
+    //tables.clear();
 
     //创建文件操作对象
     QFile dbFile(filePath);

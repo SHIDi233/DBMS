@@ -24,6 +24,8 @@ int Column::serialize(char buf[]) {
     offset += 4;
     memcpy(buf + offset, _mtime, 32);
     offset += 32;
+    memcpy(buf + offset, &_integrities, 4);
+    offset += 4;
 
     return offset;
 }
@@ -41,6 +43,8 @@ int Column::deSerialize(char buf[]) {
     offset += 4;
     memcpy(_mtime, buf + offset, 32);
     offset += 32;
+    memcpy(&_integrities, buf + offset, 4);
+    offset += 4;
 
     return offset;
 }

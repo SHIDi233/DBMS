@@ -22,7 +22,7 @@ QString DB::getName() {
 
 bool DB::writeTable(Table* t, QString filePath) {
 
-    char buf[TABLEBYTE+10000];
+    char buf[TABLEBYTE+128];
     int cnt = t->serialize(buf);
 
     //创建文件操作对象
@@ -60,7 +60,7 @@ bool DB::readTables(QString filePath) {
 //    if(!found) { return false; }
 
     //循环将表信息读入列表中
-    char buf[TABLEBYTE];
+    char buf[TABLEBYTE + 128];
     while(!dbOut.atEnd()) {
         dbOut.readRawData(buf, TABLEBYTE);
         Table *t = new Table();
@@ -74,7 +74,7 @@ bool DB::readTables(QString filePath) {
 
 bool DB::writeTables(QString filePath) {
 
-    char buf[TABLEBYTE];
+    char buf[TABLEBYTE + 128];
     int cnt;
 
     //创建文件操作对象

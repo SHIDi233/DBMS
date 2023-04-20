@@ -60,7 +60,7 @@ int Table::serialize(char buf[]) {
     offset += 256;
     memcpy(buf + offset, _crtime, 32);
     offset += 32;
-    memcpy(buf + offset, _mtime, 256);
+    memcpy(buf + offset, _mtime, 32);
     offset += 32;
 
     return offset;
@@ -84,7 +84,7 @@ int Table::deSerialize(char buf[]) {
     offset += 256;
     memcpy(_crtime, buf + offset, 32);
     offset += 32;
-    memcpy(_mtime, buf + offset, 256);
+    memcpy(_mtime, buf + offset, 32);
     offset += 32;
 
     return 0;

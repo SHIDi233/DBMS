@@ -11,7 +11,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     user.createDb("testDB");
 
-
+    loadDB();
+    db = dbs[0];
 }
 
 MainWindow::~MainWindow()
@@ -19,15 +20,41 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+bool MainWindow::loadDB() {
+
+    //加载数据库
+    //创建文件操作对象
+    bool isRead = true;
+    QFile dbFile(rootPath.absoluteFilePath("ruanko.db"));
+    if(!dbFile.open(QIODevice::ReadOnly)) { isRead = false; }
+    QDataStream dbOut(&dbFile);
+
+    //循环将表信息读入列表中
+    char buf[DBBYTE];
+    while(!dbOut.atEnd()) {
+        dbOut.readRawData(buf, DBBYTE);
+        DB *d = new DB();
+        d->deSerialize(buf);
+        dbs.append(d);
+    }
+
+    return isRead;
+}
+
 void MainWindow::on_pushButton_5_clicked()
 {
-//    SqlAnalysis s;
-//    s.parse_sql(ui->textEdit_3->toPlainText());
+    QString tableName = ui->lineEdit->text();
+    if(tableName.isEmpty()) { return; }
+    db->createTable(tableName);
+}
 
-    QDateTime current_date_time =QDateTime::currentDateTime();
-        QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz ddd");
-    db = new DB("testDB",true,"E:\\ST\\qt\\DBMS\\test\\data\\testDB",current_date);
 
-    db->createTable("6");
+void MainWindow::on_pushButton_6_clicked()
+{
+    QString tableName = ui->lineEdit->text();
+    if(tableName.isEmpty()) { return; }
+    QString columnName = ui->lineEdit_2->text();
+    if(columnName.isEmpty()) { return; }
+    db->addColumn(tableName, columnName, TYPE::INTEGER, 4);
 }
 

@@ -78,9 +78,9 @@ void SqlAnalysis::parse_sql(QString qsql) {
 
         //重复调用添加列
 
-        for(int i=0;i<output->count();i++){
+        for(int i=0;i<output->count();i+=2){
             db->addColumn(QString(QString::fromLocal8Bit(table_name.data()))
-                          ,(*output)[i++],get_type((*output)[i]),get_size((*output)[i]));
+                          ,(*output)[i],get_type((*output)[i+1]),get_size((*output)[i+1]));
         }
 
     }else if(regex_match(sql, match, desc_table_pattern)){
@@ -265,6 +265,7 @@ void SqlAnalysis::trim_create(QString input,QVector<QString>* output){
 //sql语句预处理-表插入
 void SqlAnalysis::trim_insert(QString columns,QString values,QVector<QString>* output1,QVector<QString>* output2){
     columns = columns.replace(QRegExp(",")," ");
+    values = values.replace(QRegExp(",")," ");
     QStringList list_column = columns.split(" ");
     for(auto &s : list_column){
         if(s=="")
@@ -317,8 +318,9 @@ TYPE SqlAnalysis::get_type(QString input){
 }
 
 int SqlAnalysis::get_size(QString input){
-    input.replace(QRegExp("VARCHAR("),"");
-    input.replace(QRegExp(")"),"");
+    input.replace(QRegExp("VARCHAR"),"");
+    input.replace('(',"");
+    input.replace(')',"");
     bool isOk=false;
     int tmp = input.toInt(&isOk);
     if(isOk){

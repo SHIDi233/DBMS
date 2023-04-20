@@ -27,6 +27,8 @@ private slots:
 
     void on_pushButton_7_clicked();
 
+    void showTable(QVector<QString>,QVector<QVector<QString>>);
+
 private:
     Ui::MainWindow *ui;
 

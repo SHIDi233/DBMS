@@ -14,8 +14,9 @@ MainWindow::MainWindow(QWidget *parent)
     //user.createDb("testDB");
 
     user.loadDB();
-    db = user.getDB("testDB");
 
+
+    db = user.getDB("testDB");
 
 
     //test for ui

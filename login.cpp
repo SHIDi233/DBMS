@@ -15,9 +15,9 @@ Login::Login(QWidget *parent) :
 {
     ui->setupUi(this);
 
-//    QMovie* movie = new QMovie("://image/show.gif");
-//    ui->label->setMovie(movie);
-//    movie->start();
+    QMovie* movie = new QMovie("://image/sh.gif");
+    ui->label->setMovie(movie);
+    movie->start();
 }
 
 Login::~Login()

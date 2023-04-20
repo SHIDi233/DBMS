@@ -23,5 +23,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    void showList();
 };
 #endif // MAINWINDOW_H

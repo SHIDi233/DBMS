@@ -11,13 +11,14 @@
 #include "db.h"
 #include<QString>
 #include<QVector>
+#include "mainwindow.h"
 
 
 class SqlAnalysis
 {
 public:
     SqlAnalysis();
-    SqlAnalysis(DB*);
+    SqlAnalysis(DB*,MainWindow*);
     void parse_sql(QString sql);//sql语句传入
     void trim_create(QString,QVector<QString>*);//sql语句修剪-表添加
     void trim_insert(QString,QString,QVector<QString>*,QVector<QString>*);//sql语句修剪-行添加
@@ -32,6 +33,7 @@ public:
 
 private:
     DB* db;
+    MainWindow* m;
 };
 
 #endif // SQLANALYSIS_H

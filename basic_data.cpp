@@ -1,4 +1,4 @@
-#include "basic_data.h"
+﻿#include "basic_data.h"
 #include "cstring"
 
 Basic_Data::Basic_Data(int size, TYPE type) : _size(size), _type(type) {}

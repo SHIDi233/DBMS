@@ -125,8 +125,8 @@ QString DB::createTable(QString tableName){
 
     //创建表类
     Table *table = new Table(tableName, path.absoluteFilePath(tableName + ".tdf"),
-                path.absoluteFilePath(tableName + ".trd"),
                 path.absoluteFilePath(tableName + ".tic"),
+                path.absoluteFilePath(tableName + ".trd"),
                 path.absoluteFilePath(tableName + ".tid"), current_date);
 
     //将表信息写入[数据库名].db文件中

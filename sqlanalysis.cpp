@@ -10,8 +10,8 @@
 #include <string>
 #include "control.h"
 #include "basic_data.h"
-
 #include<qDebug>
+#include<QList>
 
 using namespace std;
 
@@ -21,9 +21,10 @@ SqlAnalysis::SqlAnalysis()
 
 }
 
-SqlAnalysis::SqlAnalysis(DB* db)
+SqlAnalysis::SqlAnalysis(DB* db,MainWindow* m)
 {
     this->db = db;
+    this->m = m;
 }
 
 void SqlAnalysis::parse_sql(QString qsql) {
@@ -186,7 +187,11 @@ void SqlAnalysis::parse_sql(QString qsql) {
 
         //暂时测试表搜索功能语句，非最终版本
         if((*columns)[0]=="*"){
-            db->select(true,QVector<QString>(),QString(QString::fromLocal8Bit(table_name.data())),QVector<BoolStat>());
+            for(Table* tb : db->getTable()){
+                if(tb->getName()==QString(QString::fromLocal8Bit(table_name.data()))){
+                    m->showTableAll(db->select(true,QVector<QString>(),QString(QString::fromLocal8Bit(table_name.data())),QVector<BoolStat>()));
+                }
+            }
         }
         else{
             db->select(true,*columns,QString(QString::fromLocal8Bit(table_name.data())),QVector<BoolStat>());

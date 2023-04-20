@@ -17,8 +17,8 @@ public:
     ~MainWindow();
     DB* db;
 
-
-
+    void showTable(QVector<QString>,QVector<QVector<QString>>);
+    void showTableAll(QVector<QVector<QString>>);
 
 private slots:
     void on_pushButton_5_clicked();
@@ -27,11 +27,11 @@ private slots:
 
     void on_pushButton_7_clicked();
 
-    void showTable(QVector<QString>,QVector<QVector<QString>>);
-
 private:
     Ui::MainWindow *ui;
 
     void showList();
+
+
 };
 #endif // MAINWINDOW_H

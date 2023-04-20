@@ -186,7 +186,7 @@ void MainWindow::showList(){
 
 void MainWindow::on_pushButton_7_clicked()
 {
-    SqlAnalysis sa(db);
+    SqlAnalysis sa(db,this);
     sa.parse_sql(ui->textEdit->toPlainText());
 
     showList();
@@ -202,28 +202,68 @@ void MainWindow::showTable(QVector<QString> name,QVector<QVector<QString>> table
         i++;
     }
 
-    model->setHorizontalHeaderItem(0, new QStandardItem("姓名") );
-    model->setHorizontalHeaderItem(1, new QStandardItem("学号"));
-    model->setHorizontalHeaderItem(2, new QStandardItem("性别"));
-    model->setHorizontalHeaderItem(3, new QStandardItem("年龄"));
-    model->setHorizontalHeaderItem(4, new QStandardItem("院系"));
-    model->setHorizontalHeaderItem(5, new QStandardItem("兴趣"));
+    int j=0,k=0;
+    for(QVector<QString> qs : table){
+        for(QString s:qs){
+            model->setItem(j, k, new QStandardItem(s));
+            k++;
+        }
+        model->setHeaderData(0,Qt::Vertical, QString::number(j));
+        j++;
+    }
 
-    this->ui->tableView->setColumnWidth(0, 100);    //设置列的宽度
-    this->ui->tableView->setColumnWidth(1, 150);
-    this->ui->tableView->setColumnWidth(2, 50);
-    this->ui->tableView->setColumnWidth(3, 50);
-    this->ui->tableView->setColumnWidth(4, 100);
-    this->ui->tableView->setColumnWidth(5, 150);
 
-    /*setItem设置条目栏中的一个格子的信息*/
-    model->setItem(1, 5, new QStandardItem("hello world" ) );
+//    model->setHorizontalHeaderItem(0, new QStandardItem("姓名") );
+//    model->setHorizontalHeaderItem(1, new QStandardItem("学号"));
+//    model->setHorizontalHeaderItem(2, new QStandardItem("性别"));
+//    model->setHorizontalHeaderItem(3, new QStandardItem("年龄"));
+//    model->setHorizontalHeaderItem(4, new QStandardItem("院系"));
+//    model->setHorizontalHeaderItem(5, new QStandardItem("兴趣"));
 
-    /*设置行字段名*/
-    model->setRowCount(3);
-    model->setHeaderData(0,Qt::Vertical, "行0");
-    model->setHeaderData(1,Qt::Vertical, "行1");
-    model->setHeaderData(2,Qt::Vertical, "行2");
+//    this->ui->tableView->setColumnWidth(0, 100);    //设置列的宽度
+//    this->ui->tableView->setColumnWidth(1, 150);
+//    this->ui->tableView->setColumnWidth(2, 50);
+//    this->ui->tableView->setColumnWidth(3, 50);
+//    this->ui->tableView->setColumnWidth(4, 100);
+//    this->ui->tableView->setColumnWidth(5, 150);
+
+//    /*setItem设置条目栏中的一个格子的信息*/
+//    model->setItem(1, 5, new QStandardItem("hello world" ) );
+
+//    /*设置行字段名*/
+//    model->setRowCount(3);
+//    model->setHeaderData(0,Qt::Vertical, "行0");
+//    model->setHeaderData(1,Qt::Vertical, "行1");
+//    model->setHeaderData(2,Qt::Vertical, "行2");
+
+    this->ui->tableView->setModel(model);   //将tableview设置成model这个标准条目模型的模板, model设置的内容都将显示在tableview上
+}
+
+void MainWindow::showTableAll(QVector<QVector<QString>> table){
+    QStandardItemModel *model = new QStandardItemModel(this);
+
+//    int i=0;
+//    for(Column* c : name){
+//        model->setHorizontalHeaderItem(i, new QStandardItem(c->getName()));
+//        this->ui->tableView->setColumnWidth(i, 50);
+//        i++;
+//    }
+
+    int j=0,k=0;
+    for(QVector<QString> qs : table){
+        k=0;
+        for(QString s:qs){
+            if(j==0){
+                model->setHorizontalHeaderItem(k, new QStandardItem(s));
+            }
+            else{
+                model->setItem(j, k, new QStandardItem(s));
+            }
+            k++;
+        }
+        model->setHeaderData(0,Qt::Vertical, QString::number(j));
+        j++;
+    }
 
     this->ui->tableView->setModel(model);   //将tableview设置成model这个标准条目模型的模板, model设置的内容都将显示在tableview上
 }

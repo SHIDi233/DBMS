@@ -258,14 +258,15 @@ QString Table::insertRecord(const QVector<QString>& columnNameList, const QVecto
 
     //创建新的插入
     Row *newRow = new Row();
+    Basic_Data *data = nullptr;
     for(int i = 0; i < columns.size(); i++) {
 //        if(!isRead[i]) {
 //            Basic_Data *data = new NullData(columns[i]->getTypeLen());
 //            newRow->addData(data);
 //            continue;
 //        }
-
-        Basic_Data *data = nullptr;
+        if(!isRead[i]) continue;
+        data = nullptr;
         if(columns[i]->getType() == TYPE::BOOL) {
             data = new Bool();
         } else if (columns[i]->getType() == TYPE::VARCHAR) {
@@ -277,7 +278,7 @@ QString Table::insertRecord(const QVector<QString>& columnNameList, const QVecto
         } else if (columns[i]->getType() == TYPE::INTEGER) {
             data = new Integer();
         }
-        for(int j = 0; j < columnNameList.size(); i++) {//寻找字段在哪一位
+        for(int j = 0; j < columnNameList.size(); j++) {//寻找字段在哪一位
             if(columns[i]->getName().compare(columnNameList[j]) == 0) {
                 data->setValue(valueList[j]);
                 break;
@@ -286,6 +287,7 @@ QString Table::insertRecord(const QVector<QString>& columnNameList, const QVecto
         newRow->addData(data);
     }
     rows.push_back(newRow);
+    commit();
     return "插入成功";
 }
 
@@ -298,6 +300,7 @@ QVector<QVector<QString>> Table::select(bool isAll, const QVector<QString>& colu
         for(auto &c : columns) {
             columnName.push_back(c->getName());
         }
+        res.push_back(columnName);
         //将每一行依次插入
         for(auto &r : rows) {
             // TODO: 判断此行是否符合要求

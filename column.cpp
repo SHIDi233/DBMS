@@ -5,6 +5,10 @@ Column::Column(QString name, TYPE type, int typeLen, int integrities) :
     _type(type), _typeLen(typeLen), _integrities(integrities)
 {
     strcpy(_name, name.toLatin1().data());
+    if(type == TYPE::INTEGER) _typeLen = 4;
+    else if(type == TYPE::BOOL) _typeLen = 1;
+    else if(type == TYPE::DOUBLE) _typeLen = 8;
+    else if(type == TYPE::DATETIME) _typeLen = 32;
 }
 
 Column::Column() {

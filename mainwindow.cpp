@@ -103,7 +103,6 @@ MainWindow::MainWindow(QWidget *parent)
 //            model->setHeaderData(1,Qt::Vertical, "行1");
 //            model->setHeaderData(2,Qt::Vertical, "行2");
 
-
 }
 
 MainWindow::~MainWindow()

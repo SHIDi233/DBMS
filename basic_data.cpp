@@ -16,40 +16,40 @@ Basic_Data::~Basic_Data() {
 }
 
 bool Basic_Data::setValue(QString) {
-
+    return false;
 }
 
 QString Basic_Data::getValue() {
-
+    return "false";
 }
 
 int Basic_Data::getCharArray(char buf[]) {
-
+    return 1;
 }
 
 int Basic_Data::readCharArray(char buf[]) {
-
+    return 1;
 }
 
 
 bool Basic_Data::operator==(const QString& r) {
-
+    return false;
 }
 
 bool Basic_Data::operator>=(const QString& r) {
-
+    return false;
 }
 
 bool Basic_Data::operator>(const QString& r) {
-
+    return false;
 }
 
 bool Basic_Data::operator<=(const QString& r) {
-
+    return false;
 }
 
 bool Basic_Data::operator<(const QString& r) {
-
+    return false;
 }
 
 
@@ -108,12 +108,13 @@ int Double::readCharArray(char buf[]) {
     }
 
     memcpy(&_value, buf, 8);
+    setType(TYPE::DOUBLE);
     return 8;
 }
 
 bool Double::setValue(QString value) {
-    bool *isOk = nullptr;//判断传入字符串能否转化为double
-    double v = value.toDouble(isOk);
+    bool isOk;//判断传入字符串能否转化为double
+    double v = value.toDouble(&isOk);
     if(!isOk) {
         return false;
     }
@@ -219,6 +220,7 @@ int Varchar::readCharArray(char buf[]) {
     }
 
     memcpy(_value, buf, getSize());
+    setType(TYPE::VARCHAR);
     return getSize();
 }
 
@@ -260,13 +262,13 @@ bool Varchar::operator<(const QString& r) {
 
 //Integer函数
 QString Integer::getValue() {
-    if(getType() == TYPE::NULLDATA) { return ""; }
+    //if(getType() == TYPE::NULLDATA) { return ""; }
     return QString::number(_value);
 }
 
 bool Integer::setValue(QString value) {
-    bool *isOk = nullptr;//判断传入字符串能否转化为int
-    int v = value.toInt(isOk);
+    bool isOk;//判断传入字符串能否转化为int
+    int v = value.toInt(&isOk);
     if(!isOk) {
         return false;
     }
@@ -296,6 +298,7 @@ int Integer::readCharArray(char buf[]) {
     }
 
     memcpy(&_value, buf, 4);
+    setType(TYPE::INTEGER);
     return 4;
 }
 
@@ -387,6 +390,7 @@ int Bool::readCharArray(char buf[]) {
     }
 
     memcpy(&_value, buf, 1);
+    setType(TYPE::BOOL);
     return 1;
 }
 

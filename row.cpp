@@ -9,7 +9,7 @@ int Row::serialize(char buf[], const QVector<Column*>& columns) {
     int offset = 0;
     //循环写入
     for(auto &r : datas) {
-        offset += r->getCharArray(buf);
+        offset += r->getCharArray(buf + offset);
     }
 
     return offset;

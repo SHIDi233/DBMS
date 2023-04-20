@@ -97,6 +97,7 @@ int Table::deSerialize(char buf[]) {
 
     // TODO: 加载字段信息和数据记录
     readColumns();
+    readRecord();
 
     return 0;
 }
@@ -156,6 +157,14 @@ bool Table::readColumns() {
     return true;
 }
 
+int Table::getRowByte() {
+    int res = 0;
+    for(auto &c : columns) {
+        res += c->getTypeLen();
+    }
+    return res;
+}
+
 bool Table::readRecord() {
     //清空表并释放空间
     for(auto &r : rows) { delete r; }
@@ -165,11 +174,15 @@ bool Table::readRecord() {
     QFile dbFile(_trd);
     if(!dbFile.open(QIODevice::ReadOnly)) { return false; }
     QDataStream dbOut(&dbFile);
-
+    //计算一个记录的字节大小
+    int size = 0;
+    for(auto &c : columns) {
+        size += c->getTypeLen();
+    }
     //循环将表信息读入列表中
-    char buf[TABLEBYTE + 128];
+    char *buf = new char[size + 128];
     while(!dbOut.atEnd()) {
-        dbOut.readRawData(buf, TABLEBYTE);
+        dbOut.readRawData(buf, size);
         Row *row = new Row();
         row->deSerialize(buf, columns);
         rows.append(row);

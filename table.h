@@ -84,6 +84,7 @@ public:
 
     //记录文件读写
     bool readRecord();
+    int getRowByte();
 
     //获取私有参数
     QString getName();

@@ -22,7 +22,7 @@ QString DB::getName() {
 
 bool DB::writeTable(Table* t, QString filePath) {
 
-    char buf[TABLEBYTE];
+    char buf[TABLEBYTE+10000];
     int cnt = t->serialize(buf);
 
     //创建文件操作对象

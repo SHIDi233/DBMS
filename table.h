@@ -82,6 +82,9 @@ public:
     bool writeColumns();
     bool readColumns();
 
+    //记录文件读写
+    bool readRecord();
+
     //获取私有参数
     QString getName();
     QVector<Column*>& getColumns();

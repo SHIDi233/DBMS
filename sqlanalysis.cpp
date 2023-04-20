@@ -78,12 +78,10 @@ void SqlAnalysis::parse_sql(QString qsql) {
 
         //重复调用添加列
 
-        for(int i=0;i<output->count()-1;i++){
+        for(int i=0;i<output->count();i++){
             db->addColumn(QString(QString::fromLocal8Bit(table_name.data()))
-                          ,(*output)[i++],get_type((*output)[i]).getType()
-                          ,get_type((*output)[i]).getSize(),0);
+                          ,(*output)[i++],get_type((*output)[i]));
         }
-
 
 
 
@@ -295,13 +293,15 @@ void SqlAnalysis::trim_select(QString input,QVector<QString>* output){
     }
 }
 
-Basic_Data SqlAnalysis::get_type(QString input){
+TYPE SqlAnalysis::get_type(QString input){
     Basic_Data* bd;
     if(input.contains(QRegExp("INT"))){
         bd = new Integer();
+        return INTEGER;
     }
     else if(input.contains(QRegExp("BOOL"))){
         bd = new Bool();
+        return BOOL;
     }
     else if(input.contains(QRegExp("VARCHAR"))){
         input.replace(QRegExp("VARCHAR("),"");
@@ -310,12 +310,16 @@ Basic_Data SqlAnalysis::get_type(QString input){
         int tmp = input.toInt(&isOk);
         if(isOk){
             bd = new Varchar(tmp);
+            return VARCHAR;
         }
     }
     else if(input.contains(QRegExp("DOUBLE"))){
         bd = new Double();
+        return DOUBLE;
     }
     else if(input.contains(QRegExp("DATETIME"))){
         bd = new DateTime();
+        return DATETIME;
     }
+    return NULLDATA;
 }

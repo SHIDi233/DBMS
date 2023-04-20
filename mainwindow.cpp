@@ -158,6 +158,9 @@ void MainWindow::showList(){
 
 void MainWindow::on_pushButton_7_clicked()
 {
+    SqlAnalysis sa(db);
+    sa.parse_sql(ui->textEdit->toPlainText());
 
+    showList();
 }
 

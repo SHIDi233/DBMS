@@ -27,7 +27,7 @@ public:
     void trim_select(QString,QVector<QString>*);//sql语句修剪-表搜索
 
 
-    Basic_Data get_type(QString);//获得类型
+    TYPE get_type(QString);//获得类型
 
 private:
     DB* db;

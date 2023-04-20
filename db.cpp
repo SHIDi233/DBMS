@@ -165,7 +165,7 @@ QString DB::addColumn(QString tableName, QString columnName, TYPE type, int type
 
     //readTables(path.absoluteFilePath(QString(_name) + ".tb"));//读取表信息
     for(auto &t : tables) {
-        if(t->getName().compare(tableName)) {
+        if(t->getName().compare(tableName) == 0) {
             found = true;
             t->addColumn(columnName, type, typeLen, integ);
             break;

@@ -34,6 +34,7 @@ public:
 
     DB* getDB(QString dbName);
     bool loadDB();//加载数据库
+    QVector<DB*>& getDbs();
 };
 
 #endif // USER_H

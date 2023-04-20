@@ -9,6 +9,9 @@ User::User()
 
 }
 
+QVector<DB*>& User::getDbs() {
+    return dbs;
+}
 
 QString User::createDb(QString name)
 {

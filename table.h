@@ -84,6 +84,8 @@ public:
 
     //获取私有参数
     QString getName();
+    QVector<Column*>& getColumns();
+    QList<Row*>& getRows();
 };
 
 #endif // TABLE_H

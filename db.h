@@ -32,6 +32,7 @@ public:
     QString getName();
     bool getType();
     QString getFilePath();
+    QList<Table*> &getTable();
 
 
     //字段管理

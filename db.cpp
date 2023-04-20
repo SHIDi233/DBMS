@@ -13,6 +13,9 @@ DB::DB(QString name, bool type, QString filePath, QString crtime)
     strcpy(_crtime, crtime.toLatin1().data());
 }
 
+DB::DB() {
+}
+
 bool DB::writeTable(Table* t, QString filePath) {
 
     char buf[TABLEBYTE+10000];
@@ -58,7 +61,7 @@ bool DB::readTables(QString filePath) {
         dbOut.readRawData(buf, TABLEBYTE);
         Table *t = new Table();
         t->deSerialize(buf);
-        tables.append(t);
+        tables.push_back(t);
     }
 //    t.deSerialize(buf);
 
@@ -119,6 +122,7 @@ QString DB::createTable(QString tableName){
                 path.absoluteFilePath(tableName + ".tid"), current_date);
 
     //将表信息写入[数据库名].db文件中
+    tables.append(table);
     writeTable(table, path.absoluteFilePath(QString(_name) + ".tb"));
 
     return "表格创建成功";
@@ -126,11 +130,14 @@ QString DB::createTable(QString tableName){
 
 QString DB::addColumn(QString tableName, QString columnName, TYPE type, int typeLen, Integrity *integrity) {
     // TODO: 判断约束类型
-    int integ;
+    int integ = 0;
+    if(integrity == nullptr) {
+        integ = 0;
+    }
     QDir path(_filePath);
     bool found = false;//表示是否找指定表
 
-    readTables(path.absoluteFilePath(QString(_name) + ".tb"));//读取表信息
+    //readTables(path.absoluteFilePath(QString(_name) + ".tb"));//读取表信息
     for(auto &t : tables) {
         if(t->getName().compare(tableName)) {
             found = true;
@@ -141,7 +148,7 @@ QString DB::addColumn(QString tableName, QString columnName, TYPE type, int type
 
     if(!found) { return "未找到表"; }
 
-    writeTables(tableName);//将表信息重新写入
+    writeTables(path.absoluteFilePath(QString(_name) + ".tb"));//将表信息重新写入
     return "修改表成功";
 }
 
@@ -169,6 +176,10 @@ int DB::deSerialize(char buf[]) {
     offset += 256;
     memcpy(_crtime, buf + offset, 32);
     offset += 32;
+
+    //加载table
+    QDir path(_filePath);
+    readTables(path.absoluteFilePath(QString(_name) + ".tb"));
 
     return 0;
 }

@@ -24,8 +24,14 @@ QString User::createDb(QString name)
 
     //创建数据库路径
     QDir path(rootPath);
-    if(!path.cd("data")) { path.mkdir("data"); }
-    if(!path.cd(name)) { path.mkdir(name); }
+    if(!path.cd("data")) {
+        path.mkdir("data");
+        path.cd("data");
+    }
+    if(!path.cd(name)) {
+        path.mkdir(name);
+        path.cd(name);
+    }
     DB database(name, false, path.absolutePath(), current_date);
 
     // 创建表描述文件

@@ -27,7 +27,7 @@ public:
 
     DB(QString name, bool type, QString filePath, QString crtime);//创建数据库时调用
 
-    DB(QString name);//读取数据库时调用
+    DB();//读取数据库时调用
 
     QString getName();
     bool getType();

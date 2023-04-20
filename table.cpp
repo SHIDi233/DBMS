@@ -166,6 +166,19 @@ QString Table::addColumn(QString columnName, TYPE type, int typeLen, int integri
     strcpy(_mtime, current_date.toLatin1().data());
 }
 
+QString Table::dropColumn(QString columnName) {
+    bool found = false;
+    for(int i = 0; i < columns.size(); i++) {
+        if(columns[i]->getName().compare(columnName) == 0) {
+            columns.remove(i);
+            found = true;
+            break;
+        }
+    }
+    if(!found) { return "未找到字段"; }
+    return "删除成功";
+}
+
 QString Table::getName() { return QString(_name); }
 
 int Table::commit() {

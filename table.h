@@ -59,6 +59,8 @@ public:
     //字段管理
     QString addColumn(QString columnName, TYPE type, int typeLen, int integrity);//增加列
 
+    QString dropColumn(QString columnName);
+
     //数据管理
     QString insertRecord(const QVector<QString>& columnNameList, const QVector<QString>& valueList);//插入记录
 

@@ -56,6 +56,29 @@ QString User::createDb(QString name)
     return "数据库创建成功";
 }
 
+QString User::dropDB(QString name) {
+    // TODO: 判断用户权限
+    //寻找数据库
+    bool found = false;
+    for(int i = 0; i < dbs.size(); i++) {
+        if(dbs[i]->getName().compare(name) == 0) {
+            dbs.remove(i);
+            found = true;
+        }
+    }
+    if(!found) { return "未找到数据库"; }
+
+    //重新写入文件
+    QFile dbFile(rootPath.absoluteFilePath("ruanko.db"));
+    dbFile.open(QIODevice::WriteOnly);
+    QDataStream dbOut(&dbFile);
+    char buf[DBBYTE];
+    for(auto &d : dbs) {
+        int len = d->serialize(buf);
+        dbOut.writeRawData(buf, len);
+    }
+}
+
 DB* User::getDB(QString name) {
     for(auto &d : dbs) {
         if(name.compare(d->getName()) == 0) {

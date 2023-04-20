@@ -28,6 +28,7 @@ private:
 public:
     User();
     QString createDb(QString name);//创建数据库
+    QString dropDB(QString name);//删除数据库
     QString createUser(QString name, QString pwd);//创建普通用户
     QString grant(Permission);//给予权限
 

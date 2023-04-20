@@ -132,6 +132,24 @@ QString DB::createTable(QString tableName){
     return "表格创建成功";
 }
 
+QString DB::dropTable(QString tableName) {
+    //寻找数据库
+    bool found = false;
+    for(int i = 0; i < tables.size(); i++) {
+        if(tables[i]->getName().compare(tableName) == 0) {
+            tables.removeAt(i);
+            found = true;
+        }
+    }
+    if(!found) { return "未找到表"; }
+
+    //重新写入
+    QDir path(_filePath);
+    writeTables(path.absoluteFilePath(QString(_name) + ".tb"));
+
+    return "表格删除成功";
+}
+
 QString DB::addColumn(QString tableName, QString columnName, TYPE type, int typeLen, Integrity *integrity) {
     // TODO: 判断约束类型
     int integ = 0;
@@ -154,6 +172,20 @@ QString DB::addColumn(QString tableName, QString columnName, TYPE type, int type
 
     writeTables(path.absoluteFilePath(QString(_name) + ".tb"));//将表信息重新写入
     return "修改表成功";
+}
+
+QString DB::dropColumn(QString tableName, QString columnName) {
+
+    bool found = false;//表示是否找指定表
+    for(auto &t : tables) {
+        if(t->getName().compare(tableName)) {
+            found = true;
+            t->dropColumn(columnName);
+            break;
+        }
+    }
+    if(!found) { return "未找到表"; }
+    return "字段删除成功";
 }
 
 int DB::serialize(char buf[]) {

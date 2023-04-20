@@ -13,8 +13,8 @@ MainWindow::MainWindow(QWidget *parent)
     //user.createDb("testDB");
 
     //loadDB();
-    loadDB();
-    db = dbs[0];
+    user.loadDB();
+    db = user.getDB("testDB");
 
 
     //test for ui

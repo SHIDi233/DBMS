@@ -8,6 +8,7 @@
 #ifndef SQLANALYSIS_H
 #define SQLANALYSIS_H
 #include "basic_data.h"
+#include "db.h"
 #include<QString>
 #include<QVector>
 
@@ -16,6 +17,7 @@ class SqlAnalysis
 {
 public:
     SqlAnalysis();
+    SqlAnalysis(DB*);
     void parse_sql(QString sql);//sql语句传入
     void trim_create(QString,QVector<QString>*);//sql语句修剪-表添加
     void trim_insert(QString,QString,QVector<QString>*,QVector<QString>*);//sql语句修剪-行添加
@@ -26,6 +28,9 @@ public:
 
 
     Basic_Data get_type(QString);//获得类型
+
+private:
+    DB* db;
 };
 
 #endif // SQLANALYSIS_H

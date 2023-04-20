@@ -21,6 +21,11 @@ SqlAnalysis::SqlAnalysis()
 
 }
 
+SqlAnalysis::SqlAnalysis(DB* db)
+{
+    this->db = db;
+}
+
 void SqlAnalysis::parse_sql(QString qsql) {
     /**
     *  sql语句预处理:全部转换为大写

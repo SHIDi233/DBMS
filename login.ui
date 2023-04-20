@@ -49,6 +49,16 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">background:white;
+    padding-left:5px ;
+	padding-top:1px ;
+    border-bottom-left-radius:3px;
+    border-bottom-right-radius:3px;
+	border: 1px solid rgb(209 , 209 , 209);
+    border-top:transparent;
+</string>
+    </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_2">
     <property name="geometry">

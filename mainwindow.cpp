@@ -11,7 +11,12 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    //user.createDb("testDB");
+
+    user.loadDB();
     db = user.getDB("testDB");
+
+
 
     //test for ui
         QStandardItemModel *model = new QStandardItemModel(this);

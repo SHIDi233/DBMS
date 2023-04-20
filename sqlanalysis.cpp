@@ -2,7 +2,7 @@
 *  Name:SqlAnalysis
 *  Author: Li Wenjie, Shi haoyuan
 *  Description:Sql语句分析
-*  Date: 2023-4-19
+*  Date: 2023-4-20
 */
 #include "sqlanalysis.h"
 #include <iostream>
@@ -22,9 +22,17 @@ SqlAnalysis::SqlAnalysis()
 }
 
 void SqlAnalysis::parse_sql(QString qsql) {
+    /**
+    *  sql语句预处理:全部转换为大写
+    */
+    qsql=qsql.toUpper();
+
     string sql = qsql.toStdString();
     // CREATE TABLE 语句的正则表达式
     regex create_table_pattern(R"(CREATE\s+TABLE\s+(\w+)\s*\((.+)\))");
+
+    // DESC TABLE 语句的正则表达式
+    regex desc_table_pattern(R"(DESC\s+(\w+))");
 
     // INSERT INTO 语句的正则表达式
     regex insert_into_pattern(R"(INSERT\s+INTO\s+(\w+)\s*\((.+)\)\s*VALUES\s*\((.+)\))");
@@ -64,15 +72,22 @@ void SqlAnalysis::parse_sql(QString qsql) {
         qDebug()<<output;
 
         //重复调用添加列
-//        for(QString &s : *output){
-//            db->addColumn(table_name,s);
-//        }
-//        for(int i=0;i<output->count()-1;i++){
-//            db->addColumn(table_name,(*output)[i++]);
-//        }
+
+        for(int i=0;i<output->count()-1;i++){
+            db->addColumn(QString(QString::fromLocal8Bit(table_name.data()))
+                          ,(*output)[i++],get_type((*output)[i]).getType()
+                          ,get_type((*output)[i]).getSize(),0);
+        }
 
 
-    } else if (regex_match(sql, match, insert_into_pattern)) {
+
+
+    }else if(regex_match(sql, match, desc_table_pattern)){
+        //匹配 Desc 语句
+        string table_name = match[1];
+        //db->
+
+    }else if (regex_match(sql, match, insert_into_pattern)) {
         // 匹配 INSERT INTO 语句
         string table_name = match[1];
         string columns_str = match[2];
@@ -80,11 +95,12 @@ void SqlAnalysis::parse_sql(QString qsql) {
 
         cout << "INSERT statement " << "\ntable  name:" << table_name << "\ncolumn list:" <<" (" << columns_str << ") \nVALUES (" << values_str << ")\n" << endl;
 
-        //db->
-
         //......调用 INSERT 函数操作
+        QVector<QString>* columns = new QVector<QString>;
+        QVector<QString>* values = new QVector<QString>;
+        trim_insert(QString(QString::fromLocal8Bit(columns_str.data())),QString(QString::fromLocal8Bit(values_str.data())),columns,values);
 
-
+        db->insertRecord(QString(QString::fromLocal8Bit(table_name.data())),*columns,*values);
 
     } else if (regex_match(sql, match, delete_from_pattern)) {
         // 匹配 DELETE FROM 语句
@@ -164,6 +180,17 @@ void SqlAnalysis::parse_sql(QString qsql) {
         }
 
         //......调用 SELECT 函数操作
+        QVector<QString>* columns = new QVector<QString>;
+        trim_select(QString(QString::fromLocal8Bit(columns_str.data())),columns);
+
+        //暂时测试表搜索功能语句，非最终版本
+        if((*columns)[0]=="*"){
+            db->select(true,QVector<QString>(),QString(QString::fromLocal8Bit(table_name.data())),QVector<BoolStat>());
+        }
+        else{
+            db->select(true,*columns,QString(QString::fromLocal8Bit(table_name.data())),QVector<BoolStat>());
+        }
+
 
     } else {
         cout << "Invalid SQL statement" << endl;
@@ -223,7 +250,7 @@ void SqlAnalysis::parse_sql(QString qsql) {
 //}
 
 
-//sql语句处理
+//sql语句预处理-表建立
 void SqlAnalysis::trim_create(QString input,QVector<QString>* output){
     input = input.replace(QRegExp(",")," ");
     QStringList list = input.split(" ");
@@ -234,24 +261,56 @@ void SqlAnalysis::trim_create(QString input,QVector<QString>* output){
     }
 }
 
-Basic_Data get_type(QString input){
-    //Basic_Data
-    if(input.contains(QRegExp("INT"))){
+//sql语句预处理-表插入
+void SqlAnalysis::trim_insert(QString columns,QString values,QVector<QString>* output1,QVector<QString>* output2){
+    columns = columns.replace(QRegExp(",")," ");
+    QStringList list_column = columns.split(" ");
+    for(auto &s : list_column){
+        if(s=="")
+            continue;
+        output1->append(s);
+    }
 
+    QStringList list_value = values.split(" ");
+    for(auto &s : list_value){
+        if(s=="")
+            continue;
+        output2->append(s);
+    }
+}
+
+//sql语句预处理-表搜索
+void SqlAnalysis::trim_select(QString input,QVector<QString>* output){
+    input = input.replace(QRegExp(",")," ");
+    QStringList list = input.split(" ");
+    for(auto &s : list){
+        if(s=="")
+            continue;
+        output->append(s);
+    }
+}
+
+Basic_Data get_type(QString input){
+    Basic_Data* bd;
+    if(input.contains(QRegExp("INT"))){
+        bd = new Integer();
     }
     else if(input.contains(QRegExp("BOOL"))){
-
+        bd = new Bool();
     }
     else if(input.contains(QRegExp("VARCHAR"))){
-
+        input.replace(QRegExp("VARCHAR("),"");
+        input.replace(QRegExp(")"),"");
+        bool isOk=false;
+        int tmp = input.toInt(&isOk);
+        if(isOk){
+            bd = new Varchar(tmp);
+        }
     }
     else if(input.contains(QRegExp("DOUBLE"))){
-
+        bd = new Double();
     }
     else if(input.contains(QRegExp("DATETIME"))){
-
-    }
-    else if(input.contains(QRegExp("NULLDATA"))){
-
+        bd = new DateTime();
     }
 }

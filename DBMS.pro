@@ -16,6 +16,7 @@ SOURCES += \
     file.cpp \
     index.cpp \
     integrity.cpp \
+    login.cpp \
     main.cpp \
     mainwindow.cpp \
     row.cpp \
@@ -34,6 +35,7 @@ HEADERS += \
     file.h \
     index.h \
     integrity.h \
+    login.h \
     mainwindow.h \
     row.h \
     sqlanalysis.h \
@@ -43,6 +45,7 @@ HEADERS += \
     waittodo.h
 
 FORMS += \
+    login.ui \
     mainwindow.ui
 
 TRANSLATIONS += \

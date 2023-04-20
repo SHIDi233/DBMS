@@ -290,7 +290,7 @@ void SqlAnalysis::trim_select(QString input,QVector<QString>* output){
     }
 }
 
-Basic_Data get_type(QString input){
+Basic_Data SqlAnalysis::get_type(QString input){
     Basic_Data* bd;
     if(input.contains(QRegExp("INT"))){
         bd = new Integer();

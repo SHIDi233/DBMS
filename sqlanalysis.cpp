@@ -80,10 +80,8 @@ void SqlAnalysis::parse_sql(QString qsql) {
 
         for(int i=0;i<output->count();i++){
             db->addColumn(QString(QString::fromLocal8Bit(table_name.data()))
-                          ,(*output)[i++],get_type((*output)[i]));
+                          ,(*output)[i++],get_type((*output)[i]),get_size((*output)[i]));
         }
-
-
 
     }else if(regex_match(sql, match, desc_table_pattern)){
         //匹配 Desc 语句
@@ -304,14 +302,8 @@ TYPE SqlAnalysis::get_type(QString input){
         return BOOL;
     }
     else if(input.contains(QRegExp("VARCHAR"))){
-        input.replace(QRegExp("VARCHAR("),"");
-        input.replace(QRegExp(")"),"");
-        bool isOk=false;
-        int tmp = input.toInt(&isOk);
-        if(isOk){
-            bd = new Varchar(tmp);
-            return VARCHAR;
-        }
+
+        return VARCHAR;
     }
     else if(input.contains(QRegExp("DOUBLE"))){
         bd = new Double();
@@ -322,4 +314,16 @@ TYPE SqlAnalysis::get_type(QString input){
         return DATETIME;
     }
     return NULLDATA;
+}
+
+int SqlAnalysis::get_size(QString input){
+    input.replace(QRegExp("VARCHAR("),"");
+    input.replace(QRegExp(")"),"");
+    bool isOk=false;
+    int tmp = input.toInt(&isOk);
+    if(isOk){
+        return tmp;
+    }
+    else
+        return 0;
 }

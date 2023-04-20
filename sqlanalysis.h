@@ -28,6 +28,7 @@ public:
 
 
     TYPE get_type(QString);//获得类型
+    int get_size(QString);//获得VARCHAR长度
 
 private:
     DB* db;

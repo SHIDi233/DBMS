@@ -144,9 +144,9 @@ bool Table::readColumns() {
     QDataStream dbOut(&dbFile);
 
     //循环将表信息读入列表中
-    char buf[TABLEBYTE + 128];
+    char buf[COLUMNBYTE + 128];
     while(!dbOut.atEnd()) {
-        dbOut.readRawData(buf, TABLEBYTE);
+        dbOut.readRawData(buf, COLUMNBYTE);
         Column *c = new Column();
         c->deSerialize(buf);
         columns.append(c);

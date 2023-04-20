@@ -156,6 +156,29 @@ bool Table::readColumns() {
     return true;
 }
 
+bool Table::readRecord() {
+    //清空表并释放空间
+    for(auto &r : rows) { delete r; }
+    rows.clear();
+
+    //创建文件操作对象
+    QFile dbFile(_trd);
+    if(!dbFile.open(QIODevice::ReadOnly)) { return false; }
+    QDataStream dbOut(&dbFile);
+
+    //循环将表信息读入列表中
+    char buf[TABLEBYTE + 128];
+    while(!dbOut.atEnd()) {
+        dbOut.readRawData(buf, TABLEBYTE);
+        Row *row = new Row();
+        row->deSerialize(buf, columns);
+        rows.append(row);
+    }
+    dbFile.close();
+
+    return true;
+}
+
 QString Table::addColumn(QString columnName, TYPE type, int typeLen, int integrity) {
 
     //创建column类

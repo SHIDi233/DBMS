@@ -124,7 +124,7 @@ QString DB::createTable(QString tableName){
     QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz ddd");
 
     //创建表类
-    Table *table = new Table(_name, path.absoluteFilePath(tableName + ".tdf"),
+    Table *table = new Table(tableName, path.absoluteFilePath(tableName + ".tdf"),
                 path.absoluteFilePath(tableName + ".trd"),
                 path.absoluteFilePath(tableName + ".tic"),
                 path.absoluteFilePath(tableName + ".tid"), current_date);

@@ -20,6 +20,10 @@ QString DB::getName() {
     return _name;
 }
 
+QList<Table*>& DB::getTable() {
+    return tables;
+}
+
 bool DB::writeTable(Table* t, QString filePath) {
 
     char buf[TABLEBYTE+128];

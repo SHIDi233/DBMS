@@ -42,6 +42,14 @@ int Table::insert(bool no[],Basic_Data input[]){
 //    doList.append(WaitToDo_Table(WaitToDo_Table::INSERT,input));//将加入行放入缓存
 //}
 
+QVector<Column*>& Table::getColumns() {
+    return columns;
+}
+
+QList<Row*>& Table::getRows() {
+    return rows;
+}
+
 int Table::serialize(char buf[]) {
     int offset = 0;
     memcpy(buf + offset, _name, 128);

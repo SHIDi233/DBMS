@@ -72,7 +72,7 @@ void SqlAnalysis::parse_sql(QString qsql) {
         cout << "CREATE TABLE statement" << "\ntable  name:" << table_name << "\ncolumn list:" <<" (" << columns_str << ")\n" << endl;
 
         //......调用CREATE函数操作
-        db->createTable(QString(QString::fromLocal8Bit(table_name.data())));//根据表名创建表
+        m->appendText(db->createTable(QString(QString::fromLocal8Bit(table_name.data()))));//根据表名创建表
         QVector<QString>* output = new QVector<QString>;
         trim_create(QString(QString::fromLocal8Bit(columns_str.data())),output);
         qDebug()<<output;
@@ -80,8 +80,8 @@ void SqlAnalysis::parse_sql(QString qsql) {
         //重复调用添加列
 
         for(int i=0;i<output->count();i+=2){
-            db->addColumn(QString(QString::fromLocal8Bit(table_name.data()))
-                          ,(*output)[i],get_type((*output)[i+1]),get_size((*output)[i+1]));
+            m->appendText(db->addColumn(QString(QString::fromLocal8Bit(table_name.data()))
+                          ,(*output)[i],get_type((*output)[i+1]),get_size((*output)[i+1])));
         }
 
     }else if(regex_match(sql, match, desc_table_pattern)){
@@ -102,7 +102,7 @@ void SqlAnalysis::parse_sql(QString qsql) {
         QVector<QString>* values = new QVector<QString>;
         trim_insert(QString(QString::fromLocal8Bit(columns_str.data())),QString(QString::fromLocal8Bit(values_str.data())),columns,values);
 
-        db->insertRecord(QString(QString::fromLocal8Bit(table_name.data())),*columns,*values);
+        m->appendText(db->insertRecord(QString(QString::fromLocal8Bit(table_name.data())),*columns,*values));
 
     } else if (regex_match(sql, match, delete_from_pattern)) {
         // 匹配 DELETE FROM 语句
@@ -194,7 +194,7 @@ void SqlAnalysis::parse_sql(QString qsql) {
             }
         }
         else{
-            db->select(true,*columns,QString(QString::fromLocal8Bit(table_name.data())),QVector<BoolStat>());
+            db->select(false,*columns,QString(QString::fromLocal8Bit(table_name.data())),QVector<BoolStat>());
         }
 
 

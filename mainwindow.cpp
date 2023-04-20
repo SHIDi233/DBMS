@@ -267,3 +267,8 @@ void MainWindow::showTableAll(QVector<QVector<QString>> table){
 
     this->ui->tableView->setModel(model);   //将tableview设置成model这个标准条目模型的模板, model设置的内容都将显示在tableview上
 }
+
+//命令执行后的输出
+void MainWindow::appendText(QString output){
+    ui->textEdit->setText(ui->textEdit->toPlainText()+"\n"+output);//附加输出
+}

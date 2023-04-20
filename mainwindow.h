@@ -18,7 +18,8 @@ public:
     DB* db;
 
     void showTable(QVector<QString>,QVector<QVector<QString>>);
-    void showTableAll(QVector<QVector<QString>>);
+    void showTableAll(QVector<QVector<QString>>);//显示表信息
+    void appendText(QString output);//附加输出
 
 private slots:
     void on_pushButton_5_clicked();

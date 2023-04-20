@@ -87,6 +87,9 @@ int Table::deSerialize(char buf[]) {
     memcpy(_mtime, buf + offset, 32);
     offset += 32;
 
+    // TODO: 加载字段信息和数据记录
+    readColumns();
+
     return 0;
 }
 
@@ -161,6 +164,19 @@ QString Table::addColumn(QString columnName, TYPE type, int typeLen, int integri
     //修改其他内容
     _fieldNum++;
     strcpy(_mtime, current_date.toLatin1().data());
+}
+
+QString Table::dropColumn(QString columnName) {
+    bool found = false;
+    for(int i = 0; i < columns.size(); i++) {
+        if(columns[i]->getName().compare(columnName) == 0) {
+            columns.remove(i);
+            found = true;
+            break;
+        }
+    }
+    if(!found) { return "未找到字段"; }
+    return "删除成功";
 }
 
 QString Table::getName() { return QString(_name); }

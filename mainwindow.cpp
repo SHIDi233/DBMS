@@ -10,6 +10,9 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    db = user.getDB("testDB");
+
     //test for ui
         QStandardItemModel *model = new QStandardItemModel(this);
 
@@ -66,27 +69,6 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-bool MainWindow::loadDB() {
-
-    //加载数据库
-    //创建文件操作对象
-    bool isRead = true;
-    QFile dbFile(rootPath.absoluteFilePath("ruanko.db"));
-    if(!dbFile.open(QIODevice::ReadOnly)) { isRead = false; }
-    QDataStream dbOut(&dbFile);
-
-    //循环将表信息读入列表中
-    char buf[DBBYTE];
-    while(!dbOut.atEnd()) {
-        dbOut.readRawData(buf, DBBYTE);
-        DB *d = new DB();
-        d->deSerialize(buf);
-        dbs.append(d);
-    }
-
-    return isRead;
 }
 
 void MainWindow::on_pushButton_5_clicked()

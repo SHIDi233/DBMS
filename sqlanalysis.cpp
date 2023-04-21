@@ -133,7 +133,7 @@ void SqlAnalysis::parse_sql(QString qsql) {
 
         //......调用 DROP 函数操作
 
-        //db->dropTable(QString(QString::fromLocal8Bit(table_name.data())));//根据表名删除表
+        db->dropTable(QString(QString::fromLocal8Bit(table_name.data())));//根据表名删除表
 
     } else if (regex_match(sql, match, create_index_regex)) {
         cout << "CREATE INDEX statement" << "\nindex name:" << match[3] << "\ntable name:" << match[4] << "\ncolumn list:" << "(" << match[5] << ")\n" <<endl;

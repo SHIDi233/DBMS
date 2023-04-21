@@ -21,7 +21,16 @@ Table::Table() {
 }
 
 Table::~Table() {
-    // TODO: 完成函数
+    for(auto &r : rows) {
+        delete r;
+        r = nullptr;
+    }
+    rows.clear();
+    for(auto &c : columns) {
+        delete c;
+        c = nullptr;
+    }
+    columns.clear();
 }
 
 int Table::insert(int no,Basic_Data input){

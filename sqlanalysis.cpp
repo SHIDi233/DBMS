@@ -8,7 +8,7 @@
 #include <iostream>
 #include <regex>
 #include <string>
-#include "control.h"
+#include "Control.h"
 #include "basic_data.h"
 #include<qDebug>
 #include<QList>
@@ -179,7 +179,32 @@ void SqlAnalysis::parse_sql(QString qsql) {
 
         // 检查是否存在 WHERE 子句
         if (!where_clause.empty()) {
-            cout << " WHERE " << where_clause << endl;
+            cout << "WHERE " << where_clause << endl;
+
+            QVector<string>update3;
+                    cout<<"where:"<<endl;
+
+                    regex rr("(\.+?and )|(\.+?or )");
+                    smatch rrsm;
+                    string::const_iterator st=where_clause.begin();
+                    string::const_iterator en=where_clause.end();
+                    bool flag=false;
+                    while(regex_search(st,en,rrsm,rr)){
+                        flag =true;
+                        cout<<rrsm.str()<<endl;
+                        update3.push_back(rrsm.str());
+                        st=rrsm[0].second;
+                    }
+                    if(flag){
+                            regex_search(st,en,rrsm,regex("\.+"));
+                            cout<<rrsm.str()<<endl;
+                            update3.push_back(rrsm.str());
+                    }
+                    else{
+                            cout<<where_clause<<endl;
+                            update3.push_back(where_clause);
+                    }
+
         }
 
         // 检查是否存在 GROUP BY 子句
@@ -304,6 +329,17 @@ void SqlAnalysis::trim_insert(QString columns,QString values,QVector<QString>* o
 
 //sql语句预处理-表搜索
 void SqlAnalysis::trim_select(QString input,QVector<QString>* output){
+    input = input.replace(QRegExp(",")," ");
+    QStringList list = input.split(" ");
+    for(auto &s : list){
+        if(s=="")
+            continue;
+        output->append(s);
+    }
+}
+
+//sql语句预处理-where
+void SqlAnalysis::trim_where(QString input,QVector<QString>* output){
     input = input.replace(QRegExp(",")," ");
     QStringList list = input.split(" ");
     for(auto &s : list){

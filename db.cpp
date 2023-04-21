@@ -234,7 +234,7 @@ QString DB::insertRecord(QString tableName, const QVector<QString>& columnNameLi
 }
 
 QVector<QVector<QString>> DB::select(bool isAll, const QVector<QString>& column_names,
-                                     QString tableName, const QVector<BoolStat>& boolStats) {
+                                     QString tableName, QVector<BoolStat> boolStats) {
     for(auto &t : tables) {
         if(tableName.compare(t->getName()) == 0) {
             return t->select(isAll, column_names, boolStats);

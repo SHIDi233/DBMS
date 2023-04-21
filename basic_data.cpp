@@ -262,7 +262,7 @@ bool Varchar::operator<(const QString& r) {
 
 //Integer函数
 QString Integer::getValue() {
-    //if(getType() == TYPE::NULLDATA) { return ""; }
+    if(getType() == TYPE::NULLDATA) { return ""; }
     return QString::number(_value);
 }
 

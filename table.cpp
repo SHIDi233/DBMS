@@ -21,7 +21,16 @@ Table::Table() {
 }
 
 Table::~Table() {
-    // TODO: 完成函数
+    for(auto &r : rows) {
+        delete r;
+        r = nullptr;
+    }
+    rows.clear();
+    for(auto &c : columns) {
+        delete c;
+        c = nullptr;
+    }
+    columns.clear();
 }
 
 int Table::insert(int no,Basic_Data input){
@@ -306,6 +315,28 @@ QString Table::insertRecord(const QVector<QString>& columnNameList, const QVecto
 QVector<QVector<QString>> Table::select(bool isAll, const QVector<QString>& column_names,
                                         QVector<BoolStat>& boolStats) {
     QVector<QVector<QString>> res;
+
+    //判断该行是否符合要求
+    QVector<int> columnIndex;
+    for(int i = 0; i < rows.size(); i++) {
+        bool isOk = true;
+        for(auto &b : boolStats) {
+            for(int j = 0; j < columns.size(); j++) {
+                if(columns[j]->getName().compare(b.getColumnName())) {
+                    if(b.getConnect()) {
+                        isOk &= b.judge(*(rows[i]->getData(j)));
+                    } else {
+                        isOk |= b.judge(*(rows[i]->getData(j)));
+                    }
+                    break;
+                }
+            }
+        }
+        if(isOk) {
+            columnIndex.push_back(i);
+        }
+    }
+
     if(isAll) {
         //将列名存入第一行
         QVector<QString> columnName;
@@ -314,27 +345,27 @@ QVector<QVector<QString>> Table::select(bool isAll, const QVector<QString>& colu
         }
         res.push_back(columnName);
         //将每一行依次插入
-        for(auto &r : rows) {
-            //判断该行是否符合要求
-            bool isOk = true;
-            for(auto &b : boolStats) {
-                for(int i = 0; i < columns.size(); i++) {
-                    if(columns[i]->getName().compare(b.getColumnName())) {
-                        if(b.getConnect()) {
-                            isOk &= b.judge(*r->getData(i));
-                        } else {
-                            isOk |= b.judge(*r->getData(i));
-                        }
-                        break;
-                    }
-                }
-                if(!isOk) { break; }
-            }
-            if(!isOk) { continue; }//不符合继续检查下一行
+        for(auto &c : columnIndex) {
+//            //判断该行是否符合要求
+//            bool isOk = true;
+//            for(auto &b : boolStats) {
+//                for(int i = 0; i < columns.size(); i++) {
+//                    if(columns[i]->getName().compare(b.getColumnName())) {
+//                        if(b.getConnect()) {
+//                            isOk &= b.judge(*r->getData(i));
+//                        } else {
+//                            isOk |= b.judge(*r->getData(i));
+//                        }
+//                        break;
+//                    }
+//                }
+//                if(!isOk) { break; }
+//            }
+//            if(!isOk) { continue; }//不符合继续检查下一行
 
             QVector<QString> row;
             for(int i = 0; i < columns.size(); i++) {
-                row.push_back(r->getValue(i));
+                row.push_back(rows[c]->getValue(i));
             }
             res.push_back(row);
         }
@@ -368,27 +399,27 @@ QVector<QVector<QString>> Table::select(bool isAll, const QVector<QString>& colu
     }
     res.push_back(columnName);
     //将每一行插入
-    for(auto &r : rows) {
-        //判断该行是否符合要求
-        bool isOk = true;
-        for(auto &b : boolStats) {
-            for(int i = 0; i < columns.size(); i++) {
-                if(columns[i]->getName().compare(b.getColumnName())) {
-                    if(b.getConnect()) {
-                        isOk &= b.judge(*r->getData(i));
-                    } else {
-                        isOk |= b.judge(*r->getData(i));
-                    }
-                    break;
-                }
-            }
-            if(!isOk) { break; }
-        }
-        if(!isOk) { continue; }//不符合继续检查下一行
+    for(auto &c : columnIndex) {
+//        //判断该行是否符合要求
+//        bool isOk = true;
+//        for(auto &b : boolStats) {
+//            for(int i = 0; i < columns.size(); i++) {
+//                if(columns[i]->getName().compare(b.getColumnName())) {
+//                    if(b.getConnect()) {
+//                        isOk &= b.judge(*r->getData(i));
+//                    } else {
+//                        isOk |= b.judge(*r->getData(i));
+//                    }
+//                    break;
+//                }
+//            }
+//            if(!isOk) { break; }
+//        }
+//        if(!isOk) { continue; }//不符合继续检查下一行
 
         QVector<QString> row;
         for(auto &i : indexes) {
-            row.push_back(r->getValue(i));
+            row.push_back(rows[c]->getValue(i));
         }
         res.push_back(row);
     }

@@ -6,6 +6,10 @@ BoolStat::BoolStat(QString name, bool connect) :
 
 }
 
+bool BoolStat::judge(Basic_Data) {
+    return false;
+}
+
 QString BoolStat::getColumnName() {
     return _columnName;
 }

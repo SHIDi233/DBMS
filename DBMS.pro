@@ -11,6 +11,7 @@ CONFIG += c++11
 SOURCES += \
     basic_data.cpp \
     boolstat.cpp \
+    btree.cpp \
     column.cpp \
     db.cpp \
     file.cpp \
@@ -30,6 +31,7 @@ HEADERS += \
     Control.h \
     basic_data.h \
     boolstat.h \
+    btree.h \
     column.h \
     db.h \
     file.h \

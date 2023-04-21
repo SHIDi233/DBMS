@@ -38,6 +38,9 @@ void SqlAnalysis::parse_sql(QString qsql) {
     // CREATE TABLE 语句的正则表达式
     regex create_db_pattern(R"(CREATE\s+DATABASE\s+(\w+))");
 
+    // DROP DATABASE 语句的正则表达式
+    regex drop_db_pattern(R"(DROP\s+DATABASE\s+(\w+))");
+
     // CREATE TABLE 语句的正则表达式
     regex create_table_pattern(R"(CREATE\s+TABLE\s+(\w+)\s*\((.+)\))");
 

@@ -34,6 +34,10 @@ void SqlAnalysis::parse_sql(QString qsql) {
     qsql=qsql.toUpper();
 
     string sql = qsql.toStdString();
+
+    // CREATE TABLE 语句的正则表达式
+    regex create_db_pattern(R"(CREATE\s+DATABASE\s+(\w+))");
+
     // CREATE TABLE 语句的正则表达式
     regex create_table_pattern(R"(CREATE\s+TABLE\s+(\w+)\s*\((.+)\))");
 
@@ -63,8 +67,17 @@ void SqlAnalysis::parse_sql(QString qsql) {
             R"(SELECT\s+(.+)\s+FROM\s+(\w+)(?:\s+WHERE\s+(.+))?(?:\s+GROUP\s+BY\s+(.+))?(?:\s+HAVING\s+(.+))?(?:\s+ORDER\s+BY\s+(.+))?)");
 
     smatch match;
+    if (regex_match(sql, match, create_db_pattern)) {
+        // 匹配 CREATE TABLE 语句
+        string db_name = match[1];
 
-    if (regex_match(sql, match, create_table_pattern)) {
+        //cout << "CREATE TABLE statement" << "\ntable  name:" << table_name << "\ncolumn list:" <<" (" << columns_str << ")\n" << endl;
+
+        //......调用CREATE函数操作
+         m->appendText(user.createDb(QString(QString::fromLocal8Bit(db_name.data()))));
+
+    }
+    else if (regex_match(sql, match, create_table_pattern)) {
         // 匹配 CREATE TABLE 语句
         string table_name = match[1];
         string columns_str = match[2];

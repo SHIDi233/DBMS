@@ -286,7 +286,7 @@ QString Table::insertRecord(const QVector<QString>& columnNameList, const QVecto
 //            newRow->addData(data);
 //            continue;
 //        }
-        if(!isRead[i]) continue;
+//        if(!isRead[i]) continue;
         data = nullptr;
         if(columns[i]->getType() == TYPE::BOOL) {
             data = new Bool();

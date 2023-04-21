@@ -58,3 +58,7 @@ bool Row::addData(Basic_Data *data) {
 QString Row::getValue(int index) {
     return datas[index]->getValue();
 }
+
+Basic_Data* Row::getData(int index) {
+    return datas[index];
+}

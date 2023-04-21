@@ -95,7 +95,6 @@ int Table::deSerialize(char buf[]) {
     memcpy(_mtime, buf + offset, 32);
     offset += 32;
 
-    // TODO: 加载字段信息和数据记录
     readColumns();
     readRecord();
 
@@ -305,7 +304,7 @@ QString Table::insertRecord(const QVector<QString>& columnNameList, const QVecto
 }
 
 QVector<QVector<QString>> Table::select(bool isAll, const QVector<QString>& column_names,
-                                         const QVector<BoolStat>& boolStats) {
+                                        QVector<BoolStat>& boolStats) {
     QVector<QVector<QString>> res;
     if(isAll) {
         //将列名存入第一行
@@ -316,7 +315,22 @@ QVector<QVector<QString>> Table::select(bool isAll, const QVector<QString>& colu
         res.push_back(columnName);
         //将每一行依次插入
         for(auto &r : rows) {
-            // TODO: 判断此行是否符合要求
+            //判断该行是否符合要求
+            bool isOk = true;
+            for(auto &b : boolStats) {
+                for(int i = 0; i < columns.size(); i++) {
+                    if(columns[i]->getName().compare(b.getColumnName())) {
+                        if(b.getConnect()) {
+                            isOk &= b.judge(*r->getData(i));
+                        } else {
+                            isOk |= b.judge(*r->getData(i));
+                        }
+                        break;
+                    }
+                }
+                if(!isOk) { break; }
+            }
+            if(!isOk) { continue; }//不符合继续检查下一行
 
             QVector<QString> row;
             for(int i = 0; i < columns.size(); i++) {
@@ -346,9 +360,31 @@ QVector<QVector<QString>> Table::select(bool isAll, const QVector<QString>& colu
         }
     }
     if(!isIn) { return res; }
+
+    //第一行插入列名
+    QVector<QString> columnName;
+    for(auto &c : columns) {
+        columnName.push_back(c->getName());
+    }
+    res.push_back(columnName);
     //将每一行插入
     for(auto &r : rows) {
-        // TODO: 判断此行是否符合要求
+        //判断该行是否符合要求
+        bool isOk = true;
+        for(auto &b : boolStats) {
+            for(int i = 0; i < columns.size(); i++) {
+                if(columns[i]->getName().compare(b.getColumnName())) {
+                    if(b.getConnect()) {
+                        isOk &= b.judge(*r->getData(i));
+                    } else {
+                        isOk |= b.judge(*r->getData(i));
+                    }
+                    break;
+                }
+            }
+            if(!isOk) { break; }
+        }
+        if(!isOk) { continue; }//不符合继续检查下一行
 
         QVector<QString> row;
         for(auto &i : indexes) {

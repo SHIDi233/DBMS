@@ -7,47 +7,52 @@
 #ifndef BOOLSTAT_H
 #define BOOLSTAT_H
 #include "basic_data.h"
+#include <QVector>
 
 class BoolStat
 {
 private:
-    char _columnName[128];//字段名
+    QString _columnName;//字段名
     bool _connect;//true表示用and连接，false表示用or连接
 public:
+    BoolStat(QString name, bool connect);
     BoolStat();
-//    virtual bool judge(Basic_Data);
-    const char* getColumnName();
+    virtual bool judge(Basic_Data);
+    QString getColumnName();
+    void setConnect(bool connect);
+    bool getConnect();
 };
 
-////比较类
-//class Compare : public BoolStat
-//{
-//private:
-//    Basic_Data _value;
-//public:
-//    Compare(QString columnName, Basic_Data value, QString type);//type："<", "<=", ">", ">=", "="
-//    bool judge(Basic_Data data);
-//};
+//比较类
+class Compare : public BoolStat
+{
+private:
+    QString _value;
+    QString _type;//表示比较类型s
+public:
+    Compare(QString columnName, QString value, QString type, bool connect = true);//type："<", "<=", ">", ">=", "="
+    bool judge(Basic_Data data);
+};
 
-////between类
-//class Between : public BoolStat
-//{
-//private:
-//    Basic_Data _value1;
-//    Basic_Data _value2;
-//public:
-//    Between(QString columnName, Basic_Data value1, Basic_Data value2);
-//    bool judge(Basic_Data data);
-//};
+//between类
+class Between : public BoolStat
+{
+private:
+    QString _value1;
+    QString _value2;
+public:
+    Between(QString columnName, QString value1, QString value2, bool connect = true);
+    bool judge(Basic_Data data);
+};
 
-////in类
-//class IsIn : public BoolStat
-//{
-//private:
-//    QVector<Basic_Data>* _values;
-//public:
-//    IsIn(QString columnName, const QVector<Basic_Data>* values);
-//    bool judge(Basic_Data data);
-//};
+//in类
+class IsIn : public BoolStat
+{
+private:
+    QVector<QString> _values;
+public:
+    IsIn(QString columnName, const QVector<QString> &values, bool connect = true);
+    bool judge(Basic_Data data);
+};
 
 #endif // BOOLSTAT_H

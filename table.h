@@ -61,6 +61,8 @@ public:
 
     QString dropColumn(QString columnName);
 
+    QString modifyColumn(QString columnName, QString newName, TYPE newType, int newTypeLen, int integrity);//修改列
+
     //数据管理
     QString insertRecord(const QVector<QString>& columnNameList, const QVector<QString>& valueList);//插入记录
 
@@ -68,7 +70,7 @@ public:
 
     QVector<QVector<QString>> select(bool isAll, //如果查询的是*则isAll为true, 此时column_name直接传空数组即可
                    const QVector<QString>& column_names, //所有查询的列名
-                   const QVector<BoolStat>& boolStats);//查询记录
+                   QVector<BoolStat>& boolStats);//查询记录
 
     //文件写入
     bool writeToFile();

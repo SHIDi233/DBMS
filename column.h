@@ -29,6 +29,7 @@ public:
     TYPE getType();
     int getTypeLen();
     QString getName();
+    bool modify(TYPE newType, int newTypeLen, int integrity);
 };
 
 #endif // COLUMN_H

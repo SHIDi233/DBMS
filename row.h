@@ -18,5 +18,6 @@ public:
     bool addData(Basic_Data *data);
     QString getValue(int index);
     Basic_Data* getData(int index);
+    bool setData(int index, QString data);
 };
 #endif // ROW_H

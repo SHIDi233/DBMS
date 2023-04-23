@@ -54,7 +54,7 @@ public:
     //记录管理
     QString insertRecord(QString tableName, const QVector<QString>& columnNameList, const QVector<QString>& valueList);//插入记录
 
-    QString updateRecord(QString tableName, QString columnName, QString value, const QVector<BoolStat>& boolStats);//更新记录
+    QString updateRecord(QString tableName, QString columnName, QString value, QVector<BoolStat> boolStats);//更新记录
 
     QVector<QVector<QString>> select(bool isAll, //如果查询的是*则isAll为true, 此时column_name直接传空数组即可
                    const QVector<QString>& column_names, //所有查询的列名

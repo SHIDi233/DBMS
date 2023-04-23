@@ -233,6 +233,15 @@ QString DB::insertRecord(QString tableName, const QVector<QString>& columnNameLi
     return "未找到表";
 }
 
+QString DB::updateRecord(QString tableName, QString columnName, QString value, QVector<BoolStat> boolStats) {
+    for(auto &t : tables) {
+        if(tableName.compare(t->getName()) == 0) {
+            return t->updateRecord(columnName, value, boolStats);
+        }
+    }
+    return "未找到表";
+}
+
 QVector<QVector<QString>> DB::select(bool isAll, const QVector<QString>& column_names,
                                      QString tableName, QVector<BoolStat> boolStats) {
     for(auto &t : tables) {

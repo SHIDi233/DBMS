@@ -33,24 +33,6 @@ Table::~Table() {
     columns.clear();
 }
 
-int Table::insert(int no,Basic_Data input){
-
-}
-
-int Table::insert(bool no[],Basic_Data input[]){
-    for(int i=0;i<_fieldNum;i++){
-        if(no[i]){
-            //Basic_Data类型检测
-
-
-        }
-    }
-}
-
-//int Table::insert(Row input){
-//    doList.append(WaitToDo_Table(WaitToDo_Table::INSERT,input));//将加入行放入缓存
-//}
-
 QVector<Column*>& Table::getColumns() {
     return columns;
 }
@@ -128,7 +110,7 @@ bool Table::writeColumns() {
     char buf[COLUMNBYTE + 128];
 
     QFile dbFile(_tdf);
-    if(!dbFile.open(QIODevice::Append)) { return false; };
+    if(!dbFile.open(QIODevice::WriteOnly)) { return false; };
     QDataStream dbOut(&dbFile);
 
     //循环写入
@@ -229,7 +211,21 @@ QString Table::dropColumn(QString columnName) {
         }
     }
     if(!found) { return "未找到字段"; }
+    writeColumns();
     return "删除成功";
+}
+
+QString Table::modifyColumn(QString columnName, TYPE newType, int newTypeLen, int integrity) {
+    bool found = false;
+    for(int i = 0; i < columns.size(); i++) {
+        if(columns[i]->getName().compare(columnName) == 0) {
+            columns[i]->modify(newType, newTypeLen, integrity);
+            found = true;
+            break;
+        }
+    }
+    if(!found) { return "未找到字段"; }
+    return "字段修改成功";
 }
 
 QString Table::getName() { return QString(_name); }
@@ -312,12 +308,10 @@ QString Table::insertRecord(const QVector<QString>& columnNameList, const QVecto
     return "插入成功";
 }
 
-QVector<QVector<QString>> Table::select(bool isAll, const QVector<QString>& column_names,
-                                        QVector<BoolStat>& boolStats) {
-    QVector<QVector<QString>> res;
-
-    //判断该行是否符合要求
-    QVector<int> columnIndex;
+QString Table::updateRecord(const QVector<QString>& columnNameList,
+                            const QVector<QString> valueList, QVector<BoolStat>& boolStats) {
+    //寻找符合要求的行
+    QVector<int> rowIndex;
     for(int i = 0; i < rows.size(); i++) {
         bool isOk = true;
         for(auto &b : boolStats) {
@@ -333,7 +327,61 @@ QVector<QVector<QString>> Table::select(bool isAll, const QVector<QString>& colu
             }
         }
         if(isOk) {
-            columnIndex.push_back(i);
+            rowIndex.push_back(i);
+        }
+    }
+    //寻找符合要修改的列
+    bool isIn;
+    QVector<int> columnIndex(columnNameList.size());
+    QVector<bool> isRead(columns.size(), false);//为防止传入字段名有重复
+    for(int j = 0; j < columnNameList.size(); j++) {
+        isIn = false;
+        for(int i = 0; i < columns.size(); i++) {//在字段里寻找是否有同名的
+            if(columns[i]->getName().compare(columnNameList[j]) == 0 && !isRead[i]) {//找到了就退出
+                isIn = true;
+                isRead[i] = true;
+                columnIndex[j] = i;
+                break;
+            }
+        }
+        if(!isIn) {//没找到直接退出寻找
+            return "未找到字段";
+        }
+    }
+
+    //修改数据
+    bool res = true;
+    for(auto &r : rowIndex) {
+        for(int i = 0; i < columnIndex.size(); i++) {
+            res &= rows[r]->setData(columnIndex[i], valueList[i]);
+        }
+        if(!res) { return "数据类型错误, 修改失败"; }
+    }
+    return "修改成功";
+}
+
+QVector<QVector<QString>> Table::select(bool isAll, const QVector<QString>& column_names,
+                                        QVector<BoolStat>& boolStats) {
+    QVector<QVector<QString>> res;
+
+    //判断该行是否符合要求
+    QVector<int> rowIndex;
+    for(int i = 0; i < rows.size(); i++) {
+        bool isOk = true;
+        for(auto &b : boolStats) {
+            for(int j = 0; j < columns.size(); j++) {
+                if(columns[j]->getName().compare(b.getColumnName())) {
+                    if(b.getConnect()) {
+                        isOk &= b.judge(*(rows[i]->getData(j)));
+                    } else {
+                        isOk |= b.judge(*(rows[i]->getData(j)));
+                    }
+                    break;
+                }
+            }
+        }
+        if(isOk) {
+            rowIndex.push_back(i);
         }
     }
 
@@ -345,7 +393,7 @@ QVector<QVector<QString>> Table::select(bool isAll, const QVector<QString>& colu
         }
         res.push_back(columnName);
         //将每一行依次插入
-        for(auto &c : columnIndex) {
+        for(auto &c : rowIndex) {
 //            //判断该行是否符合要求
 //            bool isOk = true;
 //            for(auto &b : boolStats) {

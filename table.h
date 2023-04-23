@@ -41,11 +41,6 @@ public:
 //    Table(char buf[]);//读取表时调用这个函数
     Table();
     ~Table();
-    //对表数据进行操作
-    int insert();//插入
-    int insert(int,Basic_Data);//键值对方式插入(废弃)
-    int insert(bool[],Basic_Data[]);//整行方式插入
-    int insert(Row input);//行类插入
 
     int del();
 
@@ -59,14 +54,14 @@ public:
     //字段管理
     QString addColumn(QString columnName, TYPE type, int typeLen, int integrity);//增加列
 
-    QString dropColumn(QString columnName);
+    QString dropColumn(QString columnName);//删除列
 
-    QString modifyColumn(QString columnName, QString newName, TYPE newType, int newTypeLen, int integrity);//修改列
+    QString modifyColumn(QString columnName, TYPE newType, int newTypeLen, int integrity);//修改列
 
     //数据管理
     QString insertRecord(const QVector<QString>& columnNameList, const QVector<QString>& valueList);//插入记录
 
-    QString updateRecord(QString columnName, QString value, const QVector<BoolStat>& boolStats);//更新记录
+    QString updateRecord(const QVector<QString>& columnNameList, const QVector<QString> valueList, QVector<BoolStat>& boolStats);//更新记录
 
     QVector<QVector<QString>> select(bool isAll, //如果查询的是*则isAll为true, 此时column_name直接传空数组即可
                    const QVector<QString>& column_names, //所有查询的列名

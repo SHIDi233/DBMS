@@ -60,3 +60,10 @@ int Column::getTypeLen() { return _typeLen; }
 QString Column::getName() {
     return _name;
 }
+
+bool Column::modify(TYPE newType, int newTypeLen, int integrity) {
+    _type = newType;
+    _typeLen = newTypeLen;
+    _integrities = integrity;
+    return true;
+}

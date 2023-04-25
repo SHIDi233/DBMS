@@ -35,17 +35,13 @@ private:
 
     QVector<Column*> columns;//字段容器
     QList<Row*> rows;//记录列表
+    QList<Integrity*> integrities;//约束容器
 public:
     Table(QString name, QString tdf, QString tic, QString trd, QString tid, QString crtime);//创建表时调用这个函数
     Table(QString name);//修改表时调用这个函数
 //    Table(char buf[]);//读取表时调用这个函数
     Table();
     ~Table();
-    //对表数据进行操作
-    int insert();//插入
-    int insert(int,Basic_Data);//键值对方式插入(废弃)
-    int insert(bool[],Basic_Data[]);//整行方式插入
-    int insert(Row input);//行类插入
 
     int del();
 
@@ -59,18 +55,23 @@ public:
     //字段管理
     QString addColumn(QString columnName, TYPE type, int typeLen, int integrity);//增加列
 
-    QString dropColumn(QString columnName);
+    QString dropColumn(QString columnName);//删除列
 
-    QString modifyColumn(QString columnName, QString newName, TYPE newType, int newTypeLen, int integrity);//修改列
+    QString modifyColumn(QString columnName, TYPE newType, int newTypeLen, int integrity);//修改列
 
     //数据管理
     QString insertRecord(const QVector<QString>& columnNameList, const QVector<QString>& valueList);//插入记录
 
-    QString updateRecord(QString columnName, QString value, const QVector<BoolStat>& boolStats);//更新记录
+    QString updateRecord(const QVector<QString>& columnNameList, const QVector<QString> valueList, QVector<BoolStat>& boolStats);//更新记录
 
     QVector<QVector<QString>> select(bool isAll, //如果查询的是*则isAll为true, 此时column_name直接传空数组即可
                    const QVector<QString>& column_names, //所有查询的列名
-                   QVector<BoolStat>& boolStats);//查询记录
+                   QVector<BoolStat*>& boolStats);//查询记录
+
+    //约束管理
+    QString addIntegrity(QString integName, QString filed, ITGTYPE type, QString param);
+
+    QString dropIntegrity(QString integName);
 
     //文件写入
     bool writeToFile();
@@ -87,6 +88,9 @@ public:
     //记录文件读写
     bool readRecord();
     int getRowByte();
+
+    //约束文件读写
+    bool readInteg();
 
     //获取私有参数
     QString getName();

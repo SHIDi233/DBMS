@@ -17,16 +17,25 @@ enum ITGTYPE{
     IDENTITY = 10007//自增
 };
 
+const int INTEGBYTE = 128 + 128 + 4 + 256;
+
 class Integrity
 {
 private:
     char _name[128];//约束名
     char _field[128];//被约束的字段名
-    int _type;//约束类型
+    ITGTYPE _type;//约束类型
     char _param[256];//参数
 public:
-    Integrity(QString name, QString field, int type, QString param);
-    Integrity(const char* name, const char* field, int type, const char* param);
+    Integrity(QString name, QString field, ITGTYPE type, QString param);
+
+    int serialize(char buf[]);
+    int deSerialize(char buf[]);
+
+    QString getName();
+    QString getParam();
+
+    bool check(QString value);
 };
 
 #endif // INTEGRITY_H

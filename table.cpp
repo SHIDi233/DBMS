@@ -447,7 +447,7 @@ QVector<QVector<QString>> Table::select(bool isAll, const QVector<QString>& colu
     }
     res.push_back(columnName);
     //将每一行插入
-    for(auto &c : columnIndex) {
+    for(auto &c : rowIndex) {
 //        //判断该行是否符合要求
 //        bool isOk = true;
 //        for(auto &b : boolStats) {

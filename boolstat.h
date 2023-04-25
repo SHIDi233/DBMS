@@ -17,7 +17,7 @@ private:
 public:
     BoolStat(QString name, bool connect);
     BoolStat();
-    virtual bool judge(Basic_Data);
+    virtual bool judge(Basic_Data *data);
     QString getColumnName();
     void setConnect(bool connect);
     bool getConnect();
@@ -31,7 +31,7 @@ private:
     QString _type;//表示比较类型s
 public:
     Compare(QString columnName, QString value, QString type, bool connect = true);//type："<", "<=", ">", ">=", "="
-    bool judge(Basic_Data data);
+    bool judge(Basic_Data *data);
 };
 
 //between类
@@ -42,7 +42,7 @@ private:
     QString _value2;
 public:
     Between(QString columnName, QString value1, QString value2, bool connect = true);
-    bool judge(Basic_Data data);
+    bool judge(Basic_Data *data);
 };
 
 //in类
@@ -52,7 +52,7 @@ private:
     QVector<QString> _values;
 public:
     IsIn(QString columnName, const QVector<QString> &values, bool connect = true);
-    bool judge(Basic_Data data);
+    bool judge(Basic_Data *data);
 };
 
 #endif // BOOLSTAT_H

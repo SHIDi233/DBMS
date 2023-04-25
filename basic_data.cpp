@@ -225,37 +225,72 @@ int Varchar::readCharArray(char buf[]) {
 }
 
 bool Varchar::operator==(const QString& r) {
+    //判断是否符合字符串结构
+    bool isOk = false;
+    if(r.at(0) == '\'' && r.at(r.size() - 1) == '\'') { isOk = true; }
+    else if(r.at(0) == '\"' && r.at(r.size() - 1) == '\"') { isOk = true; }
+    if(!isOk) { return false; }
+    QString r2 = r.mid(1, r.size() - 2);
+
     if(getType() == TYPE::NULLDATA) { return false; }
 
-    if(r.compare(_value) != 0) { return false; }
+    if(r2.compare(_value) != 0) { return false; }
     else { return true; }
 }
 
 bool Varchar::operator>=(const QString& r) {
+    //判断是否符合字符串结构
+    bool isOk = false;
+    if(r.at(0) == '\'' && r.at(r.size() - 1) == '\'') { isOk = true; }
+    else if(r.at(0) == '\"' && r.at(r.size() - 1) == '\"') { isOk = true; }
+    if(!isOk) { return false; }
+    QString r2 = r.mid(1, r.size() - 2);
+
     if(getType() == TYPE::NULLDATA) { return false; }
 
-    if(r.compare(_value) >= 0) { return true; }
+    if(r2.compare(_value) >= 0) { return true; }
     else { return false; }
 }
 
 bool Varchar::operator>(const QString& r) {
+    //判断是否符合字符串结构
+    bool isOk = false;
+    if(r.at(0) == '\'' && r.at(r.size() - 1) == '\'') { isOk = true; }
+    else if(r.at(0) == '\"' && r.at(r.size() - 1) == '\"') { isOk = true; }
+    if(!isOk) { return false; }
+    QString r2 = r.mid(1, r.size() - 2);
+
     if(getType() == TYPE::NULLDATA) { return false; }
 
-    if(r.compare(_value) > 0) { return true; }
+    if(r2.compare(_value) > 0) { return true; }
     else { return false; }
 }
 
 bool Varchar::operator<=(const QString& r) {
+    //判断是否符合字符串结构
+    bool isOk = false;
+    if(r.at(0) == '\'' && r.at(r.size() - 1) == '\'') { isOk = true; }
+    else if(r.at(0) == '\"' && r.at(r.size() - 1) == '\"') { isOk = true; }
+    if(!isOk) { return false; }
+    QString r2 = r.mid(1, r.size() - 2);
+
     if(getType() == TYPE::NULLDATA) { return false; }
 
-    if(r.compare(_value) <= 0) { return true; }
+    if(r2.compare(_value) <= 0) { return true; }
     else { return false; }
 }
 
 bool Varchar::operator<(const QString& r) {
+    //判断是否符合字符串结构
+    bool isOk = false;
+    if(r.at(0) == '\'' && r.at(r.size() - 1) == '\'') { isOk = true; }
+    else if(r.at(0) == '\"' && r.at(r.size() - 1) == '\"') { isOk = true; }
+    if(!isOk) { return false; }
+    QString r2 = r.mid(1, r.size() - 2);
+
     if(getType() == TYPE::NULLDATA) { return false; }
 
-    if(r.compare(_value) < 0) { return true; }
+    if(r2.compare(_value) < 0) { return true; }
     else { return false; }
 }
 

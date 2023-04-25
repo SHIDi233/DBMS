@@ -6,7 +6,7 @@ BoolStat::BoolStat(QString name, bool connect) :
 
 }
 
-bool BoolStat::judge(Basic_Data) {
+bool BoolStat::judge(Basic_Data *data) {
     return false;
 }
 
@@ -23,21 +23,21 @@ Compare::Compare(QString columnName, QString value, QString type, bool connect) 
 {
 }
 
-bool Compare::judge(Basic_Data data) {
+bool Compare::judge(Basic_Data *data) {
     if(_type == "=") {
-        return data == _value;
+        return data->operator==(_value);
     }
     if(_type == ">=") {
-        return data >= _value;
+        return data->operator>=(_value);
     }
     if(_type == "<=") {
-        return data <= _value;
+        return data->operator<=(_value);
     }
     if(_type == ">") {
-        return data > _value;
+        return data->operator>(_value);
     }
     if(_type == "<") {
-        return data < _value;
+        return data->operator<(_value);
     }
     return false;
 }
@@ -47,8 +47,8 @@ Between::Between(QString columnName, QString value1, QString value2, bool connec
 {
 }
 
-bool Between::judge(Basic_Data data) {
-    return data >= _value1 && data <= _value2;
+bool Between::judge(Basic_Data *data) {
+    return data->getValue() >= _value1 && data->getValue() <= _value2;
 }
 
 IsIn::IsIn(QString columnName, const QVector<QString> &values, bool connect) :
@@ -56,10 +56,10 @@ IsIn::IsIn(QString columnName, const QVector<QString> &values, bool connect) :
 {
 }
 
-bool IsIn::judge(Basic_Data data) {
+bool IsIn::judge(Basic_Data *data) {
     bool isIn = false;
     for(auto &v : _values) {
-        if(data == v) {
+        if(data->getValue() == v) {
             isIn = true;
             break;
         }

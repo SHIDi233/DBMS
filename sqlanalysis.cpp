@@ -207,7 +207,7 @@ void SqlAnalysis::parse_sql(QString qsql) {
         trim_where(QString(QString::fromLocal8Bit(where_clause.data())),t);
         QVector<QString> s = *t;
 
-        QVector<Compare*> bs;
+        QVector<BoolStat*> bs;
         for(int i=0;i<s.count()-2;){
             Compare* c;
             if(i==0){

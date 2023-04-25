@@ -185,10 +185,19 @@ void MainWindow::showList(){
 
 void MainWindow::on_pushButton_7_clicked()
 {
-    SqlAnalysis sa(db,this);
-    sa.parse_sql(ui->textEdit->toPlainText());
+    //记录所有语句
+    QString all= ui->textEdit->toPlainText();
+    all=all.replace("\n","");
+    QStringList list = all.split(";");
 
-    showList();
+    //预编译
+    //...
+    //执行语句
+    SqlAnalysis sa(db,this);
+    for(QString s : list){
+        sa.parse_sql(s);
+        showList();
+    }
 }
 
 void MainWindow::showTable(QVector<QString> name,QVector<QVector<QString>> table){

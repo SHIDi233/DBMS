@@ -62,3 +62,8 @@ QString Row::getValue(int index) {
 Basic_Data* Row::getData(int index) {
     return datas[index];
 }
+
+bool Row::setData(int index, QString data) {
+    bool isOk = datas[index]->setValue(data);
+    return isOk;
+}

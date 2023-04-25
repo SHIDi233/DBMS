@@ -88,8 +88,9 @@ int Table::deSerialize(char buf[]) {
 
     readColumns();
     readRecord();
+    //readInteg();
 
-    return 0;
+    return offset;
 }
 
 bool Table::writeColumn(Column* c) {
@@ -361,7 +362,7 @@ QString Table::updateRecord(const QVector<QString>& columnNameList,
 }
 
 QVector<QVector<QString>> Table::select(bool isAll, const QVector<QString>& column_names,
-                                        QVector<BoolStat>& boolStats) {
+                                        QVector<BoolStat*>& boolStats) {
     QVector<QVector<QString>> res;
 
     //判断该行是否符合要求
@@ -370,11 +371,11 @@ QVector<QVector<QString>> Table::select(bool isAll, const QVector<QString>& colu
         bool isOk = true;
         for(auto &b : boolStats) {
             for(int j = 0; j < columns.size(); j++) {
-                if(columns[j]->getName().compare(b.getColumnName())) {
-                    if(b.getConnect()) {
-                        isOk &= b.judge(*(rows[i]->getData(j)));
+                if(columns[j]->getName().compare(b->getColumnName())) {
+                    if(b->getConnect()) {
+                        isOk &= b->judge(*(rows[i]->getData(j)));
                     } else {
-                        isOk |= b.judge(*(rows[i]->getData(j)));
+                        isOk |= b->judge(*(rows[i]->getData(j)));
                     }
                     break;
                 }

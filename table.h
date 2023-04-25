@@ -35,6 +35,7 @@ private:
 
     QVector<Column*> columns;//字段容器
     QList<Row*> rows;//记录列表
+    QList<Integrity*> integrities;//约束容器
 public:
     Table(QString name, QString tdf, QString tic, QString trd, QString tid, QString crtime);//创建表时调用这个函数
     Table(QString name);//修改表时调用这个函数
@@ -65,7 +66,12 @@ public:
 
     QVector<QVector<QString>> select(bool isAll, //如果查询的是*则isAll为true, 此时column_name直接传空数组即可
                    const QVector<QString>& column_names, //所有查询的列名
-                   QVector<BoolStat>& boolStats);//查询记录
+                   QVector<BoolStat*>& boolStats);//查询记录
+
+    //约束管理
+    QString addIntegrity(QString integName, QString filed, ITGTYPE type, QString param);
+
+    QString dropIntegrity(QString integName);
 
     //文件写入
     bool writeToFile();
@@ -82,6 +88,9 @@ public:
     //记录文件读写
     bool readRecord();
     int getRowByte();
+
+    //约束文件读写
+    bool readInteg();
 
     //获取私有参数
     QString getName();

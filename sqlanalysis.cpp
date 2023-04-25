@@ -181,29 +181,6 @@ void SqlAnalysis::parse_sql(QString qsql) {
         if (!where_clause.empty()) {
             cout << "WHERE " << where_clause << endl;
 
-            QVector<string>update3;
-                    cout<<"where:"<<endl;
-
-                    regex rr("(\.+?and )|(\.+?or )");
-                    smatch rrsm;
-                    string::const_iterator st=where_clause.begin();
-                    string::const_iterator en=where_clause.end();
-                    bool flag=false;
-                    while(regex_search(st,en,rrsm,rr)){
-                        flag =true;
-                        cout<<rrsm.str()<<endl;
-                        update3.push_back(rrsm.str());
-                        st=rrsm[0].second;
-                    }
-                    if(flag){
-                            regex_search(st,en,rrsm,regex("\.+"));
-                            cout<<rrsm.str()<<endl;
-                            update3.push_back(rrsm.str());
-                    }
-                    else{
-                            cout<<where_clause<<endl;
-                            update3.push_back(where_clause);
-                    }
 
         }
 
@@ -226,16 +203,40 @@ void SqlAnalysis::parse_sql(QString qsql) {
         QVector<QString>* columns = new QVector<QString>;
         trim_select(QString(QString::fromLocal8Bit(columns_str.data())),columns);
 
+        QVector<QString>* t=new QVector<QString>;
+        trim_where(QString(QString::fromLocal8Bit(where_clause.data())),t);
+        QVector<QString> s = *t;
+
+        QVector<Compare*> bs;
+        for(int i=0;i<s.count()-2;){
+            Compare* c;
+            if(i==0){
+                c=new Compare(s[i],s[i+2],s[i+1]);
+                i+=3;
+            }
+            else{
+                bool isTrue;
+                if(s[i]=="AND")
+                    isTrue=true;
+                else
+                    isTrue=false;
+                c=new Compare(s[i+1],s[i+3],s[i+2],isTrue);
+                i+=4;
+            }
+            bs.push_back(c);
+        }
+
         //暂时测试表搜索功能语句，非最终版本
         if((*columns)[0]=="*"){
             for(Table* tb : db->getTable()){
                 if(tb->getName()==QString(QString::fromLocal8Bit(table_name.data()))){
-                    m->showTableAll(db->select(true,QVector<QString>(),QString(QString::fromLocal8Bit(table_name.data())),QVector<BoolStat>()));
+                    m->showTableAll(db->select(true,QVector<QString>(),QString(QString::fromLocal8Bit(table_name.data())),bs));
                 }
             }
         }
         else{
-            db->select(false,*columns,QString(QString::fromLocal8Bit(table_name.data())),QVector<BoolStat>());
+            //Bool
+            db->select(false,*columns,QString(QString::fromLocal8Bit(table_name.data())),bs);
         }
 
 
@@ -340,13 +341,18 @@ void SqlAnalysis::trim_select(QString input,QVector<QString>* output){
 
 //sql语句预处理-where
 void SqlAnalysis::trim_where(QString input,QVector<QString>* output){
-    input = input.replace(QRegExp(",")," ");
+    input = input.replace(QRegExp("=")," = ");
+    input = input.replace(QRegExp(">")," > ");
+    input = input.replace(QRegExp("<")," < ");
+    input = input.replace(QRegExp(">=")," >= ");
+    input = input.replace(QRegExp("<=")," <= ");
     QStringList list = input.split(" ");
     for(auto &s : list){
         if(s=="")
             continue;
         output->append(s);
     }
+    return;
 }
 
 TYPE SqlAnalysis::get_type(QString input){

@@ -26,6 +26,7 @@ public:
     void trim_update(QString,QVector<QString>*);//sql语句修剪-表创建
     //void trim_create(QString,QVector<QString>*);//sql语句修剪-表创建
     void trim_select(QString,QVector<QString>*);//sql语句修剪-表搜索
+    void trim_where(QString input,QVector<QString>* output);//sql语句修建-where解析
 
 
     TYPE get_type(QString);//获得类型

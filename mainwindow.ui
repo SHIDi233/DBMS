@@ -125,6 +125,11 @@
       <height>511</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
     <property name="styleSheet">
      <string notr="true">background-image:url(:/link.png)</string>
     </property>

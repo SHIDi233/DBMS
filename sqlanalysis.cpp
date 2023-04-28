@@ -1,4 +1,4 @@
-﻿/**
+﻿ /**
 *  Name:SqlAnalysis
 *  Author: Li Wenjie, Shi haoyuan
 *  Description:Sql语句分析
@@ -140,6 +140,7 @@ void SqlAnalysis::parse_sql(QString qsql) {
         cout << "UPDATE statement" << "\ntable  name:" << table_name << " \nSET clause:" << set_clause << " \nWHERE " << condition << "\n" << endl;
 
         //......调用 UPDATE 函数操作
+
 
     } else if (regex_match(sql, match, drop_table_pattern)) {
         // 匹配 DROP TABLE 语句

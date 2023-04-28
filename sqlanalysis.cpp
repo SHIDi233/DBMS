@@ -31,7 +31,24 @@ void SqlAnalysis::parse_sql(QString qsql) {
     /**
     *  sql语句预处理:全部转换为大写
     */
-    qsql=qsql.toUpper();
+    //qsql=qsql.toUpper();//旧语句，不能对引号内容进行正确转换
+    bool isName=false;
+    int num=0;
+    for(QChar c : qsql){
+        if(c=='"' || c=='\''){
+            if(isName==true){
+                isName=false;
+            }
+            else{
+                isName=true;
+            }
+        }
+
+
+        if(!isName)
+            qsql[num]=qsql[num].toUpper();
+        num++;
+    }
 
     string sql = qsql.toStdString();
 

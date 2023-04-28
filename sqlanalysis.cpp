@@ -1,4 +1,4 @@
-﻿/**
+﻿ /**
 *  Name:SqlAnalysis
 *  Author: Li Wenjie, Shi haoyuan
 *  Description:Sql语句分析
@@ -31,7 +31,24 @@ void SqlAnalysis::parse_sql(QString qsql) {
     /**
     *  sql语句预处理:全部转换为大写
     */
-    qsql=qsql.toUpper();
+    //qsql=qsql.toUpper();//旧语句，不能对引号内容进行正确转换
+    bool isName=false;
+    int num=0;
+    for(QChar c : qsql){
+        if(c=='"' || c=='\''){
+            if(isName==true){
+                isName=false;
+            }
+            else{
+                isName=true;
+            }
+        }
+
+
+        if(!isName)
+            qsql[num]=qsql[num].toUpper();
+        num++;
+    }
 
     string sql = qsql.toStdString();
 
@@ -140,6 +157,7 @@ void SqlAnalysis::parse_sql(QString qsql) {
         cout << "UPDATE statement" << "\ntable  name:" << table_name << " \nSET clause:" << set_clause << " \nWHERE " << condition << "\n" << endl;
 
         //......调用 UPDATE 函数操作
+
 
     } else if (regex_match(sql, match, drop_table_pattern)) {
         // 匹配 DROP TABLE 语句

@@ -28,12 +28,15 @@ private:
     char _param[256];//参数
 public:
     Integrity(QString name, QString field, ITGTYPE type, QString param);
+    Integrity();
 
     int serialize(char buf[]);
     int deSerialize(char buf[]);
 
     QString getName();
     QString getParam();
+    ITGTYPE getType();
+    QString getField();
 
     bool check(QString value);
 };

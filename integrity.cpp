@@ -9,6 +9,8 @@ Integrity::Integrity(QString name, QString field, ITGTYPE type, QString param) :
     strcpy(_param, param.toLatin1().data());
 }
 
+Integrity::Integrity() {}
+
 int Integrity::serialize(char buf[]) {
     int offset = 0;
     memcpy(buf + offset, _name, 128);
@@ -35,4 +37,20 @@ int Integrity::deSerialize(char buf[]) {
     offset += 256;
 
     return offset;
+}
+
+QString Integrity::getName() {
+    return _name;
+}
+
+QString Integrity::getParam() {
+    return _param;
+}
+
+ITGTYPE Integrity::getType() {
+    return _type;
+}
+
+QString Integrity::getField() {
+    return _field;
 }

@@ -157,6 +157,7 @@ void SqlAnalysis::parse_sql(QString qsql) {
         cout << "UPDATE statement" << "\ntable  name:" << table_name << " \nSET clause:" << set_clause << " \nWHERE " << condition << "\n" << endl;
 
         //......调用 UPDATE 函数操作
+        db->
 
 
     } else if (regex_match(sql, match, drop_table_pattern)) {
@@ -355,6 +356,29 @@ void SqlAnalysis::trim_select(QString input,QVector<QString>* output){
             continue;
         output->append(s);
     }
+}
+
+//sql语句预处理-表更改
+void SqlAnalysis::trim_update(QString input,QVector<QString>* cnames,QVector<QString>* values){
+    input = input.replace(QRegExp(",")," ");
+    QStringList list = input.split(" ");
+    int num=0;
+    for(auto &s : list){
+        if(s=="")
+            continue;
+
+        if(num%3==0){
+            cnames->append(s);
+        }
+        else if(num%3==1){
+
+        }
+        else if(num%3==2){
+            values->append(s);
+        }
+        num++;
+    }
+
 }
 
 //sql语句预处理-where

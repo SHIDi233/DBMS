@@ -15,6 +15,7 @@ SOURCES += \
     column.cpp \
     db.cpp \
     file.cpp \
+    highlighter.cpp \
     index.cpp \
     integrity.cpp \
     login.cpp \
@@ -35,6 +36,7 @@ HEADERS += \
     column.h \
     db.h \
     file.h \
+    highlighter.h \
     index.h \
     integrity.h \
     login.h \

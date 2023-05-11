@@ -52,7 +52,7 @@ void SqlAnalysis::parse_sql(QString qsql) {
 
     string sql = qsql.toStdString();
 
-    // CREATE TABLE 语句的正则表达式
+    // CREATE DATABASE 语句的正则表达式
     regex create_db_pattern(R"(CREATE\s+DATABASE\s+(\w+))");
 
     // DROP DATABASE 语句的正则表达式
@@ -157,7 +157,7 @@ void SqlAnalysis::parse_sql(QString qsql) {
         cout << "UPDATE statement" << "\ntable  name:" << table_name << " \nSET clause:" << set_clause << " \nWHERE " << condition << "\n" << endl;
 
         //......调用 UPDATE 函数操作
-        db->
+        //db->
 
 
     } else if (regex_match(sql, match, drop_table_pattern)) {

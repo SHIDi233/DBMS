@@ -6,6 +6,9 @@
 #include<QStandardItemModel>
 #include<QVector>
 #include<QMouseEvent>
+#include"highlighter.h"
+
+Highlighter *highlighter;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -102,6 +105,16 @@ MainWindow::MainWindow(QWidget *parent)
 //            model->setHeaderData(0,Qt::Vertical, "行0");
 //            model->setHeaderData(1,Qt::Vertical, "行1");
 //            model->setHeaderData(2,Qt::Vertical, "行2");
+
+    QFont font;
+    font.setFamily("Courier");
+    font.setFixedPitch(true);
+    font.setPointSize(10);
+
+    ui->textEdit->setFont(font);
+    highlighter = new Highlighter(ui->textEdit->document());
+
+    //ui->tableView->setVisible(false);
 
 }
 

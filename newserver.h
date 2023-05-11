@@ -3,9 +3,7 @@
 
 
 #include<QTcpServer>//监听套接字
-#include<QTcpSocket>//通信套接字
-#include<QUdpSocket>//音视频通话用udp
-#include<QProcess>
+#include<QTcpSocket>
 #include<QThread>
 #include<QMutex>
 #include<iostream>
@@ -19,7 +17,7 @@ public:
     NewServer(qintptr);
     void run() override;//伪线程启动
 public slots:
-    void set(qintptr handle);
+    //void set(qintptr handle);
 signals:
     void st(qintptr handle);
 private:
@@ -40,17 +38,7 @@ private:
     /***************/
     void send(QByteArray);//单体发送信息
     void send(int*);//单体发送信息
-    void sendImg(QByteArray);//发送图片信息
-    void f();//推送流
 
-    void mode(int);
-    bool isTrue(QString,QString);//检测登录是否成功
-
-    void send_word();//发送文本
-    void send_img();//发送图片
-
-    void startVideo();
-    void startAudio();
 };
 
 #endif // NEWSERVER_H

@@ -29,7 +29,8 @@ SOURCES += \
     table.cpp \
     tableinfo.cpp \
     user.cpp \
-    waittodo.cpp
+    waittodo.cpp \
+    wktcpserver.cpp
 
 HEADERS += \
     Control.h \
@@ -51,7 +52,8 @@ HEADERS += \
     table.h \
     tableinfo.h \
     user.h \
-    waittodo.h
+    waittodo.h \
+    wktcpserver.h
 
 FORMS += \
     login.ui \

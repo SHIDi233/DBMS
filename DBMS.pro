@@ -1,4 +1,5 @@
 QT       += core gui
+QT       += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -21,7 +22,9 @@ SOURCES += \
     login.cpp \
     main.cpp \
     mainwindow.cpp \
+    newserver.cpp \
     row.cpp \
+    server.cpp \
     sqlanalysis.cpp \
     table.cpp \
     tableinfo.cpp \
@@ -41,7 +44,9 @@ HEADERS += \
     integrity.h \
     login.h \
     mainwindow.h \
+    newserver.h \
     row.h \
+    server.h \
     sqlanalysis.h \
     table.h \
     tableinfo.h \

@@ -16,9 +16,10 @@
 using namespace std;
 
 
-SqlAnalysis::SqlAnalysis()
+SqlAnalysis::SqlAnalysis(DB* db)
 {
-
+    this->db = db;
+    m = nullptr;
 }
 
 SqlAnalysis::SqlAnalysis(DB* db,MainWindow* m)

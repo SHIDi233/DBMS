@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "client.h"
 #include "db.h"
 
 QT_BEGIN_NAMESPACE
@@ -11,16 +12,19 @@ QT_END_NAMESPACE
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-
+signals:
+    void send_table(QString);
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(Client* c = nullptr,QWidget *parent = nullptr);
+    //MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     DB* db;
 
     void showTable(QVector<QString>,QVector<QVector<QString>>);
-    void showTableAll(QVector<QVector<QString>>);//显示表信息
+    //void showTableAll(QVector<QVector<QString>>);//显示表信息
     void appendText(QString output);//附加输出
-
+public slots:
+    void showTableAll(QVector<QVector<QString>>);//显示表信息
 private slots:
     void on_pushButton_5_clicked();
 
@@ -33,6 +37,7 @@ private:
 
     void showList();
 
+    Client * client;
 
 };
 #endif // MAINWINDOW_H

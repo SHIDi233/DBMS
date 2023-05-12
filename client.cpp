@@ -4,9 +4,16 @@
 #include<QDir>
 #include"mainwindow.h"
 #include<stdlib.h>
+#include <QMetaType>
+
+MainWindow* mw;
 
 Client::Client(){
+    qRegisterMetaType<QVector<QVector<QString>>>("QVector<QVector<QString>>");//注册diskInformation类型
 
+    mw = new MainWindow(this);
+    mw->show();
+    connect(this,SIGNAL(back(QVector<QVector<QString>>)),mw,SLOT(showTableAll(QVector<QVector<QString>>)));
 }
 
 void Client::run(){
@@ -30,29 +37,34 @@ void Client::run(){
 //                socket_client->flush();
 //                cout<<target;
                 isOnline = true;
-                send("test");
+                //send("test");
 //                //t->start();
                 break;
             }
 
-        MainWindow* mw = new MainWindow;
-        mw->show();
+
 
 
 
         }
         while(isOnline){
-//            m_mutex.lock();
-//            cout<<1<<endl;
             if(socket_client->waitForReadyRead()){
-            int len = -1;
-            socket_client->read((char*)&len,sizeof(int));//读取长度
-            QString s;
-            socket_client->read((char*)&s,len);//读取字符串
-            qDebug()<<s;
-            //mode(rec);//跳转相应功能
-//            m_mutex.unlock();
+            QVector<QVector<QString>> data;
+            int vn = receive_int();
+            for(int i=0;i<vn;i++){
+                int sn = receive_int();
+                QVector<QString> qss;
+
+                for(int k=0;k<sn;k++){
+                    int slen = receive_int();
+                    qss.push_back(receive_QS(slen));
+                }
+                data.push_back(qss);
+            }
+            socket_client->readAll();
+            emit back(data);
         }
+
     }
 
 }
@@ -67,17 +79,7 @@ void Client::send(QString data){
     qDebug()<<data+"指令发出";
 }
 
-void Client::send(int target,QString data){
-    int t = 3;//目标
-    socket_client->write((char*)&t,sizeof(int));//标识符
-    //target = 233;//目标
-    socket_client->write((char*)&target,sizeof(int));
-    //socket_client->flush();
-    //QString mystring= "test from cilent";
-    socket_client->write(data.toUtf8().data());
-    socket_client->flush();
-    qDebug()<<"发出";
-}
+
 
 
 
@@ -86,4 +88,30 @@ void Client::send_heart(){
     qDebug()<<"发送心跳";
     socket_client->write((char*)&temp,sizeof(int));//发送心跳
     socket_client->flush();
+}
+
+int Client::receive_int(){
+    int temp;
+    while(1){
+        if(socket_client->waitForReadyRead()){
+            socket_client->read((char*)&temp,sizeof(int));
+            break;
+        }
+    }
+    return temp;
+}
+
+QString Client::receive_QS(int len){
+    if(len<=0 || len>=200)
+        return QString("");
+    char temp[len+1];
+    while(1){
+        if(socket_client->waitForReadyRead()){
+            socket_client->read((char*)&temp,len);
+            break;
+        }
+    }
+    temp[len]='\0';
+    QString s(temp);
+    return s;
 }

@@ -16,8 +16,10 @@
 
 class SqlAnalysis
 {
+signals:
+    //void back_table(QVector<QVector<QString>> table);
 public:
-    SqlAnalysis();
+    SqlAnalysis(DB*);
     SqlAnalysis(DB*,MainWindow*);
     QVector<QVector<QString>> parse_sql(QString sql);//sql语句传入
     void trim_create(QString,QVector<QString>*);//sql语句修剪-表添加
@@ -35,6 +37,8 @@ public:
 private:
     DB* db;
     MainWindow* m;
+
+    //bool isNet = false;
 };
 
 #endif // SQLANALYSIS_H

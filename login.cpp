@@ -59,8 +59,8 @@ void Login::on_pushButton_clicked()
     else{
         Client* c = new Client();
         c->start();
-        MainWindow* mw = new MainWindow;
-        mw->show();
+//        MainWindow* mw = new MainWindow;
+//        mw->show();
         this->hide();
     }
 

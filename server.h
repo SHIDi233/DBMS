@@ -40,14 +40,6 @@ private:
 
     int num=0;//总用户数
 
-
-    //网络端口资源配置相关
-    bool SPics[1000]={false};//图片等文件发送相关
-    int maxSPices = 0;
-    bool PVideo[1000]={false};//通话视频通道
-    int maxPVideo = 0;
-    bool PAudio[1000]={false};//通话音频通道
-    int maxPAudio = 0;
 };
 
 

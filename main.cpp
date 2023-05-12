@@ -1,5 +1,5 @@
 ﻿#include "mainwindow.h"
-
+#include"server.h"
 #include <QApplication>
 #include <QLocale>
 #include <QTranslator>
@@ -22,6 +22,10 @@ int main(int argc, char *argv[])
     }
 //    MainWindow w;
 //    w.show();
+
+    Server* s = new Server();
+    s->start();
+
     Login l;
     l.show();
     return a.exec();

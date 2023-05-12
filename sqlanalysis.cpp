@@ -27,7 +27,7 @@ SqlAnalysis::SqlAnalysis(DB* db,MainWindow* m)
     this->m = m;
 }
 
-void SqlAnalysis::parse_sql(QString qsql) {
+QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
     /**
     *  sql语句预处理:全部转换为大写
     */
@@ -249,19 +249,21 @@ void SqlAnalysis::parse_sql(QString qsql) {
         if((*columns)[0]=="*"){
             for(Table* tb : db->getTable()){
                 if(tb->getName()==QString(QString::fromLocal8Bit(table_name.data()))){
-                    m->showTableAll(db->select(true,QVector<QString>(),QString(QString::fromLocal8Bit(table_name.data())),bs));
+                    //m->showTableAll(db->select(true,QVector<QString>(),QString(QString::fromLocal8Bit(table_name.data())),bs));
+                    return db->select(true,QVector<QString>(),QString(QString::fromLocal8Bit(table_name.data())),bs);
                 }
             }
         }
         else{
             //Bool
-            db->select(false,*columns,QString(QString::fromLocal8Bit(table_name.data())),bs);
+            return db->select(false,*columns,QString(QString::fromLocal8Bit(table_name.data())),bs);
         }
 
 
     } else {
         cout << "Invalid SQL statement" << endl;
     }
+    return QVector<QVector<QString>>();
 }
 
 //int main() {

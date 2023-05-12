@@ -22,21 +22,20 @@ void NewServer::run(){
     qint16 port  =socket_ser->peerPort();
     QString temp = QString("端口是%1，ip地址是%2").arg(port).arg(ip);
     isSet=true;
+    isOnline=true;
+    while(isOnline){
+        if(socket_ser->waitForReadyRead()){
+            qDebug()<<"收到信息";
+        int len = -1;
+        socket_ser->read((char*)&len,sizeof(int));//读取长度
+        qDebug()<<len;
+        char rec[len+1];
+        socket_ser->read(rec,len);//读取字符串
+        rec[len]='\0';
+        qDebug()<<rec;
 
-//    while(isOnline){
-//        while(isSet){
-//            m_mutex.lock();
-//            cout<<1<<endl;
-//        if(socket_ser->waitForReadyRead()){
-//            int rec = -1;
-//            socket_ser->read((char*)&rec,sizeof(int));//读取第一个数
-//            //socket_ser->flush();
-//            qDebug()<<rec;
-//            mode(rec);//跳转相应功能
-//            m_mutex.unlock();
-//        }
-//        }
-//    }
+        }
+    }
 }
 
 

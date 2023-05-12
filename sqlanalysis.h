@@ -19,7 +19,7 @@ class SqlAnalysis
 public:
     SqlAnalysis();
     SqlAnalysis(DB*,MainWindow*);
-    void parse_sql(QString sql);//sql语句传入
+    QVector<QVector<QString>> parse_sql(QString sql);//sql语句传入
     void trim_create(QString,QVector<QString>*);//sql语句修剪-表添加
     void trim_insert(QString,QString,QVector<QString>*,QVector<QString>*);//sql语句修剪-行添加
     void trim_delete(QString,QVector<QString>*);//sql语句修剪-行删除

@@ -5,6 +5,7 @@
 #include<QMouseEvent>
 #include<QGraphicsDropShadowEffect>
 #include"mainwindow.h"
+#include"client.h"
 
 
 QString button_start = "QPushButton{color:white;background-color:rgb(14 , 150 , 254);border-radius:5px;}";
@@ -50,9 +51,19 @@ Login::~Login()
 
 void Login::on_pushButton_clicked()
 {
-    MainWindow* mw = new MainWindow;
-    mw->show();
-    this->hide();
+    if(ui->lineEdit_2->text()==""){
+        MainWindow* mw = new MainWindow;
+        mw->show();
+        this->hide();
+    }
+    else{
+        Client* c = new Client();
+        c->start();
+        MainWindow* mw = new MainWindow;
+        mw->show();
+        this->hide();
+    }
+
 }
 
 

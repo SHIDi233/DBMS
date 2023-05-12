@@ -13,6 +13,7 @@ SOURCES += \
     basic_data.cpp \
     boolstat.cpp \
     btree.cpp \
+    client.cpp \
     column.cpp \
     db.cpp \
     file.cpp \
@@ -37,6 +38,7 @@ HEADERS += \
     basic_data.h \
     boolstat.h \
     btree.h \
+    client.h \
     column.h \
     db.h \
     file.h \

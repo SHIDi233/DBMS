@@ -208,7 +208,9 @@ void MainWindow::on_pushButton_7_clicked()
     //执行语句
     SqlAnalysis sa(db,this);
     for(QString s : list){
-        sa.parse_sql(s);
+        if(s=="")
+            continue;
+        showTableAll(sa.parse_sql(s));
         showList();
     }
 }

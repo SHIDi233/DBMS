@@ -10,19 +10,10 @@ Highlighter::Highlighter(QTextDocument *parent)
     //keywordFormat.setForeground(Qt::darkBlue);
     keywordFormat.setForeground(Qt::red);
     keywordFormat.setFontWeight(QFont::Bold);
-    const QString keywordPatterns[] = {
-        QStringLiteral("\\bchar\\b"), QStringLiteral("\\bclass\\b"), QStringLiteral("\\bconst\\b"),
-        QStringLiteral("\\bdouble\\b"), QStringLiteral("\\benum\\b"), QStringLiteral("\\bexplicit\\b"),
-        QStringLiteral("\\bfriend\\b"), QStringLiteral("\\binline\\b"), QStringLiteral("\\bint\\b"),
-        QStringLiteral("\\blong\\b"), QStringLiteral("\\bnamespace\\b"), QStringLiteral("\\boperator\\b"),
-        QStringLiteral("\\bprivate\\b"), QStringLiteral("\\bprotected\\b"), QStringLiteral("\\bpublic\\b"),
-        QStringLiteral("\\bshort\\b"), QStringLiteral("\\bsignals\\b"), QStringLiteral("\\bsigned\\b"),
-        QStringLiteral("\\bslots\\b"), QStringLiteral("\\bstatic\\b"), QStringLiteral("\\bstruct\\b"),
-        QStringLiteral("\\btemplate\\b"), QStringLiteral("\\btypedef\\b"), QStringLiteral("\\btypename\\b"),
-        QStringLiteral("\\bunion\\b"), QStringLiteral("\\bunsigned\\b"), QStringLiteral("\\bvirtual\\b"),
-        QStringLiteral("\\bvoid\\b"), QStringLiteral("\\bvolatile\\b"), QStringLiteral("\\bbool\\b"),
+    const QString keywordPatterns[] = {//主关键词
         QStringLiteral("\\bcreate\\b"), QStringLiteral("\\btable\\b"), QStringLiteral("\\bdatabase\\b"),
-        QStringLiteral("\\binsert\\b"), QStringLiteral("\\binto\\b"), QStringLiteral("\\bdelete\\b")
+        QStringLiteral("\\binsert\\b"), QStringLiteral("\\binto\\b"), QStringLiteral("\\bdelete\\b"),
+        QStringLiteral("\\bselect\\b"), QStringLiteral("\\bwhere\\b")
     };
     for (const QString &pattern : keywordPatterns) {
         rule.pattern = QRegularExpression(pattern);
@@ -41,24 +32,27 @@ Highlighter::Highlighter(QTextDocument *parent)
 //! [2]
 
 //! [3]
-    singleLineCommentFormat.setForeground(Qt::red);
+    singleLineCommentFormat.setForeground(Qt::darkGreen);
     rule.pattern = QRegularExpression(QStringLiteral("//[^\n]*"));
     rule.format = singleLineCommentFormat;
     highlightingRules.append(rule);
 
-    multiLineCommentFormat.setForeground(Qt::red);
+    multiLineCommentFormat.setForeground(Qt::blue);
 //! [3]
 
+
+
+
 //! [4]
-    quotationFormat.setForeground(Qt::darkGreen);
-    rule.pattern = QRegularExpression(QStringLiteral("\".*\""));
-    rule.format = quotationFormat;
-    highlightingRules.append(rule);
+//    quotationFormat.setForeground(Qt::darkGreen);
+//    rule.pattern = QRegularExpression(QStringLiteral("\".*\""));
+//    rule.format = quotationFormat;
+//    highlightingRules.append(rule);
 //! [4]
 
 //! [5]//()前名字颜色
     functionFormat.setFontItalic(true);
-    functionFormat.setForeground(Qt::blue);
+    functionFormat.setForeground(Qt::darkYellow);
     rule.pattern = QRegularExpression(QStringLiteral("\\b[A-Za-z0-9_]+(?=\\()"));
     rule.format = functionFormat;
     highlightingRules.append(rule);

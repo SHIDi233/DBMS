@@ -11,6 +11,7 @@
 #include<QTextCodec>
 #include<QMessageBox>
 #include<QProcess>
+#include"sqldebug.h"
 
 Highlighter *highlighter;
 
@@ -52,9 +53,6 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
-
-
 
 void MainWindow::on_pushButton_5_clicked()
 {
@@ -332,5 +330,55 @@ void MainWindow::on_action_5_triggered()
             emit send_table(s);
         }
     }
+}
+
+//检查
+void MainWindow::on_action_7_triggered()
+{
+    ui->textEdit_2->setText("");
+
+    //记录所有语句
+    QString all= ui->textEdit->toPlainText();
+    all=all.replace("\n","");
+    all=all.replace("/",";");
+    QStringList list = all.split(";");
+
+    //预编译
+    //...
+    //执行语句
+    if(this->client==nullptr){//本地连接模式
+        SqlDebug sd;
+//        SqlAnalysis sa(db,this);
+        int i=1;
+        int isFalse[100]={0};
+        for(QString s : list){
+            if(s=="")
+                continue;
+            QString back = sd.parse_sql(s);
+            if(back!=""){
+                //qDebug()<<s+" "+back;
+                qDebug()<<"第"+QString::number(i)+"句问题";
+                isFalse[i]=1;
+            }
+            i++;
+        }
+
+        for(int k=1;k<=100;k++){
+            if(isFalse[k]==1){
+                ui->textEdit_2->setText(ui->textEdit_2->toPlainText()+"→\n");
+            }
+            else{
+                ui->textEdit_2->setText(ui->textEdit_2->toPlainText()+"\n");
+            }
+        }
+    }
+//    else{//网络IP连接模式
+//        SqlAnalysis sa(db,this);
+//        for(QString s : list){
+//            if(s=="")
+//                continue;
+//            emit send_table(s);
+//        }
+//    }
 }
 

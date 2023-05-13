@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1294</width>
-    <height>727</height>
+    <height>732</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -65,19 +65,6 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QScrollBar" name="verticalScrollBar">
-    <property name="geometry">
-     <rect>
-      <x>200</x>
-      <y>50</y>
-      <width>21</width>
-      <height>631</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Vertical</enum>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pushButton_2">
     <property name="geometry">
      <rect>
@@ -117,14 +104,17 @@
     <property name="styleSheet">
      <string notr="true">background-image:url(:/link.png)</string>
     </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
    </widget>
    <widget class="QTreeView" name="treeView">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>50</y>
-      <width>161</width>
-      <height>631</height>
+      <x>30</x>
+      <y>40</y>
+      <width>171</width>
+      <height>661</height>
      </rect>
     </property>
     <property name="editTriggers">
@@ -134,9 +124,9 @@
    <widget class="QTableView" name="tableView">
     <property name="geometry">
      <rect>
-      <x>240</x>
+      <x>250</x>
       <y>370</y>
-      <width>1041</width>
+      <width>1031</width>
       <height>311</height>
      </rect>
     </property>
@@ -151,17 +141,17 @@
     <property name="geometry">
      <rect>
       <x>220</x>
-      <y>10</y>
+      <y>0</y>
       <width>191</width>
-      <height>26</height>
+      <height>31</height>
      </rect>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_7">
     <property name="geometry">
      <rect>
-      <x>1135</x>
-      <y>8</y>
+      <x>1140</x>
+      <y>0</y>
       <width>151</width>
       <height>31</height>
      </rect>
@@ -179,7 +169,7 @@
       <x>50</x>
       <y>0</y>
       <width>181</width>
-      <height>39</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -199,6 +189,56 @@
      <string>UTF-8</string>
     </property>
    </widget>
+   <widget class="QTextEdit" name="textEdit_2">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>50</y>
+      <width>21</width>
+      <height>631</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 0, 0);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="verticalScrollBarPolicy">
+     <enum>Qt::ScrollBarAlwaysOff</enum>
+    </property>
+    <property name="horizontalScrollBarPolicy">
+     <enum>Qt::ScrollBarAlwaysOff</enum>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="textEdit_3">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>40</y>
+      <width>1081</width>
+      <height>661</height>
+     </rect>
+    </property>
+   </widget>
+   <zorder>textEdit_3</zorder>
+   <zorder>pushButton_3</zorder>
+   <zorder>pushButton_4</zorder>
+   <zorder>pushButton</zorder>
+   <zorder>pushButton_2</zorder>
+   <zorder>textEdit</zorder>
+   <zorder>treeView</zorder>
+   <zorder>tableView</zorder>
+   <zorder>comboBox_2</zorder>
+   <zorder>pushButton_7</zorder>
+   <zorder>label</zorder>
+   <zorder>label_2</zorder>
+   <zorder>textEdit_2</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -286,7 +326,7 @@
   </action>
   <action name="action_7">
    <property name="text">
-    <string>开始调试</string>
+    <string>语法检查</string>
    </property>
    <property name="shortcut">
     <string>F5</string>

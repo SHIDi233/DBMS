@@ -37,7 +37,7 @@ Highlighter::Highlighter(QTextDocument *parent)
     rule.format = singleLineCommentFormat;
     highlightingRules.append(rule);
 
-    multiLineCommentFormat.setForeground(Qt::blue);
+    multiLineCommentFormat.setForeground(Qt::darkGreen);
 //! [3]
 
 

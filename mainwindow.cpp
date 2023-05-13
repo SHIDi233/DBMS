@@ -21,6 +21,8 @@ MainWindow::MainWindow(Client* c,QWidget *parent)
 {
     ui->setupUi(this);
 
+    this->setWindowFlags(Qt::FramelessWindowHint);
+
     client = c;
     if(c!=nullptr){
         connect(this,SIGNAL(send_table(QString)),c,SLOT(send(QString)));

@@ -6,12 +6,17 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1294</width>
+    <width>1300</width>
     <height>732</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>CCN</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(24, 24, 24);
+alternate-background-color: rgb(42, 42, 42);
+selection-background-color: rgb(42, 42, 42);</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="pushButton_3">
@@ -102,7 +107,10 @@
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-image:url(:/link.png)</string>
+     <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(31, 31, 31);
+background-image:url(:/link.png)
+</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::NoFrame</enum>
@@ -113,9 +121,13 @@
      <rect>
       <x>30</x>
       <y>40</y>
-      <width>171</width>
+      <width>181</width>
       <height>661</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(31, 31, 31);
+color: rgb(255, 255, 255);</string>
     </property>
     <property name="editTriggers">
      <set>QAbstractItemView::NoEditTriggers</set>
@@ -127,7 +139,7 @@
       <x>250</x>
       <y>370</y>
       <width>1031</width>
-      <height>311</height>
+      <height>301</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -135,6 +147,9 @@
       <horstretch>0</horstretch>
       <verstretch>0</verstretch>
      </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
     </property>
    </widget>
    <widget class="QComboBox" name="comboBox_2">
@@ -145,6 +160,12 @@
       <width>191</width>
       <height>31</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(29,  29, 29);
+color: rgb(255, 255, 255);
+border-width: 1px;border-color: rgb(204, 204, 204);
+border-style: solid;</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_7">
@@ -157,7 +178,9 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true"/>
+     <string notr="true">color: rgb(255, 255, 255);
+border-width: 1px;border-color: rgb(204, 204, 204);
+border-style: solid;</string>
     </property>
     <property name="text">
      <string>执行</string>
@@ -168,9 +191,12 @@
      <rect>
       <x>50</x>
       <y>0</y>
-      <width>181</width>
+      <width>131</width>
       <height>31</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(204, 204, 204);</string>
     </property>
     <property name="text">
      <string>TextLabel</string>
@@ -180,10 +206,13 @@
     <property name="geometry">
      <rect>
       <x>1190</x>
-      <y>680</y>
-      <width>101</width>
-      <height>16</height>
+      <y>676</y>
+      <width>91</width>
+      <height>20</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
     </property>
     <property name="text">
      <string>UTF-8</string>
@@ -204,7 +233,9 @@
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: rgb(255, 0, 0);</string>
+     <string notr="true">
+color: rgb(255, 0, 0);
+background-color: rgb(31, 31, 31);</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::NoFrame</enum>
@@ -225,7 +256,21 @@
       <height>661</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(29, 29, 29);</string>
+    </property>
    </widget>
+   <widget class="QTextEdit" name="textEdit_5">
+    <property name="geometry">
+     <rect>
+      <x>1140</x>
+      <y>0</y>
+      <width>151</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <zorder>textEdit_5</zorder>
    <zorder>textEdit_3</zorder>
    <zorder>pushButton_3</zorder>
    <zorder>pushButton_4</zorder>
@@ -245,11 +290,37 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1294</width>
-     <height>26</height>
+     <width>1300</width>
+     <height>28</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">selection-background-color: rgb(42, 42, 42);
+
+background-color: rgb(24, 24, 24);
+alternate-background-color: rgb(42, 42, 42);
+color: rgb(191, 191, 191);</string>
+   </property>
+   <property name="defaultUp">
+    <bool>false</bool>
+   </property>
    <widget class="QMenu" name="menu1">
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
     <property name="title">
      <string>文件</string>
     </property>
@@ -260,6 +331,14 @@
     <addaction name="action_4"/>
    </widget>
    <widget class="QMenu" name="menu">
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
     <property name="title">
      <string>运行</string>
     </property>
@@ -268,12 +347,25 @@
     <addaction name="action_7"/>
    </widget>
    <widget class="QMenu" name="menu_2">
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
     <property name="title">
      <string>扩展</string>
     </property>
     <addaction name="action_6"/>
    </widget>
    <widget class="QMenu" name="menu_3">
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
     <property name="title">
      <string>帮助</string>
     </property>

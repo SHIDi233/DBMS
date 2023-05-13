@@ -20,6 +20,9 @@ void NewServer::send(int* sendMsg){
 void NewServer::run(){
     socket_ser = new QTcpSocket();
     socket_ser->setSocketDescriptor(handle);
+
+    socket_ser->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
+
     QString ip=socket_ser->peerAddress().toString();
     qint16 port  =socket_ser->peerPort();
     QString temp = QString("端口是%1，ip地址是%2").arg(port).arg(ip);

@@ -57,7 +57,7 @@ void Login::on_pushButton_clicked()
         this->hide();
     }
     else{
-        Client* c = new Client();
+        Client* c = new Client(ui->lineEdit_2->text());
         c->start();
 //        MainWindow* mw = new MainWindow;
 //        mw->show();

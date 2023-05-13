@@ -7,6 +7,10 @@
 #include<QVector>
 #include<QMouseEvent>
 #include"highlighter.h"
+#include<QFileDialog>
+#include<QTextCodec>
+#include<QMessageBox>
+#include<QProcess>
 
 Highlighter *highlighter;
 
@@ -19,8 +23,10 @@ MainWindow::MainWindow(Client* c,QWidget *parent)
     client = c;
     if(c!=nullptr){
         connect(this,SIGNAL(send_table(QString)),c,SLOT(send(QString)));
+        ui->label->setText("远程数据库");
     }
     //user.createDb("testDB");
+    ui->label->setText("未选定数据库");
 
     user.loadDB();
 
@@ -98,6 +104,13 @@ void MainWindow::showList(){
         i++;
     }
 
+    if(i==0){//首次使用创建root数据库
+        user.createDb("root");
+        int ret2 = QMessageBox::information(this, tr("CCN"),tr("首次使用，需要重启程序完成配置!"), QMessageBox::Ok);
+        qApp->quit();
+            QProcess::startDetached(qApp->applicationFilePath(), QStringList());
+    }
+
     model->setHorizontalHeaderLabels(QStringList()<<"Manage");
 
     //设置model
@@ -115,6 +128,7 @@ void MainWindow::on_pushButton_7_clicked()
     //记录所有语句
     QString all= ui->textEdit->toPlainText();
     all=all.replace("\n","");
+    all=all.replace("/",";");
     QStringList list = all.split(";");
 
     //预编译
@@ -196,7 +210,127 @@ void MainWindow::on_treeView_doubleClicked(const QModelIndex &index)
        QVariant db_name = inp.data();
        QString qs_db = db_name.toString();
        db = user.getDB(qs_db);
+       ui->label->setText(qs_db);
     }
     return;
+}
+
+//打开文件
+void MainWindow::on_action1_triggered()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Sql"),
+                                                      "/home",
+                                                      tr("sql (*.sql *.txt *.cpp)"));
+    if(fileName=="")
+        return;
+    QString displayString;
+    QFile file(fileName);
+    //目标文件路径
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        qDebug()<<"Can't open the file!";
+        return;
+    }
+    this->fileName = fileName;
+    QTextCodec *codec = QTextCodec::codecForName("utf-8");
+    QByteArray arr = file.readAll();
+    ui->textEdit->clear();
+    ui->textEdit->setPlainText(codec->toUnicode(arr));
+    file.close();
+}
+
+
+void MainWindow::on_action_4_triggered()
+{
+    qApp->quit();
+}
+
+//保存文件
+void MainWindow::on_action_triggered()
+{
+    if(fileName=="")
+        return;
+
+    QFile file(fileName);
+    //以文本方式打开
+    if( file.open(QIODevice::WriteOnly | QIODevice::Text) )
+    {
+//        QTextCodec *codec = QTextCodec::codecForName("utf-8");
+        QTextStream out(&file); //IO设备对象的地址对其进行初始化
+        out.setCodec("UTF-8");
+
+        QString tem1 = ui->textEdit->toPlainText();
+        string std = tem1.toStdString();
+        QByteArray arr = tem1.toUtf8();
+
+        out << arr; //输出
+        file.close();
+     }
+}
+
+//另存为
+void MainWindow::on_action_2_triggered()
+{
+    QFileDialog dlg(this);
+
+    //获取内容的保存路径
+    QString fileName = dlg.getSaveFileName(this, tr("保存sql到"), "./", tr("Sql File(*.sql)"));
+
+    if( fileName == "" )
+    {
+        return;
+    }
+    QFile file(fileName);
+
+    //以文本方式打开
+    if( file.open(QIODevice::WriteOnly | QIODevice::Text) )
+    {
+//        QTextCodec *codec = QTextCodec::codecForName("utf-8");
+        QTextStream out(&file); //IO设备对象的地址对其进行初始化
+        out.setCodec("UTF-8");
+
+        QString tem1 = ui->textEdit->toPlainText();
+        string std = tem1.toStdString();
+        QByteArray arr = tem1.toUtf8();
+
+        out << arr; //输出
+        file.close();
+     }
+}
+
+
+void MainWindow::on_action_5_triggered()
+{
+    if(db==nullptr&&this->client==nullptr){
+        qDebug()<<"未选定数据库";
+        return;
+    }
+
+    //记录所有语句
+    QString all= ui->textEdit->toPlainText();
+    all=all.replace("\n","");
+    all=all.replace("/",";");
+    QStringList list = all.split(";");
+
+    //预编译
+    //...
+    //执行语句
+    if(this->client==nullptr){//本地连接模式
+        SqlAnalysis sa(db,this);
+        for(QString s : list){
+            if(s=="")
+                continue;
+            showTableAll(sa.parse_sql(s));
+            showList();
+        }
+    }
+    else{//网络IP连接模式
+        SqlAnalysis sa(db,this);
+        for(QString s : list){
+            if(s=="")
+                continue;
+            emit send_table(s);
+        }
+    }
 }
 

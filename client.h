@@ -13,7 +13,7 @@ class Client : public QThread
 {
     Q_OBJECT
 public:
-    Client();
+    Client(QString ip);
     void run() override;
 
 signals:
@@ -27,6 +27,8 @@ private:
 
     int receive_int();
     QString receive_QS(int);
+
+    QString ip;
 
 };
 

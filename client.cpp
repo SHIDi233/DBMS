@@ -8,12 +8,14 @@
 
 MainWindow* mw;
 
-Client::Client(){
+Client::Client(QString ip){
     qRegisterMetaType<QVector<QVector<QString>>>("QVector<QVector<QString>>");//注册diskInformation类型
 
     mw = new MainWindow(this);
     mw->show();
     connect(this,SIGNAL(back(QVector<QVector<QString>>)),mw,SLOT(showTableAll(QVector<QVector<QString>>)));
+
+    this->ip = ip;
 }
 
 void Client::run(){
@@ -47,6 +49,9 @@ void Client::run(){
 
 
         }
+
+        socket_client->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
+
         while(isOnline){
             if(socket_client->waitForReadyRead()){
             QVector<QVector<QString>> data;

@@ -16,16 +16,18 @@
 using namespace std;
 
 
-SqlAnalysis::SqlAnalysis(DB* db)
+SqlAnalysis::SqlAnalysis(DB* db,NewServer* ns)
 {
     this->db = db;
     m = nullptr;
+    this->ns = ns;
 }
 
 SqlAnalysis::SqlAnalysis(DB* db,MainWindow* m)
 {
     this->db = db;
     this->m = m;
+    this->ns =  nullptr;
 }
 
 QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
@@ -52,6 +54,9 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
     }
 
     string sql = qsql.toStdString();
+
+    // USE DATABASE 语句的正则表达式
+    regex use_db_pattern(R"(USE\s+(\w+))");
 
     // CREATE DATABASE 语句的正则表达式
     regex create_db_pattern(R"(CREATE\s+DATABASE\s+(\w+))");
@@ -88,7 +93,21 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
             R"(SELECT\s+(.+)\s+FROM\s+(\w+)(?:\s+WHERE\s+(.+))?(?:\s+GROUP\s+BY\s+(.+))?(?:\s+HAVING\s+(.+))?(?:\s+ORDER\s+BY\s+(.+))?)");
 
     smatch match;
-    if (regex_match(sql, match, create_db_pattern)) {
+    if (regex_match(sql, match, use_db_pattern)) {
+        // 匹配 USE 语句
+        string db_name = match[1];
+        QString name = QString(QString::fromLocal8Bit(db_name.data()));
+
+        if(ns!=nullptr){
+            ns->db_name = name;
+        }
+        //cout << "CREATE TABLE statement" << "\ntable  name:" << table_name << "\ncolumn list:" <<" (" << columns_str << ")\n" << endl;
+
+        //......调用CREATE函数操作
+        //m->appendText(user.createDb(QString(QString::fromLocal8Bit(db_name.data()))));
+
+    }
+    else if (regex_match(sql, match, create_db_pattern)) {
         // 匹配 CREATE TABLE 语句
         string db_name = match[1];
 

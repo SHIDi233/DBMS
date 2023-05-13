@@ -1,6 +1,5 @@
 ﻿#include "newserver.h"
 #include "control.h"
-#include "db.h"
 #include "sqlanalysis.h"
 
 NewServer::NewServer(qintptr handle)
@@ -30,7 +29,7 @@ void NewServer::run(){
 
     user.loadDB();
 
-    DB* db = user.getDB("testDB");
+    //db = user.getDB("testDB");
 
 
 
@@ -45,8 +44,10 @@ void NewServer::run(){
             rec[len]='\0';
             qDebug()<<rec;
 
+            db = user.getDB(db_name);
+
             QString s(rec);
-            SqlAnalysis sa(db);
+            SqlAnalysis sa(db,this);
             QVector<QVector<QString>> out = sa.parse_sql(s);
             socket_ser->flush();
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1133</width>
-    <height>655</height>
+    <width>1311</width>
+    <height>711</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,8 +17,8 @@
    <widget class="QPushButton" name="pushButton_3">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>10</y>
+      <x>780</x>
+      <y>0</y>
       <width>81</width>
       <height>81</height>
      </rect>
@@ -33,7 +33,7 @@
    <widget class="QPushButton" name="pushButton_4">
     <property name="geometry">
      <rect>
-      <x>220</x>
+      <x>820</x>
       <y>10</y>
       <width>81</width>
       <height>81</height>
@@ -49,7 +49,7 @@
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>850</x>
       <y>10</y>
       <width>81</width>
       <height>81</height>
@@ -65,27 +65,11 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_5">
-    <property name="geometry">
-     <rect>
-      <x>620</x>
-      <y>60</y>
-      <width>51</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true"/>
-    </property>
-    <property name="text">
-     <string>运行</string>
-    </property>
-   </widget>
    <widget class="QScrollBar" name="verticalScrollBar">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>110</y>
+      <x>200</x>
+      <y>170</y>
       <width>21</width>
       <height>511</height>
      </rect>
@@ -97,7 +81,7 @@
    <widget class="QPushButton" name="pushButton_2">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>750</x>
       <y>10</y>
       <width>81</width>
       <height>81</height>
@@ -119,9 +103,9 @@
    <widget class="QTextEdit" name="textEdit">
     <property name="geometry">
      <rect>
-      <x>180</x>
-      <y>110</y>
-      <width>951</width>
+      <x>240</x>
+      <y>170</y>
+      <width>1041</width>
       <height>511</height>
      </rect>
     </property>
@@ -134,85 +118,26 @@
      <string notr="true">background-image:url(:/link.png)</string>
     </property>
    </widget>
-   <widget class="QTextEdit" name="textEdit_3">
-    <property name="geometry">
-     <rect>
-      <x>450</x>
-      <y>0</y>
-      <width>551</width>
-      <height>41</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_6">
-    <property name="geometry">
-     <rect>
-      <x>680</x>
-      <y>60</y>
-      <width>51</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true"/>
-    </property>
-    <property name="text">
-     <string>添加表</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit">
-    <property name="geometry">
-     <rect>
-      <x>450</x>
-      <y>50</y>
-      <width>113</width>
-      <height>21</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_2">
-    <property name="geometry">
-     <rect>
-      <x>450</x>
-      <y>80</y>
-      <width>113</width>
-      <height>21</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QTreeView" name="treeView">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>110</y>
+      <x>40</x>
+      <y>170</y>
       <width>161</width>
       <height>511</height>
      </rect>
     </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_7">
-    <property name="geometry">
-     <rect>
-      <x>1080</x>
-      <y>60</y>
-      <width>51</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true"/>
-    </property>
-    <property name="text">
-     <string>执行</string>
+    <property name="editTriggers">
+     <set>QAbstractItemView::NoEditTriggers</set>
     </property>
    </widget>
    <widget class="QTableView" name="tableView">
     <property name="geometry">
      <rect>
-      <x>180</x>
-      <y>280</y>
-      <width>951</width>
-      <height>341</height>
+      <x>240</x>
+      <y>370</y>
+      <width>1041</width>
+      <height>311</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -222,17 +147,131 @@
      </sizepolicy>
     </property>
    </widget>
+   <widget class="QComboBox" name="comboBox_2">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>110</y>
+      <width>191</width>
+      <height>26</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_7">
+    <property name="geometry">
+     <rect>
+      <x>1125</x>
+      <y>108</y>
+      <width>151</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>执行</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>100</y>
+      <width>181</width>
+      <height>39</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1133</width>
+     <width>1311</width>
      <height>26</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu1">
+    <property name="title">
+     <string>文件</string>
+    </property>
+    <addaction name="action1"/>
+    <addaction name="action"/>
+    <addaction name="action_2"/>
+    <addaction name="separator"/>
+    <addaction name="action_4"/>
+   </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>运行</string>
+    </property>
+    <addaction name="action_5"/>
+    <addaction name="separator"/>
+    <addaction name="action_7"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>扩展</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menu_3">
+    <property name="title">
+     <string>帮助</string>
+    </property>
+    <addaction name="action_8"/>
+    <addaction name="separator"/>
+    <addaction name="action_CCN"/>
+   </widget>
+   <addaction name="menu1"/>
+   <addaction name="menu"/>
+   <addaction name="menu_2"/>
+   <addaction name="menu_3"/>
   </widget>
+  <action name="action1">
+   <property name="text">
+    <string>打开文件</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="text">
+    <string>保存文件</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>文件另存为</string>
+   </property>
+  </action>
+  <action name="action_4">
+   <property name="text">
+    <string>退出</string>
+   </property>
+  </action>
+  <action name="action_5">
+   <property name="text">
+    <string>命令执行</string>
+   </property>
+  </action>
+  <action name="action_7">
+   <property name="text">
+    <string>开始调试</string>
+   </property>
+  </action>
+  <action name="action_8">
+   <property name="text">
+    <string>检查更新</string>
+   </property>
+  </action>
+  <action name="action_CCN">
+   <property name="text">
+    <string>关于CCN</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

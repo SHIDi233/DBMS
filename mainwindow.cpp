@@ -24,9 +24,11 @@ MainWindow::MainWindow(Client* c,QWidget *parent)
 
     user.loadDB();
 
-    showList();
+    if(c==nullptr){
+        showList();
+    }
 
-    db = user.getDB("testDB");
+    //db = user.getDB("testDB");
 
 
     QFont font;
@@ -37,6 +39,7 @@ MainWindow::MainWindow(Client* c,QWidget *parent)
     ui->textEdit->setFont(font);
     highlighter = new Highlighter(ui->textEdit->document());
 
+    ui->comboBox_2->addItem("sql");
 }
 
 MainWindow::~MainWindow()
@@ -49,21 +52,21 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_5_clicked()
 {
-    QString tableName = ui->lineEdit->text();
-    if(tableName.isEmpty()) { return; }
-    db->createTable(tableName);
+//    QString tableName = ui->lineEdit->text();
+//    if(tableName.isEmpty()) { return; }
+//    db->createTable(tableName);
 }
 
 
 void MainWindow::on_pushButton_6_clicked()
 {
-    QString tableName = ui->lineEdit->text();
-    if(tableName.isEmpty()) { return; }
-    QString columnName = ui->lineEdit_2->text();
-    if(columnName.isEmpty()) { return; }
-    db->addColumn(tableName, columnName, TYPE::INTEGER, 4);
+//    QString tableName = ui->lineEdit->text();
+//    if(tableName.isEmpty()) { return; }
+//    QString columnName = ui->lineEdit_2->text();
+//    if(columnName.isEmpty()) { return; }
+//    db->addColumn(tableName, columnName, TYPE::INTEGER, 4);
 
-    showList();
+//    showList();
 }
 
 
@@ -104,6 +107,11 @@ void MainWindow::showList(){
 
 void MainWindow::on_pushButton_7_clicked()
 {
+    if(db==nullptr&&this->client==nullptr){
+        qDebug()<<"未选定数据库";
+        return;
+    }
+
     //记录所有语句
     QString all= ui->textEdit->toPlainText();
     all=all.replace("\n","");
@@ -179,3 +187,16 @@ void MainWindow::showTableAll(QVector<QVector<QString>> table){
 void MainWindow::appendText(QString output){
     ui->textEdit->setText(ui->textEdit->toPlainText()+"\n"+output);//附加输出
 }
+
+void MainWindow::on_treeView_doubleClicked(const QModelIndex &index)
+{
+    QModelIndex inp=index;
+    QModelIndex parent =inp.parent();
+    if(parent.column()==-1){//选定为数据库
+       QVariant db_name = inp.data();
+       QString qs_db = db_name.toString();
+       db = user.getDB(qs_db);
+    }
+    return;
+}
+

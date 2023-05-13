@@ -7,6 +7,7 @@
 #include<QThread>
 #include<QMutex>
 #include<iostream>
+#include"db.h"
 using namespace std;
 
 
@@ -16,8 +17,9 @@ class NewServer : public QThread
 public:
     NewServer(qintptr);
     void run() override;//伪线程启动
+    QString db_name = "";
+
 public slots:
-    //void set(qintptr handle);
 signals:
     void st(qintptr handle);
 private:
@@ -33,7 +35,7 @@ private:
 
     int number;//账号
 
-
+    DB* db;
     //信息发送区(单体)
     /***************/
     void send(QByteArray);//单体发送信息

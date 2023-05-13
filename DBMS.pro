@@ -27,6 +27,7 @@ SOURCES += \
     row.cpp \
     server.cpp \
     sqlanalysis.cpp \
+    sqldebug.cpp \
     table.cpp \
     tableinfo.cpp \
     user.cpp \
@@ -51,6 +52,7 @@ HEADERS += \
     row.h \
     server.h \
     sqlanalysis.h \
+    sqldebug.h \
     table.h \
     tableinfo.h \
     user.h \

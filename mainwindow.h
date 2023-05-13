@@ -18,7 +18,7 @@ public:
     MainWindow(Client* c = nullptr,QWidget *parent = nullptr);
     //MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    DB* db;
+    DB* db = nullptr;
 
     void showTable(QVector<QString>,QVector<QVector<QString>>);
     //void showTableAll(QVector<QVector<QString>>);//显示表信息
@@ -31,6 +31,8 @@ private slots:
     void on_pushButton_6_clicked();
 
     void on_pushButton_7_clicked();
+
+    void on_treeView_doubleClicked(const QModelIndex &index);
 
 private:
     Ui::MainWindow *ui;

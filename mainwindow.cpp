@@ -12,6 +12,7 @@
 #include<QMessageBox>
 #include<QProcess>
 #include"sqldebug.h"
+#include<QToolBar>
 
 Highlighter *highlighter;
 
@@ -22,6 +23,9 @@ MainWindow::MainWindow(Client* c,QWidget *parent)
     ui->setupUi(this);
 
     this->setWindowFlags(Qt::FramelessWindowHint);
+
+    QMenuBar *mBar=menuBar();
+    mBar->setGeometry(10,25,1300,769);
 
     client = c;
     if(c!=nullptr){
@@ -111,9 +115,11 @@ void MainWindow::showList(){
             QProcess::startDetached(qApp->applicationFilePath(), QStringList());
     }
 
-    model->setHorizontalHeaderLabels(QStringList()<<"Manage");
+    //model->setHorizontalHeaderLabels(QStringList()<<"Manage");
+    model->setHorizontalHeaderLabels(QStringList()<<"");
 
     //设置model
+
     ui->treeView->setModel(model);
 }
 
@@ -182,12 +188,12 @@ void MainWindow::showTableAll(QVector<QVector<QString>> table){
     for(QVector<QString> qs : table){
         k=0;
         for(QString s:qs){
-            if(j==0){
-                model->setHorizontalHeaderItem(k, new QStandardItem(s));
-            }
-            else{
+//            if(j==0){
+//                model->setHorizontalHeaderItem(k, new QStandardItem(s));
+//            }
+//            else{
                 model->setItem(j, k, new QStandardItem(s));
-            }
+            //}
             k++;
         }
         model->setHeaderData(0,Qt::Vertical, QString::number(j));
@@ -383,4 +389,5 @@ void MainWindow::on_action_7_triggered()
 //        }
 //    }
 }
+
 

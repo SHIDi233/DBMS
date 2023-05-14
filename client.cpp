@@ -5,13 +5,14 @@
 #include"mainwindow.h"
 #include<stdlib.h>
 #include <QMetaType>
+#include"ccnwindow.h"
 
-MainWindow* mw;
+CCNWindow* mw;
 
 Client::Client(QString ip){
     qRegisterMetaType<QVector<QVector<QString>>>("QVector<QVector<QString>>");//注册diskInformation类型
 
-    mw = new MainWindow(this);
+    mw = new CCNWindow(this);
     mw->show();
     connect(this,SIGNAL(back(QVector<QVector<QString>>)),mw,SLOT(showTableAll(QVector<QVector<QString>>)));
 

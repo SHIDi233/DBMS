@@ -47,6 +47,7 @@ private slots:
 
     void on_action_7_triggered();
 
+
 private:
     Ui::MainWindow *ui;
 
@@ -55,6 +56,8 @@ private:
     Client * client;
 
     QString fileName;//当前打开的文件
+
+
 
 };
 #endif // MAINWINDOW_H

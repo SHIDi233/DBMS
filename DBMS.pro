@@ -13,6 +13,8 @@ SOURCES += \
     basic_data.cpp \
     boolstat.cpp \
     btree.cpp \
+    ccnbutton.cpp \
+    ccnwindow.cpp \
     client.cpp \
     column.cpp \
     db.cpp \
@@ -39,6 +41,8 @@ HEADERS += \
     basic_data.h \
     boolstat.h \
     btree.h \
+    ccnbutton.h \
+    ccnwindow.h \
     client.h \
     column.h \
     db.h \
@@ -60,6 +64,7 @@ HEADERS += \
     wktcpserver.h
 
 FORMS += \
+    ccnwindow.ui \
     login.ui \
     mainwindow.ui
 

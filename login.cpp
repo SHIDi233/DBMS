@@ -43,6 +43,9 @@ Login::Login(QWidget *parent) :
     ui->label_6->setGeometry(QRect(ui->label_6->geometry().left()+1,ui->label_6->geometry().top(),
                                    ui->label_6->geometry().width()-1,ui->label_6->geometry().height()));
 
+    ui->pushButton->setEnter(button_hover);
+    ui->pushButton->setLeave(button_start);
+
 }
 
 Login::~Login()

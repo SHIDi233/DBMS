@@ -78,7 +78,7 @@ border:0px;</string>
      <string>×</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="CCNButton" name="pushButton_2">
     <property name="geometry">
      <rect>
       <x>1390</x>
@@ -101,7 +101,7 @@ border:0px;</string>
      <string>□</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_3">
+   <widget class="CCNButton" name="pushButton_3">
     <property name="geometry">
      <rect>
       <x>1350</x>
@@ -124,6 +124,25 @@ border:0px;</string>
      <string>－</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>1</x>
+      <y>1</y>
+      <width>31</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border:0px;</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="pic.qrc">:/image/user_icon.png</pixmap>
+    </property>
+   </widget>
   </widget>
  </widget>
  <customwidgets>
@@ -133,6 +152,8 @@ border:0px;</string>
    <header location="global">ccnbutton.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="pic.qrc"/>
+ </resources>
  <connections/>
 </ui>

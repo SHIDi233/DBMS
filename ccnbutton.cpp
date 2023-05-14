@@ -1,4 +1,6 @@
 ﻿#include "ccnbutton.h"
+#include<QString>
+
 
 CCNButton::CCNButton(QWidget* parent) :QPushButton(parent)
 {
@@ -10,11 +12,18 @@ CCNButton::~CCNButton()
 
 void CCNButton::enterEvent(QEvent *)
 {
-    setStyleSheet("QPushButton{background-color:rgb(255,0,0);color: rgb(255, 255, 255);selection-background-color: rgb(255, 0, 0);border:0px;}");
+    setStyleSheet(s_close_1);
 }
 
 void CCNButton::leaveEvent(QEvent *)
 {
-    setStyleSheet("QPushButton{color: rgb(255, 255, 255);selection-background-color: rgb(255, 0, 0);border:0px;}");
+    setStyleSheet(s_close_2);
 }
 
+void CCNButton::setEnter(QString s){
+    s_close_1 = s;
+}
+
+void CCNButton::setLeave(QString s){
+    s_close_2 = s;
+}

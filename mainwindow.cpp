@@ -53,6 +53,9 @@ MainWindow::MainWindow(Client* c,QWidget *parent)
     highlighter = new Highlighter(ui->textEdit->document());
 
     ui->comboBox_2->addItem("sql");
+
+    ui->pushButton_7->setEnter("color: rgb(255, 255, 255);border-width: 1px;border-color: rgb(14 , 150 , 254);border-style: solid;border-radius:5px;background-color:rgb(14 , 135 , 228);");
+    ui->pushButton_7->setLeave("color: rgb(255, 255, 255);border-width: 1px;border-color: rgb(14 , 135 , 228);border-style: solid;border-radius:5px;background-color:rgb(14 , 150 , 254);");
 }
 
 MainWindow::~MainWindow()

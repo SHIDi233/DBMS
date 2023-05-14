@@ -27,6 +27,22 @@ CCNWindow::CCNWindow(Client* c,QWidget *parent) :
     ui->gridLayout->addWidget(mw);//添加到Layout中
     connect(this,SIGNAL(_showTableAll(QVector<QVector<QString>>)),mw,SLOT(showTableAll(QVector<QVector<QString>>)));
 
+
+    QPixmap pix("://image/user_icon.png");
+    pix.scaled(ui->label_2->size(), Qt::KeepAspectRatio);
+    ui->label_2->setPixmap(pix);
+    ui->label_2->setScaledContents(true);
+
+
+    ui->pushButton->setEnter("QPushButton{background-color:rgb(255,0,0);color: rgb(255, 255, 255);selection-background-color: rgb(255, 0, 0);border:0px;}");
+    ui->pushButton->setLeave("QPushButton{color: rgb(255, 255, 255);selection-background-color: rgb(255, 0, 0);border:0px;}");
+
+    ui->pushButton_2->setEnter("QPushButton{background-color:rgb(200,200,200);color: rgb(255, 255, 255);selection-background-color: rgb(255, 0, 0);border:0px;}");
+    ui->pushButton_2->setLeave("QPushButton{color: rgb(255, 255, 255);selection-background-color: rgb(255, 0, 0);border:0px;}");
+
+    ui->pushButton_3->setEnter("QPushButton{background-color:rgb(200,200,200);color: rgb(255, 255, 255);selection-background-color: rgb(255, 0, 0);border:0px;}");
+    ui->pushButton_3->setLeave("QPushButton{color: rgb(255, 255, 255);selection-background-color: rgb(255, 0, 0);border:0px;}");
+
 }
 
 CCNWindow::~CCNWindow()

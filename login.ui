@@ -18,7 +18,7 @@
 background-color: rgb(255, 255, 255);</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton">
+   <widget class="CCNButton" name="pushButton">
     <property name="geometry">
      <rect>
       <x>120</x>
@@ -248,6 +248,13 @@ border-radius:21px;</string>
    <zorder>label_2</zorder>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CCNButton</class>
+   <extends>QPushButton</extends>
+   <header location="global">ccnbutton.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="pic.qrc"/>
  </resources>

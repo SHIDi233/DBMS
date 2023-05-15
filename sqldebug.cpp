@@ -88,32 +88,36 @@ QString SqlDebug::parse_sql(QString qsql) {
        // 匹配 USE 语句
        string db_name = match[1];
        QString name = QString(QString::fromLocal8Bit(db_name.data()));
-
+        return "";
 
    }
    else if (regex_match(sql, match, create_db_pattern)) {
        // 匹配 CREATE TABLE 语句
        string db_name = match[1];
+       return "";
    }
    else if (regex_match(sql, match, create_table_pattern)) {
        // 匹配 CREATE TABLE 语句
        string table_name = match[1];
        string columns_str = match[2];
+       return "";
    }else if(regex_match(sql, match, desc_table_pattern)){
        //匹配 Desc 语句
        string table_name = match[1];
        //db->
+       return "";
 
    }else if (regex_match(sql, match, insert_into_pattern)) {
        // 匹配 INSERT INTO 语句
        string table_name = match[1];
        string columns_str = match[2];
        string values_str = match[3];
+       return "";
    } else if (regex_match(sql, match, delete_from_pattern)) {
        // 匹配 DELETE FROM 语句
        string table_name = match[1];
        string condition = match[2];
-
+        return "";
 
 
    } else if (regex_match(sql, match, update_pattern)) {
@@ -121,18 +125,18 @@ QString SqlDebug::parse_sql(QString qsql) {
        string table_name = match[1];
        string set_clause = match[2];
        string condition = match[3];
-
+        return "";
 
    } else if (regex_match(sql, match, drop_table_pattern)) {
        // 匹配 DROP TABLE 语句
        string table_name = match[1];
-
+    return "";
 
    } else if (regex_match(sql, match, create_index_regex)) {
-
+    return "";
 
    } else if (regex_match(sql, match, drop_index_regex)) {
-
+    return "";
 
        //......调用 DROP INDEX 函数操作
 
@@ -178,12 +182,12 @@ QString SqlDebug::parse_sql(QString qsql) {
        QVector<QString> s = *t;
 
        QVector<BoolStat*> bs;
-
+        return "";
 
    } else {
        return "Invalid SQL statement";
    }
-   return "";
+   return "Invalid SQL statement";
 }
 
 

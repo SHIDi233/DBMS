@@ -90,8 +90,8 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
 
     // SELECT 语句的正则表达式，包括可选的GROUP BY、HAVING和ORDER BY子句
     regex select_pattern(
-            R"(SELECT\s+(.+)\s+FROM\s+(\w+)(?:\s+WHERE\s+(.+))?(?:\s+GROUP\s+BY\s+(.+))?(?:\s+HAVING\s+(.+))?(?:\s+ORDER\s+BY\s+(.+))?)");
-
+            //R"(SELECT\s+(.+)\s+FROM\s+(\w+)(?:\s+WHERE\s+(.+))?(?:\s+GROUP\s+BY\s+(.+))?(?:\s+HAVING\s+(.+))?(?:\s+ORDER\s+BY\s+(.+))?)");
+            R"(SELECT\s+(.+)\s+FROM\s+(.+)(?:\s+WHERE\s+(.+))?(?:\s+GROUP\s+BY\s+(.+))?(?:\s+HAVING\s+(.+))?(?:\s+ORDER\s+BY\s+(.+))?)");
     smatch match;
     if (regex_match(sql, match, use_db_pattern)) {
         // 匹配 USE 语句
@@ -265,22 +265,23 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
             bs.push_back(c);
         }
 
+        QVector<QString> tin;
+        QString tem = QString(QString::fromLocal8Bit(table_name.data()));
+        tem = tem.replace(" ","");
+        QStringList res = tem.split(",");
+        for(QString s : res){
+            tin.push_back(s);
+        }
         //暂时测试表搜索功能语句，非最终版本
         if((*columns)[0]=="*"){
             for(Table* tb : db->getTable()){
                 if(tb->getName()==QString(QString::fromLocal8Bit(table_name.data()))){
-                    //m->showTableAll(db->select(true,QVector<QString>(),QString(QString::fromLocal8Bit(table_name.data())),bs));
-                    QVector<QString> t;
-                    t.push_back(QString(QString::fromLocal8Bit(table_name.data())));
-                    return db->select(true,QVector<QString>(),t,bs);
+                    return db->select(true,QVector<QString>(),tin,bs);
                 }
             }
         }
         else{
-            //Bool
-            QVector<QString> t;
-            t.push_back(QString(QString::fromLocal8Bit(table_name.data())));
-            return db->select(false,*columns,t,bs);
+            return db->select(false,*columns,tin,bs);
         }
 
 

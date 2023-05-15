@@ -298,6 +298,27 @@ QString Table::insertRecord(const QVector<QString>& columnNameList, const QVecto
     }
     if(!isIn) { return "传入字段名有误"; }
 
+    //判断是否符合约束
+    QVector<int> uniqueIndex;
+    for(int i = 0; i < columnNameList.size(); i++) {
+        for(int j = 0; j < integrities.size(); j++) {
+            if(integrities[j]->getField() == columnNameList[i] && integrities[j]->getType() == ITGTYPE::UNIQUE) {
+                uniqueIndex.push_back(i);
+            }
+        }
+    }
+    if(!uniqueIndex.empty()) {
+        QVector<BoolStat*> b;
+        QVector<QVector<QString>> d = select(false, columnNameList, b);
+        for(auto &i : uniqueIndex) {
+            for(auto &d1 : d) {
+                if(d1[i] == valueList[i]) {
+                    return "违反完整性约束";
+                }
+            }
+        }
+    }
+
     //创建新的插入
     Row *newRow = new Row();
     Basic_Data *data = nullptr;

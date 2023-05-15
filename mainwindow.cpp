@@ -114,7 +114,7 @@ void MainWindow::showList(){
 
     if(i==0){//首次使用创建root数据库
         user.createDb("root");
-        int ret2 = QMessageBox::information(this, tr("CCN"),tr("首次使用，需要重启程序完成配置!"), QMessageBox::Ok);
+        int ret2 = QMessageBox::information(nullptr, tr("CCN"),tr("首次使用，需要重启程序完成配置!"), QMessageBox::Ok);
         qApp->quit();
             QProcess::startDetached(qApp->applicationFilePath(), QStringList());
     }

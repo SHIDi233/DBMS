@@ -243,12 +243,20 @@ QString DB::updateRecord(QString tableName, const QVector<QString>& columnNameLi
 }
 
 QVector<QVector<QString>> DB::select(bool isAll, const QVector<QString>& column_names,
-                                     QString tableName, QVector<BoolStat*> boolStats) {
+                                     const QVector<QString>& tableName, QVector<BoolStat*> boolStats) {
+    Table table_tem;
     for(auto &t : tables) {
-        if(tableName.compare(t->getName()) == 0) {
-            return t->select(isAll, column_names, boolStats);
+        bool isFound = false;
+        for(auto &t2 : tableName) {
+            if(t2.compare(t->getName()) == 0) {
+                isFound = true;
+                table_tem = table_tem + t;
+            }
+        }
+        if(!isFound) {
+            QVector<QVector<QString>> res;
+            return res;
         }
     }
-    QVector<QVector<QString>> res;
-    return res;
+    return table_tem.select(isAll, column_names, boolStats);
 }

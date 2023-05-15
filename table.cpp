@@ -211,6 +211,7 @@ QString Table::addColumn(QString columnName, TYPE type, int typeLen, int integri
 
     //创建column类
     Column *column = new Column(columnName, type, typeLen, integrity);
+    column->setTable(getName());
     columns.append(column);
 
     //将字段信息写入[数据库名].db文件中
@@ -416,7 +417,13 @@ QVector<QVector<QString>> Table::select(bool isAll, const QVector<QString>& colu
         bool isOk = true;
         for(auto &b : boolStats) {
             for(int j = 0; j < columns.size(); j++) {
-                if(columns[j]->getName().compare(b->getColumnName()) == 0) {
+                QString columnName_tem;
+                if(b->getColumnName().contains('.')) {
+                    columnName_tem = columns[j]->getName()+"."+columns[i]->getTable();
+                } else {
+                    columnName_tem = columns[j]->getName();
+                }
+                if(columnName_tem.compare(b->getColumnName()) == 0) {
                     if(b->getConnect()) {
                         isOk &= b->judge(rows[i]->getData(j));
                     } else {
@@ -473,7 +480,13 @@ QVector<QVector<QString>> Table::select(bool isAll, const QVector<QString>& colu
     for(int j = 0; j < column_names.size(); j++) {
         isIn = false;
         for(int i = 0; i < columns.size(); i++) {//在字段里寻找是否有同名的
-            if(columns[i]->getName().compare(column_names[j]) == 0 && !isRead[i]) {//找到了就退出
+            QString columnName_tem;
+            if(column_names[j].contains('.')) {
+                columnName_tem = columns[i]->getName()+"."+columns[i]->getTable();
+            } else {
+                columnName_tem = columns[i]->getName();
+            }
+            if(columnName_tem.compare(column_names[j]) == 0 && !isRead[i]) {//找到了就退出
                 isIn = true;
                 isRead[i] = true;
                 indexes[j] = i;

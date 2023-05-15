@@ -17,6 +17,7 @@ private:
 
     char _mtime[32];//最后修改时间
     int _integrities;//完整性约束信息
+    QString _table;//所在表
 public:
     Column(QString name, TYPE type, int typeLen, int integrities);
     Column();
@@ -30,6 +31,9 @@ public:
     int getTypeLen();
     QString getName();
     bool modify(TYPE newType, int newTypeLen, int integrity);
+
+    void setTable(QString table);
+    QString getTable();
 };
 
 #endif // COLUMN_H

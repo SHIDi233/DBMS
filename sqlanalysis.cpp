@@ -270,13 +270,17 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
             for(Table* tb : db->getTable()){
                 if(tb->getName()==QString(QString::fromLocal8Bit(table_name.data()))){
                     //m->showTableAll(db->select(true,QVector<QString>(),QString(QString::fromLocal8Bit(table_name.data())),bs));
-                    return db->select(true,QVector<QString>(),QString(QString::fromLocal8Bit(table_name.data())),bs);
+                    QVector<QString> t;
+                    t.push_back(QString(QString::fromLocal8Bit(table_name.data())));
+                    return db->select(true,QVector<QString>(),t,bs);
                 }
             }
         }
         else{
             //Bool
-            return db->select(false,*columns,QString(QString::fromLocal8Bit(table_name.data())),bs);
+            QVector<QString> t;
+            t.push_back(QString(QString::fromLocal8Bit(table_name.data())));
+            return db->select(false,*columns,t,bs);
         }
 
 

@@ -32,8 +32,8 @@ public:
     QString getName();
     bool modify(TYPE newType, int newTypeLen, int integrity);
 
-    void setTable(QString table);
-    QString getTable();
+    void setTable(QString table){_table=table;};
+    QString getTable(){return _table;};
 };
 
 #endif // COLUMN_H

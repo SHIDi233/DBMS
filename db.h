@@ -58,7 +58,7 @@ public:
 
     QVector<QVector<QString>> select(bool isAll, //如果查询的是*则isAll为true, 此时column_name直接传空数组即可
                    const QVector<QString>& column_names, //所有查询的列名
-                   QString tableName, //表名
+                   const QVector<QString>& tableName, //表名
                    QVector<BoolStat*> boolStats);//查询记录
 
     QString deleteRecord(QString tableName, const QVector<BoolStat*>& boolStats);

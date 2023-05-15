@@ -96,6 +96,23 @@ public:
     QString getName();
     QVector<Column*>& getColumns();
     QList<Row*>& getRows();
+
+    //多表连接
+    Table operator+(Table *const t) {
+        Table res;
+        res.columns.append(this->columns);
+        res.columns.append(t->columns);
+        if(this->rows.isEmpty()) {
+            res.rows.append(t->rows);
+        } else {
+            for(auto &r1 : this->rows) {
+                for(auto &r2 : t->rows) {
+                    res.rows.append(r1->operator+(r2));
+                }
+            }
+        }
+        return res;
+    }
 };
 
 #endif // TABLE_H

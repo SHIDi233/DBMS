@@ -19,5 +19,12 @@ public:
     QString getValue(int index);
     Basic_Data* getData(int index);
     bool setData(int index, QString data);
+
+    Row *operator+(Row *const r) {
+        Row *res = new Row();
+        res->datas.append(this->datas);
+        res->datas.append(r->datas);
+        return res;
+    }
 };
 #endif // ROW_H

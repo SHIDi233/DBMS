@@ -34,6 +34,7 @@ SOURCES += \
     table.cpp \
     tableinfo.cpp \
     user.cpp \
+    view.cpp \
     waittodo.cpp \
     wktcpserver.cpp
 
@@ -62,6 +63,7 @@ HEADERS += \
     table.h \
     tableinfo.h \
     user.h \
+    view.h \
     waittodo.h \
     wktcpserver.h
 

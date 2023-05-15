@@ -13,6 +13,7 @@
 #include<QProcess>
 #include"sqldebug.h"
 #include<QToolBar>
+#include"about.h"
 
 Highlighter *highlighter;
 
@@ -393,4 +394,11 @@ void MainWindow::on_action_7_triggered()
 //    }
 }
 
+
+
+void MainWindow::on_action_CCN_triggered()
+{
+    About* a = new About;
+    a->show();
+}
 

@@ -13,7 +13,8 @@ Highlighter::Highlighter(QTextDocument *parent)
     const QString keywordPatterns[] = {//主关键词
         QStringLiteral("\\bcreate\\b"), QStringLiteral("\\btable\\b"), QStringLiteral("\\bdatabase\\b"),
         QStringLiteral("\\binsert\\b"), QStringLiteral("\\binto\\b"), QStringLiteral("\\bdelete\\b"),
-        QStringLiteral("\\bselect\\b"), QStringLiteral("\\bwhere\\b")
+        QStringLiteral("\\bselect\\b"), QStringLiteral("\\bwhere\\b"),QStringLiteral("\\buse\\b"),
+        QStringLiteral("\\bdrop\\b"),QStringLiteral("\\bupdate\\b"),QStringLiteral("\\bset\\b")
     };
     for (const QString &pattern : keywordPatterns) {
         rule.pattern = QRegularExpression(pattern);
@@ -27,6 +28,12 @@ Highlighter::Highlighter(QTextDocument *parent)
     classFormat.setFontWeight(QFont::Bold);
     classFormat.setForeground(Qt::darkMagenta);
     rule.pattern = QRegularExpression(QStringLiteral("\\bQ[A-Za-z]+\\b"));
+    rule.format = classFormat;
+    highlightingRules.append(rule);
+
+    classFormat.setFontWeight(QFont::Bold);
+    classFormat.setForeground(Qt::darkYellow);
+    rule.pattern = QRegularExpression(QStringLiteral("\\bfrom\\b"));
     rule.format = classFormat;
     highlightingRules.append(rule);
 //! [2]

@@ -10,6 +10,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    about.cpp \
     basic_data.cpp \
     boolstat.cpp \
     btree.cpp \
@@ -38,6 +39,7 @@ SOURCES += \
 
 HEADERS += \
     Control.h \
+    about.h \
     basic_data.h \
     boolstat.h \
     btree.h \
@@ -64,6 +66,7 @@ HEADERS += \
     wktcpserver.h
 
 FORMS += \
+    about.ui \
     ccnwindow.ui \
     login.ui \
     mainwindow.ui

@@ -48,6 +48,8 @@ private slots:
     void on_action_7_triggered();
 
 
+    void on_action_CCN_triggered();
+
 private:
     Ui::MainWindow *ui;
 

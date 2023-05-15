@@ -1,4 +1,5 @@
 QT       += core gui
+QT       += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -12,41 +13,58 @@ SOURCES += \
     basic_data.cpp \
     boolstat.cpp \
     btree.cpp \
+    ccnbutton.cpp \
+    ccnwindow.cpp \
+    client.cpp \
     column.cpp \
     db.cpp \
     file.cpp \
+    highlighter.cpp \
     index.cpp \
     integrity.cpp \
     login.cpp \
     main.cpp \
     mainwindow.cpp \
+    newserver.cpp \
     row.cpp \
+    server.cpp \
     sqlanalysis.cpp \
+    sqldebug.cpp \
     table.cpp \
     tableinfo.cpp \
     user.cpp \
-    waittodo.cpp
+    waittodo.cpp \
+    wktcpserver.cpp
 
 HEADERS += \
     Control.h \
     basic_data.h \
     boolstat.h \
     btree.h \
+    ccnbutton.h \
+    ccnwindow.h \
+    client.h \
     column.h \
     db.h \
     file.h \
+    highlighter.h \
     index.h \
     integrity.h \
     login.h \
     mainwindow.h \
+    newserver.h \
     row.h \
+    server.h \
     sqlanalysis.h \
+    sqldebug.h \
     table.h \
     tableinfo.h \
     user.h \
-    waittodo.h
+    waittodo.h \
+    wktcpserver.h
 
 FORMS += \
+    ccnwindow.ui \
     login.ui \
     mainwindow.ui
 

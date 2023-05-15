@@ -6,103 +6,56 @@
 #include<QStandardItemModel>
 #include<QVector>
 #include<QMouseEvent>
+#include"highlighter.h"
+#include<QFileDialog>
+#include<QTextCodec>
+#include<QMessageBox>
+#include<QProcess>
+#include"sqldebug.h"
+#include<QToolBar>
 
-MainWindow::MainWindow(QWidget *parent)
+Highlighter *highlighter;
+
+MainWindow::MainWindow(Client* c,QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
+    this->setWindowFlags(Qt::FramelessWindowHint);
+
+    QMenuBar *mBar=menuBar();
+    mBar->setGeometry(10,25,1300,769);
+
+    client = c;
+    if(c!=nullptr){
+        connect(this,SIGNAL(send_table(QString)),c,SLOT(send(QString)));
+        ui->label->setText("远程数据库");
+    }
     //user.createDb("testDB");
+    ui->label->setText("未选定数据库");
 
     user.loadDB();
 
-    showList();
+    if(c==nullptr){
+        showList();
+    }
 
-    db = user.getDB("testDB");
-
-
-
-
-
-    //test for ui
+    //db = user.getDB("testDB");
 
 
-        //设置表头隐藏
-        //ui->treeView->setHeaderHidden(true);
+    QFont font;
+    font.setFamily("Courier");
+    font.setFixedPitch(true);
+    font.setPointSize(10);
 
-        //设置表头
-//        model->setHorizontalHeaderLabels(QStringList()<<"Manage");
+    ui->textEdit->setFont(font);
+    highlighter = new Highlighter(ui->textEdit->document());
 
-//        //设置model
-//        ui->treeView->setModel(model);
+    ui->comboBox_2->addItem("sql");
 
-//        //设置展开
-//        ui->treeView->expandAll();
-
-//            QStandardItem *item1 = new QStandardItem("DB1");
-
-//            QStandardItem *item00 = new QStandardItem("student");
-//            QStandardItem *item10 = new QStandardItem("course");
-//            QStandardItem *item20 = new QStandardItem("sc");
-
-//            QStandardItem *item001 = new QStandardItem("sno");
-//            QStandardItem *item002 = new QStandardItem("sname");
-//            QStandardItem *item003 = new QStandardItem("classno");
-
-//            item1->setChild(0,0,item00);
-//            item1->setChild(1,0,item10);
-//            item1->setChild(2,0,item20);
-//            item00->setChild(0,0,item001);
-//            item00->setChild(1,0,item002);
-//            item00->setChild(2,0,item003);
-
-//            model->setItem(0,0,item1);
-
-
-//            QStandardItem *item2 = new QStandardItem("DB2");
-
-//            QStandardItem *item200 = new QStandardItem("data");
-
-
-//            QStandardItem *item202 = new QStandardItem("dname");
-//            QStandardItem *item212 = new QStandardItem("ctime");
-//            QStandardItem *item222 = new QStandardItem("dd");
-
-//            item2->setChild(0,0,item200);
-//            item200->setChild(0,0,item202);
-//            item200->setChild(1,0,item212);
-//            item200->setChild(2,0,item222);
-
-//            model->setItem(1,0,item2);
-
-//            QStandardItemModel *model = new QStandardItemModel(this);
-
-//            this->ui->tableView->setModel(model);   //将tableview设置成model这个标准条目模型的模板, model设置的内容都将显示在tableview上
-
-//            model->setHorizontalHeaderItem(0, new QStandardItem("姓名") );
-//            model->setHorizontalHeaderItem(1, new QStandardItem("学号"));
-//            model->setHorizontalHeaderItem(2, new QStandardItem("性别"));
-//            model->setHorizontalHeaderItem(3, new QStandardItem("年龄"));
-//            model->setHorizontalHeaderItem(4, new QStandardItem("院系"));
-//            model->setHorizontalHeaderItem(5, new QStandardItem("兴趣"));
-
-//            this->ui->tableView->setColumnWidth(0, 100);    //设置列的宽度
-//            this->ui->tableView->setColumnWidth(1, 150);
-//            this->ui->tableView->setColumnWidth(2, 50);
-//            this->ui->tableView->setColumnWidth(3, 50);
-//            this->ui->tableView->setColumnWidth(4, 100);
-//            this->ui->tableView->setColumnWidth(5, 150);
-
-//            /*setItem设置条目栏中的一个格子的信息*/
-//            model->setItem(1, 5, new QStandardItem("hello world" ) );
-
-//            /*设置行字段名*/
-//            model->setRowCount(3);
-//            model->setHeaderData(0,Qt::Vertical, "行0");
-//            model->setHeaderData(1,Qt::Vertical, "行1");
-//            model->setHeaderData(2,Qt::Vertical, "行2");
-
+    ui->pushButton_7->setEnter("color: rgb(255, 255, 255);border-width: 1px;border-color: rgb(14 , 150 , 254);border-style: solid;border-radius:5px;background-color:rgb(14 , 135 , 228);");
+    ui->pushButton_7->setLeave("color: rgb(255, 255, 255);border-width: 1px;border-color: rgb(14 , 135 , 228);border-style: solid;border-radius:5px;background-color:rgb(14 , 150 , 254);");
 }
 
 MainWindow::~MainWindow()
@@ -110,41 +63,23 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-//void MainWindow::mousePressEvent(QMouseEvent *e)
-//{
-//    if(e->button()==Qt::LeftButton)
-//        clickPos=e->pos();
-//}
-//void MainWindow::mouseMoveEvent(QMouseEvent *e)
-//{
-//    if(e->buttons()&Qt::LeftButton  //左键点击并且移动
-//            && e->pos().x()>=0      //范围在窗口的上面部分
-//            && e->pos().y()>=0
-//            && e->pos().x()<= geometry().width()
-//            && e->pos().y() <= geometry().height()/10)
-//    {
-//        move(e->pos()+pos()-clickPos);  //移动窗口
-//    }
-//}
-
-
 void MainWindow::on_pushButton_5_clicked()
 {
-    QString tableName = ui->lineEdit->text();
-    if(tableName.isEmpty()) { return; }
-    db->createTable(tableName);
+//    QString tableName = ui->lineEdit->text();
+//    if(tableName.isEmpty()) { return; }
+//    db->createTable(tableName);
 }
 
 
 void MainWindow::on_pushButton_6_clicked()
 {
-    QString tableName = ui->lineEdit->text();
-    if(tableName.isEmpty()) { return; }
-    QString columnName = ui->lineEdit_2->text();
-    if(columnName.isEmpty()) { return; }
-    db->addColumn(tableName, columnName, TYPE::INTEGER, 4);
+//    QString tableName = ui->lineEdit->text();
+//    if(tableName.isEmpty()) { return; }
+//    QString columnName = ui->lineEdit_2->text();
+//    if(columnName.isEmpty()) { return; }
+//    db->addColumn(tableName, columnName, TYPE::INTEGER, 4);
 
-    showList();
+//    showList();
 }
 
 
@@ -176,27 +111,54 @@ void MainWindow::showList(){
         i++;
     }
 
-    model->setHorizontalHeaderLabels(QStringList()<<"Manage");
+    if(i==0){//首次使用创建root数据库
+        user.createDb("root");
+        int ret2 = QMessageBox::information(this, tr("CCN"),tr("首次使用，需要重启程序完成配置!"), QMessageBox::Ok);
+        qApp->quit();
+            QProcess::startDetached(qApp->applicationFilePath(), QStringList());
+    }
+
+    //model->setHorizontalHeaderLabels(QStringList()<<"Manage");
+    model->setHorizontalHeaderLabels(QStringList()<<"");
 
     //设置model
+
     ui->treeView->setModel(model);
 }
 
 
 void MainWindow::on_pushButton_7_clicked()
 {
+    if(db==nullptr&&this->client==nullptr){
+        qDebug()<<"未选定数据库";
+        return;
+    }
+
     //记录所有语句
     QString all= ui->textEdit->toPlainText();
     all=all.replace("\n","");
+    all=all.replace("/",";");
     QStringList list = all.split(";");
 
     //预编译
     //...
     //执行语句
-    SqlAnalysis sa(db,this);
-    for(QString s : list){
-        sa.parse_sql(s);
-        showList();
+    if(this->client==nullptr){//本地连接模式
+        SqlAnalysis sa(db,this);
+        for(QString s : list){
+            if(s=="")
+                continue;
+            showTableAll(sa.parse_sql(s));
+            showList();
+        }
+    }
+    else{//网络IP连接模式
+        SqlAnalysis sa(db,this);
+        for(QString s : list){
+            if(s=="")
+                continue;
+            emit send_table(s);
+        }
     }
 }
 
@@ -219,54 +181,22 @@ void MainWindow::showTable(QVector<QString> name,QVector<QVector<QString>> table
         model->setHeaderData(0,Qt::Vertical, QString::number(j));
         j++;
     }
-
-
-//    model->setHorizontalHeaderItem(0, new QStandardItem("姓名") );
-//    model->setHorizontalHeaderItem(1, new QStandardItem("学号"));
-//    model->setHorizontalHeaderItem(2, new QStandardItem("性别"));
-//    model->setHorizontalHeaderItem(3, new QStandardItem("年龄"));
-//    model->setHorizontalHeaderItem(4, new QStandardItem("院系"));
-//    model->setHorizontalHeaderItem(5, new QStandardItem("兴趣"));
-
-//    this->ui->tableView->setColumnWidth(0, 100);    //设置列的宽度
-//    this->ui->tableView->setColumnWidth(1, 150);
-//    this->ui->tableView->setColumnWidth(2, 50);
-//    this->ui->tableView->setColumnWidth(3, 50);
-//    this->ui->tableView->setColumnWidth(4, 100);
-//    this->ui->tableView->setColumnWidth(5, 150);
-
-//    /*setItem设置条目栏中的一个格子的信息*/
-//    model->setItem(1, 5, new QStandardItem("hello world" ) );
-
-//    /*设置行字段名*/
-//    model->setRowCount(3);
-//    model->setHeaderData(0,Qt::Vertical, "行0");
-//    model->setHeaderData(1,Qt::Vertical, "行1");
-//    model->setHeaderData(2,Qt::Vertical, "行2");
-
     this->ui->tableView->setModel(model);   //将tableview设置成model这个标准条目模型的模板, model设置的内容都将显示在tableview上
 }
 
 void MainWindow::showTableAll(QVector<QVector<QString>> table){
     QStandardItemModel *model = new QStandardItemModel(this);
 
-//    int i=0;
-//    for(Column* c : name){
-//        model->setHorizontalHeaderItem(i, new QStandardItem(c->getName()));
-//        this->ui->tableView->setColumnWidth(i, 50);
-//        i++;
-//    }
-
     int j=0,k=0;
     for(QVector<QString> qs : table){
         k=0;
         for(QString s:qs){
-            if(j==0){
-                model->setHorizontalHeaderItem(k, new QStandardItem(s));
-            }
-            else{
+//            if(j==0){
+//                model->setHorizontalHeaderItem(k, new QStandardItem(s));
+//            }
+//            else{
                 model->setItem(j, k, new QStandardItem(s));
-            }
+            //}
             k++;
         }
         model->setHeaderData(0,Qt::Vertical, QString::number(j));
@@ -280,3 +210,187 @@ void MainWindow::showTableAll(QVector<QVector<QString>> table){
 void MainWindow::appendText(QString output){
     ui->textEdit->setText(ui->textEdit->toPlainText()+"\n"+output);//附加输出
 }
+
+void MainWindow::on_treeView_doubleClicked(const QModelIndex &index)
+{
+    QModelIndex inp=index;
+    QModelIndex parent =inp.parent();
+    if(parent.column()==-1){//选定为数据库
+       QVariant db_name = inp.data();
+       QString qs_db = db_name.toString();
+       db = user.getDB(qs_db);
+       ui->label->setText(qs_db);
+    }
+    return;
+}
+
+//打开文件
+void MainWindow::on_action1_triggered()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Sql"),
+                                                      "/home",
+                                                      tr("sql (*.sql *.txt *.cpp)"));
+    if(fileName=="")
+        return;
+    QString displayString;
+    QFile file(fileName);
+    //目标文件路径
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        qDebug()<<"Can't open the file!";
+        return;
+    }
+    this->fileName = fileName;
+    QTextCodec *codec = QTextCodec::codecForName("utf-8");
+    QByteArray arr = file.readAll();
+    ui->textEdit->clear();
+    ui->textEdit->setPlainText(codec->toUnicode(arr));
+    file.close();
+}
+
+
+void MainWindow::on_action_4_triggered()
+{
+    qApp->quit();
+}
+
+//保存文件
+void MainWindow::on_action_triggered()
+{
+    if(fileName=="")
+        return;
+
+    QFile file(fileName);
+    //以文本方式打开
+    if( file.open(QIODevice::WriteOnly | QIODevice::Text) )
+    {
+//        QTextCodec *codec = QTextCodec::codecForName("utf-8");
+        QTextStream out(&file); //IO设备对象的地址对其进行初始化
+        out.setCodec("UTF-8");
+
+        QString tem1 = ui->textEdit->toPlainText();
+        string std = tem1.toStdString();
+        QByteArray arr = tem1.toUtf8();
+
+        out << arr; //输出
+        file.close();
+     }
+}
+
+//另存为
+void MainWindow::on_action_2_triggered()
+{
+    QFileDialog dlg(this);
+
+    //获取内容的保存路径
+    QString fileName = dlg.getSaveFileName(this, tr("保存sql到"), "./", tr("Sql File(*.sql)"));
+
+    if( fileName == "" )
+    {
+        return;
+    }
+    QFile file(fileName);
+
+    //以文本方式打开
+    if( file.open(QIODevice::WriteOnly | QIODevice::Text) )
+    {
+//        QTextCodec *codec = QTextCodec::codecForName("utf-8");
+        QTextStream out(&file); //IO设备对象的地址对其进行初始化
+        out.setCodec("UTF-8");
+
+        QString tem1 = ui->textEdit->toPlainText();
+        string std = tem1.toStdString();
+        QByteArray arr = tem1.toUtf8();
+
+        out << arr; //输出
+        file.close();
+     }
+}
+
+
+void MainWindow::on_action_5_triggered()
+{
+    if(db==nullptr&&this->client==nullptr){
+        qDebug()<<"未选定数据库";
+        return;
+    }
+
+    //记录所有语句
+    QString all= ui->textEdit->toPlainText();
+    all=all.replace("\n","");
+    all=all.replace("/",";");
+    QStringList list = all.split(";");
+
+    //预编译
+    //...
+    //执行语句
+    if(this->client==nullptr){//本地连接模式
+        SqlAnalysis sa(db,this);
+        for(QString s : list){
+            if(s=="")
+                continue;
+            showTableAll(sa.parse_sql(s));
+            showList();
+        }
+    }
+    else{//网络IP连接模式
+        SqlAnalysis sa(db,this);
+        for(QString s : list){
+            if(s=="")
+                continue;
+            emit send_table(s);
+        }
+    }
+}
+
+//检查
+void MainWindow::on_action_7_triggered()
+{
+    ui->textEdit_2->setText("");
+
+    //记录所有语句
+    QString all= ui->textEdit->toPlainText();
+    all=all.replace("\n","");
+    all=all.replace("/",";");
+    QStringList list = all.split(";");
+
+    //预编译
+    //...
+    //执行语句
+    if(this->client==nullptr){//本地连接模式
+        SqlDebug sd;
+//        SqlAnalysis sa(db,this);
+        int i=1;
+        int isFalse[100]={0};
+        for(QString s : list){
+            if(s=="")
+                continue;
+            QString back = sd.parse_sql(s);
+            if(back!=""){
+                //qDebug()<<s+" "+back;
+                qDebug()<<"第"+QString::number(i)+"句问题";
+                isFalse[i]=1;
+            }
+            i++;
+        }
+
+        for(int k=1;k<=100;k++){
+            if(isFalse[k]==1){
+                ui->textEdit_2->setText(ui->textEdit_2->toPlainText()+"→\n");
+            }
+            else{
+                ui->textEdit_2->setText(ui->textEdit_2->toPlainText()+"\n");
+            }
+        }
+    }
+//    else{//网络IP连接模式
+//        SqlAnalysis sa(db,this);
+//        for(QString s : list){
+//            if(s=="")
+//                continue;
+//            emit send_table(s);
+//        }
+//    }
+}
+
+

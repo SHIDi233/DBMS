@@ -5,6 +5,8 @@
 #include<QMouseEvent>
 #include<QGraphicsDropShadowEffect>
 #include"mainwindow.h"
+#include"client.h"
+#include"ccnwindow.h"
 
 
 QString button_start = "QPushButton{color:white;background-color:rgb(14 , 150 , 254);border-radius:5px;}";
@@ -41,6 +43,9 @@ Login::Login(QWidget *parent) :
     ui->label_6->setGeometry(QRect(ui->label_6->geometry().left()+1,ui->label_6->geometry().top(),
                                    ui->label_6->geometry().width()-1,ui->label_6->geometry().height()));
 
+    ui->pushButton->setEnter(button_hover);
+    ui->pushButton->setLeave(button_start);
+
 }
 
 Login::~Login()
@@ -50,9 +55,21 @@ Login::~Login()
 
 void Login::on_pushButton_clicked()
 {
-    MainWindow* mw = new MainWindow;
-    mw->show();
-    this->hide();
+    if(ui->lineEdit_2->text()==""){
+//        MainWindow* mw = new MainWindow;
+//        mw->show();
+        CCNWindow* ccn = new CCNWindow;
+        ccn->show();
+        this->hide();
+    }
+    else{
+        Client* c = new Client(ui->lineEdit_2->text());
+        c->start();
+        this->hide();
+    }
+
+
+
 }
 
 
@@ -75,10 +92,11 @@ void Login::mousePressEvent(QMouseEvent *e)
 void Login::mouseMoveEvent(QMouseEvent *e)
 {
     if(e->buttons()&Qt::LeftButton  //左键点击并且移动
-            && e->pos().x()>=0      //范围在窗口的上面部分
-            && e->pos().y()>=0
-            && e->pos().x()<= geometry().width()
-            && e->pos().y() <= geometry().height()/10)
+//            && e->pos().x()>=0      //范围在窗口的上面部分
+//            && e->pos().y()>=0
+//            && e->pos().x()<= geometry().width()
+//            && e->pos().y() <= geometry().height()/10)
+            )
     {
         move(e->pos()+pos()-clickPos);  //移动窗口
     }

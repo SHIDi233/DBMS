@@ -10,5 +10,6 @@
         <file>image/top.png</file>
         <file>image/exit.png</file>
         <file>image/user.png</file>
+        <file>image/user_icon.png</file>
     </qresource>
 </RCC>

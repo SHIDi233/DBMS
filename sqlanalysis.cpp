@@ -16,18 +16,21 @@
 using namespace std;
 
 
-SqlAnalysis::SqlAnalysis()
+SqlAnalysis::SqlAnalysis(DB* db,NewServer* ns)
 {
-
+    this->db = db;
+    m = nullptr;
+    this->ns = ns;
 }
 
 SqlAnalysis::SqlAnalysis(DB* db,MainWindow* m)
 {
     this->db = db;
     this->m = m;
+    this->ns =  nullptr;
 }
 
-void SqlAnalysis::parse_sql(QString qsql) {
+QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
     /**
     *  sql语句预处理:全部转换为大写
     */
@@ -52,7 +55,10 @@ void SqlAnalysis::parse_sql(QString qsql) {
 
     string sql = qsql.toStdString();
 
-    // CREATE TABLE 语句的正则表达式
+    // USE DATABASE 语句的正则表达式
+    regex use_db_pattern(R"(USE\s+(\w+))");
+
+    // CREATE DATABASE 语句的正则表达式
     regex create_db_pattern(R"(CREATE\s+DATABASE\s+(\w+))");
 
     // DROP DATABASE 语句的正则表达式
@@ -87,7 +93,21 @@ void SqlAnalysis::parse_sql(QString qsql) {
             R"(SELECT\s+(.+)\s+FROM\s+(\w+)(?:\s+WHERE\s+(.+))?(?:\s+GROUP\s+BY\s+(.+))?(?:\s+HAVING\s+(.+))?(?:\s+ORDER\s+BY\s+(.+))?)");
 
     smatch match;
-    if (regex_match(sql, match, create_db_pattern)) {
+    if (regex_match(sql, match, use_db_pattern)) {
+        // 匹配 USE 语句
+        string db_name = match[1];
+        QString name = QString(QString::fromLocal8Bit(db_name.data()));
+
+        if(ns!=nullptr){
+            ns->db_name = name;
+        }
+        //cout << "CREATE TABLE statement" << "\ntable  name:" << table_name << "\ncolumn list:" <<" (" << columns_str << ")\n" << endl;
+
+        //......调用CREATE函数操作
+        //m->appendText(user.createDb(QString(QString::fromLocal8Bit(db_name.data()))));
+
+    }
+    else if (regex_match(sql, match, create_db_pattern)) {
         // 匹配 CREATE TABLE 语句
         string db_name = match[1];
 
@@ -157,6 +177,7 @@ void SqlAnalysis::parse_sql(QString qsql) {
         cout << "UPDATE statement" << "\ntable  name:" << table_name << " \nSET clause:" << set_clause << " \nWHERE " << condition << "\n" << endl;
 
         //......调用 UPDATE 函数操作
+        //db->
 
 
     } else if (regex_match(sql, match, drop_table_pattern)) {
@@ -248,19 +269,21 @@ void SqlAnalysis::parse_sql(QString qsql) {
         if((*columns)[0]=="*"){
             for(Table* tb : db->getTable()){
                 if(tb->getName()==QString(QString::fromLocal8Bit(table_name.data()))){
-                    m->showTableAll(db->select(true,QVector<QString>(),QString(QString::fromLocal8Bit(table_name.data())),bs));
+                    //m->showTableAll(db->select(true,QVector<QString>(),QString(QString::fromLocal8Bit(table_name.data())),bs));
+                    return db->select(true,QVector<QString>(),QString(QString::fromLocal8Bit(table_name.data())),bs);
                 }
             }
         }
         else{
             //Bool
-            db->select(false,*columns,QString(QString::fromLocal8Bit(table_name.data())),bs);
+            return db->select(false,*columns,QString(QString::fromLocal8Bit(table_name.data())),bs);
         }
 
 
     } else {
         cout << "Invalid SQL statement" << endl;
     }
+    return QVector<QVector<QString>>();
 }
 
 //int main() {
@@ -355,6 +378,29 @@ void SqlAnalysis::trim_select(QString input,QVector<QString>* output){
             continue;
         output->append(s);
     }
+}
+
+//sql语句预处理-表更改
+void SqlAnalysis::trim_update(QString input,QVector<QString>* cnames,QVector<QString>* values){
+    input = input.replace(QRegExp(",")," ");
+    QStringList list = input.split(" ");
+    int num=0;
+    for(auto &s : list){
+        if(s=="")
+            continue;
+
+        if(num%3==0){
+            cnames->append(s);
+        }
+        else if(num%3==1){
+
+        }
+        else if(num%3==2){
+            values->append(s);
+        }
+        num++;
+    }
+
 }
 
 //sql语句预处理-where

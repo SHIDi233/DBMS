@@ -244,13 +244,13 @@ QString DB::updateRecord(QString tableName, const QVector<QString>& columnNameLi
 
 QVector<QVector<QString>> DB::select(bool isAll, const QVector<QString>& column_names,
                                      const QVector<QString>& tableName, QVector<BoolStat*> boolStats) {
-    Table table_tem;
-    for(auto &t : tables) {
+    Table *table_tem = new Table();
+    for(auto &t : tableName) {
         bool isFound = false;
-        for(auto &t2 : tableName) {
-            if(t2.compare(t->getName()) == 0) {
+        for(auto &t2 : tables) {
+            if(t.compare(t2->getName()) == 0) {
                 isFound = true;
-                table_tem = table_tem + t;
+                table_tem = table_tem->operator+(t2);
             }
         }
         if(!isFound) {
@@ -258,5 +258,5 @@ QVector<QVector<QString>> DB::select(bool isAll, const QVector<QString>& column_
             return res;
         }
     }
-    return table_tem.select(isAll, column_names, boolStats);
+    return table_tem->select(isAll, column_names, boolStats);
 }

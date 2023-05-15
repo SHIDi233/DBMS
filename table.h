@@ -98,16 +98,16 @@ public:
     QList<Row*>& getRows();
 
     //多表连接
-    Table operator+(Table *const t) {
-        Table res;
-        res.columns.append(this->columns);
-        res.columns.append(t->columns);
+    Table *operator+(Table *const t) {
+        Table *res = new Table();
+        res->columns.append(this->columns);
+        res->columns.append(t->columns);
         if(this->rows.isEmpty()) {
-            res.rows.append(t->rows);
+            res->rows.append(t->rows);
         } else {
             for(auto &r1 : this->rows) {
                 for(auto &r2 : t->rows) {
-                    res.rows.append(r1->operator+(r2));
+                    res->rows.append(r1->operator+(r2));
                 }
             }
         }

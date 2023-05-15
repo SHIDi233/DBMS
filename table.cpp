@@ -88,9 +88,33 @@ int Table::deSerialize(char buf[]) {
 
     readColumns();
     readRecord();
-    //readInteg();
+    readInteg();
 
     return offset;
+}
+
+bool Table::readInteg() {
+
+    //清空容器并释放空间
+    for(auto &i : integrities) { delete i; }
+    integrities.clear();
+
+    //创建文件操作对象
+    QFile dbFile(_tic);
+    if(!dbFile.open(QIODevice::ReadOnly)) { return false; }
+    QDataStream dbOut(&dbFile);
+
+    //循环将表信息读入列表中
+    char buf[INTEGBYTE + 128];
+    while(!dbOut.atEnd()) {
+        dbOut.readRawData(buf, INTEGBYTE);
+        Integrity *i = new Integrity();
+        i->deSerialize(buf);
+        integrities.append(i);
+    }
+    dbFile.close();
+
+    return true;
 }
 
 bool Table::writeColumn(Column* c) {
@@ -273,6 +297,27 @@ QString Table::insertRecord(const QVector<QString>& columnNameList, const QVecto
         }
     }
     if(!isIn) { return "传入字段名有误"; }
+
+    //判断是否符合约束
+    QVector<int> uniqueIndex;
+    for(int i = 0; i < columnNameList.size(); i++) {
+        for(int j = 0; j < integrities.size(); j++) {
+            if(integrities[j]->getField() == columnNameList[i] && integrities[j]->getType() == ITGTYPE::UNIQUE) {
+                uniqueIndex.push_back(i);
+            }
+        }
+    }
+    if(!uniqueIndex.empty()) {
+        QVector<BoolStat*> b;
+        QVector<QVector<QString>> d = select(false, columnNameList, b);
+        for(auto &i : uniqueIndex) {
+            for(auto &d1 : d) {
+                if(d1[i] == valueList[i]) {
+                    return "违反完整性约束";
+                }
+            }
+        }
+    }
 
     //创建新的插入
     Row *newRow = new Row();
@@ -473,4 +518,28 @@ QVector<QVector<QString>> Table::select(bool isAll, const QVector<QString>& colu
         res.push_back(row);
     }
     return res;
+}
+
+//约束管理
+QString Table::addIntegrity(QString integName, QString filed, ITGTYPE type, QString param) {
+    //创建column类
+    Integrity *i = new Integrity(integName, filed, type, param);
+
+    //将字段信息写入完整性文件中
+    char buf[INTEGBYTE + 128];
+    int cnt = i->serialize(buf);
+
+    QFile dbFile(_tic);
+    if(!dbFile.open(QIODevice::Append)) { return "完整性文件丢失"; };
+    QDataStream dbOut(&dbFile);
+    dbOut.writeRawData(buf, cnt);
+    dbFile.close();
+
+    //获取当前时间
+    QDateTime current_date_time =QDateTime::currentDateTime();
+    QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz ddd");
+
+    //修改其他内容
+    strcpy_s(_mtime, current_date.toLatin1().data());
+    return "增加约束成功";
 }

@@ -21,6 +21,10 @@ Table::Table() {
 
 }
 
+Table::Table(QString name) {
+    strcpy(_name, name.toLatin1().data());
+}
+
 Table::~Table() {
     for(auto &r : rows) {
         delete r;

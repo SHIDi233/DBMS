@@ -6,6 +6,10 @@ BoolStat::BoolStat(BoolType type, QString name, bool connect) :
 
 }
 
+bool BoolStat::writeToFile(QDataStream &covOut) {
+    return true;
+}
+
 bool BoolStat::judge(Basic_Data *data) {
     return false;
 }

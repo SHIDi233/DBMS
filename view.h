@@ -44,6 +44,8 @@ public:
 
     bool writeBoolStats();
     bool readBoolStats();
+
+    QString getName();
 };
 
 #endif // VIEW_H

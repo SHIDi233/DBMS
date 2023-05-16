@@ -85,7 +85,7 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
 
    // CREATE VIEW 语句的正则表达式
    //regex create_index_regex(R"(^\s*CREATE\s+(UNIQUE\s+)?(CLUSTERED|NONCLUSTERED\s+)?INDEX\s+(\w+)\s+ON\s+(\w+)\s*\((.*)\)\s*)");
-   regex create_view_regex(R"(CREATE\s+VIEW\s+(\w+)\s+)");
+   regex create_view_regex(R"(CREATE\s+VIEW\s+(\w+)\s+AS\s+SELECT\s+(.+)\s+FROM\s+(\w+)(?:\s+WHERE\s+(.+))?(?:\s+GROUP\s+BY\s+(.+))?(?:\s+HAVING\s+(.+))?(?:\s+ORDER\s+BY\s+(.+))?))");
 
    // DROP INDEX 语句的正则表达式
    regex drop_index_regex(R"(^\s*DROP\s+INDEX\s+(\w+)\s+ON\s+(\w+)\s*)");
@@ -196,7 +196,7 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
 
        db->dropTable(QString(QString::fromLocal8Bit(table_name.data())));//根据表名删除表
 
-   } else if (regex_match(sql, match, create_index_regex)) {
+   } /*else if (regex_match(sql, match, create_index_regex)) {
        cout << "CREATE INDEX statement" << "\nindex name:" << match[3] << "\ntable name:" << match[4] << "\ncolumn list:" << "(" << match[5] << ")\n" <<endl;
        if (match[1].matched) {
            cout << "\nUNIQUE 选项已启用" << endl;
@@ -204,9 +204,9 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        if (match[2].matched) {
            cout << "\nCLUSTERED 选项已启用" << endl;
        }
-       //......调用 CREATE INDEX 函数操作
+       //......调用 CREATE INDEX 函数操作*/
 
-   } else if (regex_match(sql, match, drop_index_regex)) {
+     else if (regex_match(sql, match, drop_index_regex)) {
        cout << "DROP INDEX statement" << "\nindex name:" << match[1] << "\ntable name:" << match[2] << endl;
 
        //......调用 DROP INDEX 函数操作
@@ -291,7 +291,16 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        }
 
 
-   } else {
+   }else if (regex_match(sql, match, create_view_regex)){
+        //匹配view
+       string columns_str = match[1];
+       string table_name = match[2];
+       string where_clause = match[3];
+       string group_by_clause = match[4];
+       string having_clause = match[5];
+       string order_by_clause = match[6];
+   }
+   else {
        cout << "Invalid SQL statement" << endl;
    }
    return QVector<QVector<QString>>();

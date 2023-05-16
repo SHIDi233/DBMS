@@ -52,6 +52,7 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
             qsql[num]=qsql[num].toUpper();
         num++;
     }
+    qsql.replace(",","_");
 
     string sql = qsql.toStdString();
 
@@ -82,16 +83,21 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
     // DROP TABLE 语句的正则表达式
     regex drop_table_pattern(R"(DROP\s+TABLE\s+(\w+))");
 
-    // CREATE INDEX 语句的正则表达式
-    regex create_index_regex(R"(^\s*CREATE\s+(UNIQUE\s+)?(CLUSTERED|NONCLUSTERED\s+)?INDEX\s+(\w+)\s+ON\s+(\w+)\s*\((.*)\)\s*)");
+    // CREATE VIEW 语句的正则表达式
+    //regex create_index_regex(R"(^\s*CREATE\s+(UNIQUE\s+)?(CLUSTERED|NONCLUSTERED\s+)?INDEX\s+(\w+)\s+ON\s+(\w+)\s*\((.*)\)\s*)");
+    regex create_view_regex(R"(CREATE\s+INDEX\s)");
 
     // DROP INDEX 语句的正则表达式
     regex drop_index_regex(R"(^\s*DROP\s+INDEX\s+(\w+)\s+ON\s+(\w+)\s*)");
 
     // SELECT 语句的正则表达式，包括可选的GROUP BY、HAVING和ORDER BY子句
     regex select_pattern(
-            //R"(SELECT\s+(.+)\s+FROM\s+(\w+)(?:\s+WHERE\s+(.+))?(?:\s+GROUP\s+BY\s+(.+))?(?:\s+HAVING\s+(.+))?(?:\s+ORDER\s+BY\s+(.+))?)");
-            R"(SELECT\s+(.+)\s+FROM\s+(.+)(?:\s+WHERE\s+(.+))?(?:\s+GROUP\s+BY\s+(.+))?(?:\s+HAVING\s+(.+))?(?:\s+ORDER\s+BY\s+(.+))?)");
+            R"(SELECT\s+(.+)\s+FROM\s+(\w+)(?:\s+WHERE\s+(.+))?(?:\s+GROUP\s+BY\s+(.+))?(?:\s+HAVING\s+(.+))?(?:\s+ORDER\s+BY\s+(.+))?)");
+            //R"(SELECT\s+(.+)\s(?:\s+FROM\s+(.+))?(?:\s+WHERE\s+(.+))?(?:\s+GROUP\s+BY\s+(.+))?(?:\s+HAVING\s+(.+))?(?:\s+ORDER\s+BY\s+(.+))?)");
+            //R"(SELECT\.+from\.+(WHERE\.+)?((group by)?|(order by)?|(having)?)");
+            //R"(SELECT\s+(.+)\s+FROM\s+(.+))");
+    // SELECT 语句的正则表达式，包括可选的GROUP BY、HAVING和ORDER BY子句
+
     smatch match;
     if (regex_match(sql, match, use_db_pattern)) {
         // 匹配 USE 语句
@@ -108,7 +114,7 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
 
     }
     else if (regex_match(sql, match, create_db_pattern)) {
-        // 匹配 CREATE TABLE 语句
+        // 匹配 CREATE DB 语句
         string db_name = match[1];
 
         //cout << "CREATE TABLE statement" << "\ntable  name:" << table_name << "\ncolumn list:" <<" (" << columns_str << ")\n" << endl;
@@ -214,6 +220,7 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
         string having_clause = match[5];
         string order_by_clause = match[6];
 
+
         cout << "SELECT statement\n" << "select columns:(" << columns_str << ")\nFROM " << table_name << endl;
 
         // 检查是否存在 WHERE 子句
@@ -265,19 +272,18 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
             bs.push_back(c);
         }
 
+        //表名语义分割
         QVector<QString> tin;
         QString tem = QString(QString::fromLocal8Bit(table_name.data()));
         tem = tem.replace(" ","");
-        QStringList res = tem.split(",");
+        QStringList res = tem.split("_");
         for(QString s : res){
             tin.push_back(s);
         }
         //暂时测试表搜索功能语句，非最终版本
         if((*columns)[0]=="*"){
             for(Table* tb : db->getTable()){
-                if(tb->getName()==QString(QString::fromLocal8Bit(table_name.data()))){
                     return db->select(true,QVector<QString>(),tin,bs);
-                }
             }
         }
         else{
@@ -346,7 +352,7 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
 
 //sql语句预处理-表建立
 void SqlAnalysis::trim_create(QString input,QVector<QString>* output){
-    input = input.replace(QRegExp(",")," ");
+    input = input.replace(QRegExp("_")," ");
     QStringList list = input.split(" ");
     for(auto &s : list){
         if(s=="")
@@ -357,8 +363,8 @@ void SqlAnalysis::trim_create(QString input,QVector<QString>* output){
 
 //sql语句预处理-表插入
 void SqlAnalysis::trim_insert(QString columns,QString values,QVector<QString>* output1,QVector<QString>* output2){
-    columns = columns.replace(QRegExp(",")," ");
-    values = values.replace(QRegExp(",")," ");
+    columns = columns.replace(QRegExp("_")," ");
+    values = values.replace(QRegExp("_")," ");
     QStringList list_column = columns.split(" ");
     for(auto &s : list_column){
         if(s=="")

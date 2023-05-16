@@ -120,7 +120,7 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        //cout << "CREATE TABLE statement" << "\ntable  name:" << table_name << "\ncolumn list:" <<" (" << columns_str << ")\n" << endl;
 
        //......调用CREATE函数操作
-        m->appendText(user.createDb(QString(QString::fromLocal8Bit(db_name.data()))));
+       m->appendText(user.createDb(QString(QString::fromLocal8Bit(db_name.data()))));
 
    }
    else if (regex_match(sql, match, create_table_pattern)) {
@@ -293,12 +293,15 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
 
    }else if (regex_match(sql, match, create_view_regex)){
         //匹配view
-       string columns_str = match[1];
-       string table_name = match[2];
-       string where_clause = match[3];
-       string group_by_clause = match[4];
-       string having_clause = match[5];
-       string order_by_clause = match[6];
+       string view_name = match[1];
+       string columns_str = match[2];
+       string table_name = match[3];
+       string where_clause = match[4];
+       string group_by_clause = match[5];
+       string having_clause = match[6];
+       string order_by_clause = match[7];
+
+       db->createView();
    }
    else {
        cout << "Invalid SQL statement" << endl;

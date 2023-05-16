@@ -85,7 +85,7 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
 
    // CREATE VIEW 语句的正则表达式
    //regex create_index_regex(R"(^\s*CREATE\s+(UNIQUE\s+)?(CLUSTERED|NONCLUSTERED\s+)?INDEX\s+(\w+)\s+ON\s+(\w+)\s*\((.*)\)\s*)");
-   regex create_view_regex(R"(CREATE\s+VIEW\s+(\w+)\s+AS\s+SELECT\s+(.+)\s+FROM\s+(\w+)(?:\s+WHERE\s+(.+))?(?:\s+GROUP\s+BY\s+(.+))?(?:\s+HAVING\s+(.+))?(?:\s+ORDER\s+BY\s+(.+))?))");
+   regex create_view_regex(R"(CREATE\s+VIEW\s+(\w+)\s+AS\s+SELECT\s+(.+)\s+FROM\s+(\w+)(?:\s+WHERE\s+(.+))?(?:\s+GROUP\s+BY\s+(.+))?(?:\s+HAVING\s+(.+))?(?:\s+ORDER\s+BY\s+(.+))?)");
 
    // DROP INDEX 语句的正则表达式
    regex drop_index_regex(R"(^\s*DROP\s+INDEX\s+(\w+)\s+ON\s+(\w+)\s*)");
@@ -301,7 +301,53 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        string having_clause = match[6];
        string order_by_clause = match[7];
 
-       db->createView();
+       QString vn=QString(QString::fromLocal8Bit(view_name.data()));
+
+       QVector<QString>* columns = new QVector<QString>;
+       trim_select(QString(QString::fromLocal8Bit(columns_str.data())),columns);
+
+       QVector<QString>* t=new QVector<QString>;
+       trim_where(QString(QString::fromLocal8Bit(where_clause.data())),t);
+       QVector<QString> s = *t;
+
+       QVector<BoolStat*> bs;
+       for(int i=0;i<s.count()-2;){
+           Compare* c;
+           if(i==0){
+               c=new Compare(s[i],s[i+2],s[i+1]);
+               i+=3;
+           }
+           else{
+               bool isTrue;
+               if(s[i]=="AND")
+                   isTrue=true;
+               else
+                   isTrue=false;
+               c=new Compare(s[i+1],s[i+3],s[i+2],isTrue);
+               i+=4;
+           }
+           bs.push_back(c);
+       }
+
+       //表名语义分割
+       QVector<QString> tin;
+       QString tem = QString(QString::fromLocal8Bit(table_name.data()));
+       tem = tem.replace(" ","");
+       QStringList res = tem.split("_");
+       for(QString s : res){
+           tin.push_back(s);
+       }
+
+       //暂时测试表搜索功能语句，非最终版本
+       if((*columns)[0]=="*"){
+           for(Table* tb : db->getTable()){
+               db->createView(vn,true,QVector<QString>(),tin,bs);
+           }
+       }
+       else{
+           db->createView(vn,false,QVector<QString>(),tin,bs);
+       }
+
    }
    else {
        cout << "Invalid SQL statement" << endl;

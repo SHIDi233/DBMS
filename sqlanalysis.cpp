@@ -283,7 +283,9 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
         //暂时测试表搜索功能语句，非最终版本
         if((*columns)[0]=="*"){
             for(Table* tb : db->getTable()){
-                    return db->select(true,QVector<QString>(),tin,bs);
+//                    return db->select(true,QVector<QString>(),tin,bs);
+//                }
+                return db->select(true,QVector<QString>(),tin,bs);
             }
         }
         else{

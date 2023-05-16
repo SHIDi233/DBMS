@@ -85,7 +85,7 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
 
     // CREATE VIEW 语句的正则表达式
     //regex create_index_regex(R"(^\s*CREATE\s+(UNIQUE\s+)?(CLUSTERED|NONCLUSTERED\s+)?INDEX\s+(\w+)\s+ON\s+(\w+)\s*\((.*)\)\s*)");
-    regex create_view_regex(R"(CREATE\s+INDEX\s)");
+    regex create_view_regex(R"(CREATE\s+VIEW\s+(\w+)\s+)");
 
     // DROP INDEX 语句的正则表达式
     regex drop_index_regex(R"(^\s*DROP\s+INDEX\s+(\w+)\s+ON\s+(\w+)\s*)");

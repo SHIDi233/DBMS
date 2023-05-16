@@ -1,4 +1,4 @@
-﻿ /**
+﻿/**
 *  Name:SqlAnalysis
 *  Author: Li Wenjie, Shi haoyuan
 *  Description:Sql语句分析
@@ -18,285 +18,283 @@ using namespace std;
 
 SqlAnalysis::SqlAnalysis(DB* db,NewServer* ns)
 {
-    this->db = db;
-    m = nullptr;
-    this->ns = ns;
+   this->db = db;
+   m = nullptr;
+   this->ns = ns;
 }
 
 SqlAnalysis::SqlAnalysis(DB* db,MainWindow* m)
 {
-    this->db = db;
-    this->m = m;
-    this->ns =  nullptr;
+   this->db = db;
+   this->m = m;
+   this->ns =  nullptr;
 }
 
 QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
-    /**
-    *  sql语句预处理:全部转换为大写
-    */
-    //qsql=qsql.toUpper();//旧语句，不能对引号内容进行正确转换
-    bool isName=false;
-    int num=0;
-    for(QChar c : qsql){
-        if(c=='"' || c=='\''){
-            if(isName==true){
-                isName=false;
-            }
-            else{
-                isName=true;
-            }
-        }
+   /**
+   *  sql语句预处理:全部转换为大写
+   */
+   //qsql=qsql.toUpper();//旧语句，不能对引号内容进行正确转换
+   bool isName=false;
+   int num=0;
+   for(QChar c : qsql){
+       if(c=='"' || c=='\''){
+           if(isName==true){
+               isName=false;
+           }
+           else{
+               isName=true;
+           }
+       }
 
 
-        if(!isName)
-            qsql[num]=qsql[num].toUpper();
-        num++;
-    }
-    qsql.replace(",","_");
+       if(!isName)
+           qsql[num]=qsql[num].toUpper();
+       num++;
+   }
+   qsql.replace(",","_");
 
-    string sql = qsql.toStdString();
+   string sql = qsql.toStdString();
 
-    // USE DATABASE 语句的正则表达式
-    regex use_db_pattern(R"(USE\s+(\w+))");
+   // USE DATABASE 语句的正则表达式
+   regex use_db_pattern(R"(USE\s+(\w+))");
 
-    // CREATE DATABASE 语句的正则表达式
-    regex create_db_pattern(R"(CREATE\s+DATABASE\s+(\w+))");
+   // CREATE DATABASE 语句的正则表达式
+   regex create_db_pattern(R"(CREATE\s+DATABASE\s+(\w+))");
 
-    // DROP DATABASE 语句的正则表达式
-    regex drop_db_pattern(R"(DROP\s+DATABASE\s+(\w+))");
+   // DROP DATABASE 语句的正则表达式
+   regex drop_db_pattern(R"(DROP\s+DATABASE\s+(\w+))");
 
-    // CREATE TABLE 语句的正则表达式
-    regex create_table_pattern(R"(CREATE\s+TABLE\s+(\w+)\s*\((.+)\))");
+   // CREATE TABLE 语句的正则表达式
+   regex create_table_pattern(R"(CREATE\s+TABLE\s+(\w+)\s*\((.+)\))");
 
-    // DESC TABLE 语句的正则表达式
-    regex desc_table_pattern(R"(DESC\s+(\w+))");
+   // DESC TABLE 语句的正则表达式
+   regex desc_table_pattern(R"(DESC\s+(\w+))");
 
-    // INSERT INTO 语句的正则表达式
-    regex insert_into_pattern(R"(INSERT\s+INTO\s+(\w+)\s*\((.+)\)\s*VALUES\s*\((.+)\))");
+   // INSERT INTO 语句的正则表达式
+   regex insert_into_pattern(R"(INSERT\s+INTO\s+(\w+)\s*\((.+)\)\s*VALUES\s*\((.+)\))");
 
-    // DELETE FROM 语句的正则表达式
-    regex delete_from_pattern(R"(DELETE\s+FROM\s+(\w+)\s+WHERE\s+(.+))");
+   // DELETE FROM 语句的正则表达式
+   regex delete_from_pattern(R"(DELETE\s+FROM\s+(\w+)\s+WHERE\s+(.+))");
 
-    // UPDATE 语句的正则表达式
-    regex update_pattern(R"(UPDATE\s+(\w+)\s+SET\s+(.+)\s+WHERE\s+(.+))");
+   // UPDATE 语句的正则表达式
+   regex update_pattern(R"(UPDATE\s+(\w+)\s+SET\s+(.+)\s+WHERE\s+(.+))");
 
-    // DROP TABLE 语句的正则表达式
-    regex drop_table_pattern(R"(DROP\s+TABLE\s+(\w+))");
+   // DROP TABLE 语句的正则表达式
+   regex drop_table_pattern(R"(DROP\s+TABLE\s+(\w+))");
 
-    // CREATE VIEW 语句的正则表达式
-    //regex create_index_regex(R"(^\s*CREATE\s+(UNIQUE\s+)?(CLUSTERED|NONCLUSTERED\s+)?INDEX\s+(\w+)\s+ON\s+(\w+)\s*\((.*)\)\s*)");
-    regex create_view_regex(R"(CREATE\s+VIEW\s+(\w+)\s+)");
+   // CREATE VIEW 语句的正则表达式
+   //regex create_index_regex(R"(^\s*CREATE\s+(UNIQUE\s+)?(CLUSTERED|NONCLUSTERED\s+)?INDEX\s+(\w+)\s+ON\s+(\w+)\s*\((.*)\)\s*)");
+   regex create_view_regex(R"(CREATE\s+VIEW\s+(\w+)\s+)");
 
-    // DROP INDEX 语句的正则表达式
-    regex drop_index_regex(R"(^\s*DROP\s+INDEX\s+(\w+)\s+ON\s+(\w+)\s*)");
+   // DROP INDEX 语句的正则表达式
+   regex drop_index_regex(R"(^\s*DROP\s+INDEX\s+(\w+)\s+ON\s+(\w+)\s*)");
 
-    // SELECT 语句的正则表达式，包括可选的GROUP BY、HAVING和ORDER BY子句
-    regex select_pattern(
-            R"(SELECT\s+(.+)\s+FROM\s+(\w+)(?:\s+WHERE\s+(.+))?(?:\s+GROUP\s+BY\s+(.+))?(?:\s+HAVING\s+(.+))?(?:\s+ORDER\s+BY\s+(.+))?)");
-            //R"(SELECT\s+(.+)\s(?:\s+FROM\s+(.+))?(?:\s+WHERE\s+(.+))?(?:\s+GROUP\s+BY\s+(.+))?(?:\s+HAVING\s+(.+))?(?:\s+ORDER\s+BY\s+(.+))?)");
-            //R"(SELECT\.+from\.+(WHERE\.+)?((group by)?|(order by)?|(having)?)");
-            //R"(SELECT\s+(.+)\s+FROM\s+(.+))");
-    // SELECT 语句的正则表达式，包括可选的GROUP BY、HAVING和ORDER BY子句
+   // SELECT 语句的正则表达式，包括可选的GROUP BY、HAVING和ORDER BY子句
+   regex select_pattern(
+           R"(SELECT\s+(.+)\s+FROM\s+(\w+)(?:\s+WHERE\s+(.+))?(?:\s+GROUP\s+BY\s+(.+))?(?:\s+HAVING\s+(.+))?(?:\s+ORDER\s+BY\s+(.+))?)");
+           //R"(SELECT\s+(.+)\s(?:\s+FROM\s+(.+))?(?:\s+WHERE\s+(.+))?(?:\s+GROUP\s+BY\s+(.+))?(?:\s+HAVING\s+(.+))?(?:\s+ORDER\s+BY\s+(.+))?)");
+           //R"(SELECT\.+from\.+(WHERE\.+)?((group by)?|(order by)?|(having)?)");
+           //R"(SELECT\s+(.+)\s+FROM\s+(.+))");
+   // SELECT 语句的正则表达式，包括可选的GROUP BY、HAVING和ORDER BY子句
 
-    smatch match;
-    if (regex_match(sql, match, use_db_pattern)) {
-        // 匹配 USE 语句
-        string db_name = match[1];
-        QString name = QString(QString::fromLocal8Bit(db_name.data()));
+   smatch match;
+   if (regex_match(sql, match, use_db_pattern)) {
+       // 匹配 USE 语句
+       string db_name = match[1];
+       QString name = QString(QString::fromLocal8Bit(db_name.data()));
 
-        if(ns!=nullptr){
-            ns->db_name = name;
-        }
-        //cout << "CREATE TABLE statement" << "\ntable  name:" << table_name << "\ncolumn list:" <<" (" << columns_str << ")\n" << endl;
+       if(ns!=nullptr){
+           ns->db_name = name;
+       }
+       //cout << "CREATE TABLE statement" << "\ntable  name:" << table_name << "\ncolumn list:" <<" (" << columns_str << ")\n" << endl;
 
-        //......调用CREATE函数操作
-        //m->appendText(user.createDb(QString(QString::fromLocal8Bit(db_name.data()))));
+       //......调用CREATE函数操作
+       //m->appendText(user.createDb(QString(QString::fromLocal8Bit(db_name.data()))));
 
-    }
-    else if (regex_match(sql, match, create_db_pattern)) {
-        // 匹配 CREATE DB 语句
-        string db_name = match[1];
+   }
+   else if (regex_match(sql, match, create_db_pattern)) {
+       // 匹配 CREATE DB 语句
+       string db_name = match[1];
 
-        //cout << "CREATE TABLE statement" << "\ntable  name:" << table_name << "\ncolumn list:" <<" (" << columns_str << ")\n" << endl;
+       //cout << "CREATE TABLE statement" << "\ntable  name:" << table_name << "\ncolumn list:" <<" (" << columns_str << ")\n" << endl;
 
-        //......调用CREATE函数操作
-         m->appendText(user.createDb(QString(QString::fromLocal8Bit(db_name.data()))));
+       //......调用CREATE函数操作
+        m->appendText(user.createDb(QString(QString::fromLocal8Bit(db_name.data()))));
 
-    }
-    else if (regex_match(sql, match, create_table_pattern)) {
-        // 匹配 CREATE TABLE 语句
-        string table_name = match[1];
-        string columns_str = match[2];
+   }
+   else if (regex_match(sql, match, create_table_pattern)) {
+       // 匹配 CREATE TABLE 语句
+       string table_name = match[1];
+       string columns_str = match[2];
 
-        cout << "CREATE TABLE statement" << "\ntable  name:" << table_name << "\ncolumn list:" <<" (" << columns_str << ")\n" << endl;
+       cout << "CREATE TABLE statement" << "\ntable  name:" << table_name << "\ncolumn list:" <<" (" << columns_str << ")\n" << endl;
 
-        //......调用CREATE函数操作
-        m->appendText(db->createTable(QString(QString::fromLocal8Bit(table_name.data()))));//根据表名创建表
-        QVector<QString>* output = new QVector<QString>;
-        trim_create(QString(QString::fromLocal8Bit(columns_str.data())),output);
-        qDebug()<<output;
+       //......调用CREATE函数操作
+       m->appendText(db->createTable(QString(QString::fromLocal8Bit(table_name.data()))));//根据表名创建表
+       QVector<QString>* output = new QVector<QString>;
+       trim_create(QString(QString::fromLocal8Bit(columns_str.data())),output);
+       qDebug()<<output;
 
-        //重复调用添加列
+       //重复调用添加列
 
-        for(int i=0;i<output->count();i+=2){
-            m->appendText(db->addColumn(QString(QString::fromLocal8Bit(table_name.data()))
-                          ,(*output)[i],get_type((*output)[i+1]),get_size((*output)[i+1])));
-        }
+       for(int i=0;i<output->count();i+=2){
+           m->appendText(db->addColumn(QString(QString::fromLocal8Bit(table_name.data()))
+                         ,(*output)[i],get_type((*output)[i+1]),get_size((*output)[i+1])));
+       }
 
-    }else if(regex_match(sql, match, desc_table_pattern)){
-        //匹配 Desc 语句
-        string table_name = match[1];
-        //db->
+   }else if(regex_match(sql, match, desc_table_pattern)){
+       //匹配 Desc 语句
+       string table_name = match[1];
+       //db->
 
-    }else if (regex_match(sql, match, insert_into_pattern)) {
-        // 匹配 INSERT INTO 语句
-        string table_name = match[1];
-        string columns_str = match[2];
-        string values_str = match[3];
+   }else if (regex_match(sql, match, insert_into_pattern)) {
+       // 匹配 INSERT INTO 语句
+       string table_name = match[1];
+       string columns_str = match[2];
+       string values_str = match[3];
 
-        cout << "INSERT statement " << "\ntable  name:" << table_name << "\ncolumn list:" <<" (" << columns_str << ") \nVALUES (" << values_str << ")\n" << endl;
+       cout << "INSERT statement " << "\ntable  name:" << table_name << "\ncolumn list:" <<" (" << columns_str << ") \nVALUES (" << values_str << ")\n" << endl;
 
-        //......调用 INSERT 函数操作
-        QVector<QString>* columns = new QVector<QString>;
-        QVector<QString>* values = new QVector<QString>;
-        trim_insert(QString(QString::fromLocal8Bit(columns_str.data())),QString(QString::fromLocal8Bit(values_str.data())),columns,values);
+       //......调用 INSERT 函数操作
+       QVector<QString>* columns = new QVector<QString>;
+       QVector<QString>* values = new QVector<QString>;
+       trim_insert(QString(QString::fromLocal8Bit(columns_str.data())),QString(QString::fromLocal8Bit(values_str.data())),columns,values);
 
-        m->appendText(db->insertRecord(QString(QString::fromLocal8Bit(table_name.data())),*columns,*values));
+       m->appendText(db->insertRecord(QString(QString::fromLocal8Bit(table_name.data())),*columns,*values));
 
-    } else if (regex_match(sql, match, delete_from_pattern)) {
-        // 匹配 DELETE FROM 语句
-        string table_name = match[1];
-        string condition = match[2];
+   } else if (regex_match(sql, match, delete_from_pattern)) {
+       // 匹配 DELETE FROM 语句
+       string table_name = match[1];
+       string condition = match[2];
 
-        cout << "DELETE statement " << "\ntable  name:" << table_name << " \nWHERE " << condition << "\n" <<endl;
+       cout << "DELETE statement " << "\ntable  name:" << table_name << " \nWHERE " << condition << "\n" <<endl;
 
-        //......调用 DELETE 函数操作
-
-
-
-    } else if (regex_match(sql, match, update_pattern)) {
-        // 匹配 UPDATE 语句
-        string table_name = match[1];
-        string set_clause = match[2];
-        string condition = match[3];
-
-        cout << "UPDATE statement" << "\ntable  name:" << table_name << " \nSET clause:" << set_clause << " \nWHERE " << condition << "\n" << endl;
-
-        //......调用 UPDATE 函数操作
-        //db->
+       //......调用 DELETE 函数操作
 
 
-    } else if (regex_match(sql, match, drop_table_pattern)) {
-        // 匹配 DROP TABLE 语句
-        string table_name = match[1];
 
-        cout << "DROP TABLE statement " << "\ntable  name:" << table_name << "\n" << endl;
+   } else if (regex_match(sql, match, update_pattern)) {
+       // 匹配 UPDATE 语句
+       string table_name = match[1];
+       string set_clause = match[2];
+       string condition = match[3];
 
-        //......调用 DROP 函数操作
+       cout << "UPDATE statement" << "\ntable  name:" << table_name << " \nSET clause:" << set_clause << " \nWHERE " << condition << "\n" << endl;
 
-        db->dropTable(QString(QString::fromLocal8Bit(table_name.data())));//根据表名删除表
-
-    } /*else if (regex_match(sql, match, create_index_regex)) {
-        cout << "CREATE INDEX statement" << "\nindex name:" << match[3] << "\ntable name:" << match[4] << "\ncolumn list:" << "(" << match[5] << ")\n" <<endl;
-        if (match[1].matched) {
-            cout << "\nUNIQUE 选项已启用" << endl;
-        }
-        if (match[2].matched) {
-            cout << "\nCLUSTERED 选项已启用" << endl;
-        }
-        //......调用 CREATE INDEX 函数操作*/
-
-     else if (regex_match(sql, match, drop_index_regex)) {
-        cout << "DROP INDEX statement" << "\nindex name:" << match[1] << "\ntable name:" << match[2] << endl;
-
-        //......调用 DROP INDEX 函数操作
-
-    } else if (regex_match(sql, match, select_pattern)) {
-        // 匹配 SELECT 语句
-        string columns_str = match[1];
-        string table_name = match[2];
-        string where_clause = match[3];
-        string group_by_clause = match[4];
-        string having_clause = match[5];
-        string order_by_clause = match[6];
+       //......调用 UPDATE 函数操作
+       //db->
 
 
-        cout << "SELECT statement\n" << "select columns:(" << columns_str << ")\nFROM " << table_name << endl;
+   } else if (regex_match(sql, match, drop_table_pattern)) {
+       // 匹配 DROP TABLE 语句
+       string table_name = match[1];
 
-        // 检查是否存在 WHERE 子句
-        if (!where_clause.empty()) {
-            cout << "WHERE " << where_clause << endl;
+       cout << "DROP TABLE statement " << "\ntable  name:" << table_name << "\n" << endl;
 
+       //......调用 DROP 函数操作
 
-        }
+       db->dropTable(QString(QString::fromLocal8Bit(table_name.data())));//根据表名删除表
 
-        // 检查是否存在 GROUP BY 子句
-        if (!group_by_clause.empty()) {
-            cout << "GROUP BY " << group_by_clause << endl;
-        }
+   } else if (regex_match(sql, match, create_index_regex)) {
+       cout << "CREATE INDEX statement" << "\nindex name:" << match[3] << "\ntable name:" << match[4] << "\ncolumn list:" << "(" << match[5] << ")\n" <<endl;
+       if (match[1].matched) {
+           cout << "\nUNIQUE 选项已启用" << endl;
+       }
+       if (match[2].matched) {
+           cout << "\nCLUSTERED 选项已启用" << endl;
+       }
+       //......调用 CREATE INDEX 函数操作
 
-        // 检查是否存在 HAVING 子句
-        if (!having_clause.empty()) {
-            cout << "HAVING " << having_clause << endl;
-        }
+   } else if (regex_match(sql, match, drop_index_regex)) {
+       cout << "DROP INDEX statement" << "\nindex name:" << match[1] << "\ntable name:" << match[2] << endl;
 
-        // 检查是否存在 ORDER BY 子句
-        if (!order_by_clause.empty()) {
-            cout << "ORDER BY " << order_by_clause << endl;
-        }
+       //......调用 DROP INDEX 函数操作
 
-        //......调用 SELECT 函数操作
-        QVector<QString>* columns = new QVector<QString>;
-        trim_select(QString(QString::fromLocal8Bit(columns_str.data())),columns);
-
-        QVector<QString>* t=new QVector<QString>;
-        trim_where(QString(QString::fromLocal8Bit(where_clause.data())),t);
-        QVector<QString> s = *t;
-
-        QVector<BoolStat*> bs;
-        for(int i=0;i<s.count()-2;){
-            Compare* c;
-            if(i==0){
-                c=new Compare(s[i],s[i+2],s[i+1]);
-                i+=3;
-            }
-            else{
-                bool isTrue;
-                if(s[i]=="AND")
-                    isTrue=true;
-                else
-                    isTrue=false;
-                c=new Compare(s[i+1],s[i+3],s[i+2],isTrue);
-                i+=4;
-            }
-            bs.push_back(c);
-        }
-
-        //表名语义分割
-        QVector<QString> tin;
-        QString tem = QString(QString::fromLocal8Bit(table_name.data()));
-        tem = tem.replace(" ","");
-        QStringList res = tem.split("_");
-        for(QString s : res){
-            tin.push_back(s);
-        }
-        //暂时测试表搜索功能语句，非最终版本
-        if((*columns)[0]=="*"){
-            for(Table* tb : db->getTable()){
-//                    return db->select(true,QVector<QString>(),tin,bs);
-//                }
-                return db->select(true,QVector<QString>(),tin,bs);
-            }
-        }
-        else{
-            return db->select(false,*columns,tin,bs);
-        }
+   } else if (regex_match(sql, match, select_pattern)) {
+       // 匹配 SELECT 语句
+       string columns_str = match[1];
+       string table_name = match[2];
+       string where_clause = match[3];
+       string group_by_clause = match[4];
+       string having_clause = match[5];
+       string order_by_clause = match[6];
 
 
-    } else {
-        cout << "Invalid SQL statement" << endl;
-    }
-    return QVector<QVector<QString>>();
+       cout << "SELECT statement\n" << "select columns:(" << columns_str << ")\nFROM " << table_name << endl;
+
+       // 检查是否存在 WHERE 子句
+       if (!where_clause.empty()) {
+           cout << "WHERE " << where_clause << endl;
+
+
+       }
+
+       // 检查是否存在 GROUP BY 子句
+       if (!group_by_clause.empty()) {
+           cout << "GROUP BY " << group_by_clause << endl;
+       }
+
+       // 检查是否存在 HAVING 子句
+       if (!having_clause.empty()) {
+           cout << "HAVING " << having_clause << endl;
+       }
+
+       // 检查是否存在 ORDER BY 子句
+       if (!order_by_clause.empty()) {
+           cout << "ORDER BY " << order_by_clause << endl;
+       }
+
+       //......调用 SELECT 函数操作
+       QVector<QString>* columns = new QVector<QString>;
+       trim_select(QString(QString::fromLocal8Bit(columns_str.data())),columns);
+
+       QVector<QString>* t=new QVector<QString>;
+       trim_where(QString(QString::fromLocal8Bit(where_clause.data())),t);
+       QVector<QString> s = *t;
+
+       QVector<BoolStat*> bs;
+       for(int i=0;i<s.count()-2;){
+           Compare* c;
+           if(i==0){
+               c=new Compare(s[i],s[i+2],s[i+1]);
+               i+=3;
+           }
+           else{
+               bool isTrue;
+               if(s[i]=="AND")
+                   isTrue=true;
+               else
+                   isTrue=false;
+               c=new Compare(s[i+1],s[i+3],s[i+2],isTrue);
+               i+=4;
+           }
+           bs.push_back(c);
+       }
+
+       //表名语义分割
+       QVector<QString> tin;
+       QString tem = QString(QString::fromLocal8Bit(table_name.data()));
+       tem = tem.replace(" ","");
+       QStringList res = tem.split("_");
+       for(QString s : res){
+           tin.push_back(s);
+       }
+       //暂时测试表搜索功能语句，非最终版本
+       if((*columns)[0]=="*"){
+           for(Table* tb : db->getTable()){
+                   return db->select(true,QVector<QString>(),tin,bs);
+           }
+       }
+       else{
+           return db->select(false,*columns,tin,bs);
+       }
+
+
+   } else {
+       cout << "Invalid SQL statement" << endl;
+   }
+   return QVector<QVector<QString>>();
 }
 
 //int main() {
@@ -354,118 +352,118 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
 
 //sql语句预处理-表建立
 void SqlAnalysis::trim_create(QString input,QVector<QString>* output){
-    input = input.replace(QRegExp("_")," ");
-    QStringList list = input.split(" ");
-    for(auto &s : list){
-        if(s=="")
-            continue;
-        output->append(s);
-    }
+   input = input.replace(QRegExp("_")," ");
+   QStringList list = input.split(" ");
+   for(auto &s : list){
+       if(s=="")
+           continue;
+       output->append(s);
+   }
 }
 
 //sql语句预处理-表插入
 void SqlAnalysis::trim_insert(QString columns,QString values,QVector<QString>* output1,QVector<QString>* output2){
-    columns = columns.replace(QRegExp("_")," ");
-    values = values.replace(QRegExp("_")," ");
-    QStringList list_column = columns.split(" ");
-    for(auto &s : list_column){
-        if(s=="")
-            continue;
-        output1->append(s);
-    }
+   columns = columns.replace(QRegExp("_")," ");
+   values = values.replace(QRegExp("_")," ");
+   QStringList list_column = columns.split(" ");
+   for(auto &s : list_column){
+       if(s=="")
+           continue;
+       output1->append(s);
+   }
 
-    QStringList list_value = values.split(" ");
-    for(auto &s : list_value){
-        if(s=="")
-            continue;
-        output2->append(s);
-    }
+   QStringList list_value = values.split(" ");
+   for(auto &s : list_value){
+       if(s=="")
+           continue;
+       output2->append(s);
+   }
 }
 
 //sql语句预处理-表搜索
 void SqlAnalysis::trim_select(QString input,QVector<QString>* output){
-    input = input.replace(QRegExp(",")," ");
-    QStringList list = input.split(" ");
-    for(auto &s : list){
-        if(s=="")
-            continue;
-        output->append(s);
-    }
+   input = input.replace(QRegExp(",")," ");
+   QStringList list = input.split(" ");
+   for(auto &s : list){
+       if(s=="")
+           continue;
+       output->append(s);
+   }
 }
 
 //sql语句预处理-表更改
 void SqlAnalysis::trim_update(QString input,QVector<QString>* cnames,QVector<QString>* values){
-    input = input.replace(QRegExp(",")," ");
-    QStringList list = input.split(" ");
-    int num=0;
-    for(auto &s : list){
-        if(s=="")
-            continue;
+   input = input.replace(QRegExp(",")," ");
+   QStringList list = input.split(" ");
+   int num=0;
+   for(auto &s : list){
+       if(s=="")
+           continue;
 
-        if(num%3==0){
-            cnames->append(s);
-        }
-        else if(num%3==1){
+       if(num%3==0){
+           cnames->append(s);
+       }
+       else if(num%3==1){
 
-        }
-        else if(num%3==2){
-            values->append(s);
-        }
-        num++;
-    }
+       }
+       else if(num%3==2){
+           values->append(s);
+       }
+       num++;
+   }
 
 }
 
 //sql语句预处理-where
 void SqlAnalysis::trim_where(QString input,QVector<QString>* output){
-    input = input.replace(QRegExp("=")," = ");
-    input = input.replace(QRegExp(">")," > ");
-    input = input.replace(QRegExp("<")," < ");
-    input = input.replace(QRegExp(">=")," >= ");
-    input = input.replace(QRegExp("<=")," <= ");
-    QStringList list = input.split(" ");
-    for(auto &s : list){
-        if(s=="")
-            continue;
-        output->append(s);
-    }
-    return;
+   input = input.replace(QRegExp("=")," = ");
+   input = input.replace(QRegExp(">")," > ");
+   input = input.replace(QRegExp("<")," < ");
+   input = input.replace(QRegExp(">=")," >= ");
+   input = input.replace(QRegExp("<=")," <= ");
+   QStringList list = input.split(" ");
+   for(auto &s : list){
+       if(s=="")
+           continue;
+       output->append(s);
+   }
+   return;
 }
 
 TYPE SqlAnalysis::get_type(QString input){
-    Basic_Data* bd;
-    if(input.contains(QRegExp("INT"))){
-        bd = new Integer();
-        return INTEGER;
-    }
-    else if(input.contains(QRegExp("BOOL"))){
-        bd = new Bool();
-        return BOOL;
-    }
-    else if(input.contains(QRegExp("VARCHAR"))){
+   Basic_Data* bd;
+   if(input.contains(QRegExp("INT"))){
+       bd = new Integer();
+       return INTEGER;
+   }
+   else if(input.contains(QRegExp("BOOL"))){
+       bd = new Bool();
+       return BOOL;
+   }
+   else if(input.contains(QRegExp("VARCHAR"))){
 
-        return VARCHAR;
-    }
-    else if(input.contains(QRegExp("DOUBLE"))){
-        bd = new Double();
-        return DOUBLE;
-    }
-    else if(input.contains(QRegExp("DATETIME"))){
-        bd = new DateTime();
-        return DATETIME;
-    }
-    return NULLDATA;
+       return VARCHAR;
+   }
+   else if(input.contains(QRegExp("DOUBLE"))){
+       bd = new Double();
+       return DOUBLE;
+   }
+   else if(input.contains(QRegExp("DATETIME"))){
+       bd = new DateTime();
+       return DATETIME;
+   }
+   return NULLDATA;
 }
 
 int SqlAnalysis::get_size(QString input){
-    input.replace(QRegExp("VARCHAR"),"");
-    input.replace('(',"");
-    input.replace(')',"");
-    bool isOk=false;
-    int tmp = input.toInt(&isOk);
-    if(isOk){
-        return tmp;
-    }
-    else
-        return 0;
+   input.replace(QRegExp("VARCHAR"),"");
+   input.replace('(',"");
+   input.replace(')',"");
+   bool isOk=false;
+   int tmp = input.toInt(&isOk);
+   if(isOk){
+       return tmp;
+   }
+   else
+       return 0;
 }

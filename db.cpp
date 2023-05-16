@@ -254,8 +254,16 @@ QVector<QVector<QString>> DB::select(bool isAll, const QVector<QString>& column_
             }
         }
         if(!isFound) {
-            QVector<QVector<QString>> res;
-            return res;
+            for(auto &v : views) {
+                if(t.compare(v->getName()) == 0) {
+                    isFound = true;
+                    table_tem = table_tem->operator+(viewToTable(v));
+                }
+            }
+            if(!isFound) {
+                QVector<QVector<QString>> res;
+                return res;
+            }
         }
     }
     return table_tem->select(isAll, column_names, boolStats);

@@ -7,6 +7,17 @@ View::View()
 
 }
 
+View::View(QString name, bool isAll, const QVector<QString> &columnNames_a,
+     const QVector<QString> &tableNames_a, QVector<BoolStat*>& boolStats_a,
+     QString cov, QString tov, QString bov) :
+    _isAll(isAll), columnNames(columnNames_a), tableNames(tableNames_a), boolStats(boolStats_a)
+{
+    strcpy(_name, name.toLatin1().data());
+    strcpy(_cov, cov.toLatin1().data());
+    strcpy(_tov, tov.toLatin1().data());
+    strcpy(_bov, bov.toLatin1().data());
+}
+
 int View::serialize(char buf[]) {
 
     int offset = 0;
@@ -151,4 +162,8 @@ bool View::readBoolStats() {
     }
 
     return true;
+}
+
+QString View::getName() {
+    return _name;
 }

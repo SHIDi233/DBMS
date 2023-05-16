@@ -42,6 +42,11 @@ QString User::createDb(QString name)
     if(!tbFile.open(QIODevice::WriteOnly)) { return "表描述文件创建失败"; };
     tbFile.close();
 
+    // 创建表描述文件
+    QFile viwFile(path.absoluteFilePath(name + ".viw"));
+    if(!viwFile.open(QIODevice::WriteOnly)) { return "视图描述文件创建失败"; };
+    viwFile.close();
+
     // 创建日志文件
     QFile logFile(path.absoluteFilePath(name + ".log"));
     if(!logFile.open(QIODevice::WriteOnly)) { return "日志文件创建失败"; };

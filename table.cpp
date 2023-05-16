@@ -2,6 +2,7 @@
 #include "QDataStream"
 #include "QDir"
 #include "QDateTime"
+#include "db.h"
 
 Table::Table(QString name, QString tdf, QString tic, QString trd, QString tid, QString crtime)
     : _recordNum(0), _fieldNum(0)

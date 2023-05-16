@@ -260,3 +260,120 @@ QVector<QVector<QString>> DB::select(bool isAll, const QVector<QString>& column_
     }
     return table_tem->select(isAll, column_names, boolStats);
 }
+
+QString DB::createView(QString viewName, bool isAll, const QVector<QString>& column_names,
+                       const QVector<QString>& tableName, QVector<BoolStat*> boolStats) {
+
+    QDir path(_filePath);
+
+    //创建视图列名记录文件
+    QFile covFile(path.absoluteFilePath(viewName + ".cov"));
+    if(!covFile.open(QIODevice::WriteOnly)) { return "视图列记录文件创建失败"; };
+    covFile.close();
+
+    //创建视图表名记录文件
+    QFile tovFile(path.absoluteFilePath(viewName + ".tov"));
+    if(!tovFile.open(QIODevice::WriteOnly)) { return "视图表名记录文件创建失败"; };
+    tovFile.close();
+
+    //创建视图判断信息存储文件
+    QFile bovFile(path.absoluteFilePath(viewName + ".bov"));
+    if(!bovFile.open(QIODevice::WriteOnly)) { return "视图判断信息存储文件创建失败"; };
+    bovFile.close();
+
+    //创建视图类
+    View *view = new View(viewName, isAll, column_names, tableName, boolStats,
+                          path.absoluteFilePath(viewName + ".cov"),
+                          path.absoluteFilePath(viewName + ".tov"),
+                          path.absoluteFilePath(viewName + ".bov"));
+    views.append(view);
+    writeView(view, path.absoluteFilePath(QString(_name) + ".viw"));
+
+    return "视图创建成功";
+}
+
+bool DB::writeView(View* v, QString filePath) {
+    char buf[VIEWBYTE + 128];
+    int cnt = v->serialize(buf);
+
+    //创建文件操作对象
+    QFile viewFile(filePath);
+    if(!viewFile.open(QIODevice::Append)) { return false; }//判断文件是否存在
+    QDataStream dbOut(&viewFile);
+    dbOut.writeRawData(buf, cnt);
+
+    return true;
+}
+
+bool DB::readViews(QString filePath) {
+
+    //创建文件操作对象
+    QFile viewFile(filePath);
+    if(!viewFile.open(QIODevice::ReadOnly)) { return false; }
+    QDataStream viewOut(&viewFile);
+
+    //循环读入
+    char buf[VIEWBYTE + 128];
+    while(!viewOut.atEnd()) {
+        viewOut.readRawData(buf, VIEWBYTE);
+        View *v = new View();
+        v->deSerialize(buf);
+        views.push_back(v);
+    }
+
+    return true;
+}
+
+bool DB::writeViews(QString filePath) {
+
+    char buf[VIEWBYTE + 128];
+    int cnt;
+
+    //创建文件操作对象
+    QFile viewFile(filePath);
+    if(!viewFile.open(QIODevice::WriteOnly)) { return false; }//判断文件是否存在
+    QDataStream viewOut(&viewFile);
+
+    //循环写入数据
+    for(auto &v : views) {
+        cnt = v->serialize(buf);
+        viewOut.writeRawData(buf, cnt);
+    }
+
+    return true;
+}
+
+Table* DB::viewToTable(View *view) {
+    Table *newTable = new Table(view->_name);
+    QVector<QVector<QString>> values = select(view->_isAll, view->columnNames, view->tableNames, view->boolStats);
+    //添加列
+    for(auto &t : tables) {
+        for(auto &tn : view->tableNames) {
+            if(t->_name == tn) {
+                for(auto &cn : view->columnNames) {
+                    if(cn.contains('.')) {
+                        if(cn.split('.')[0] == t->getName()) {
+                            for(auto & c : t->columns) {
+                                if(c->getName() == cn.split('.')[1]) {
+                                    newTable->addColumn(cn, c->getType(), c->getTypeLen(), c->getIntegrities());
+                                }
+                            }
+                        }
+                    } else {
+                        for(auto & c : t->columns) {
+                            if(c->getName() == cn) {
+                                newTable->addColumn(cn, c->getType(), c->getTypeLen(), c->getIntegrities());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    //添加记录
+    for(int i = 1; i < values.size(); i++) {
+        newTable->insertRecord(view->columnNames, values[i]);
+    }
+    return newTable;
+}

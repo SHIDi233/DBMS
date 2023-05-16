@@ -67,3 +67,7 @@ bool Column::modify(TYPE newType, int newTypeLen, int integrity) {
     _integrities = integrity;
     return true;
 }
+
+int Column::getIntegrities() {
+    return _integrities;
+}

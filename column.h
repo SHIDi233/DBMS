@@ -31,6 +31,7 @@ public:
     int getTypeLen();
     QString getName();
     bool modify(TYPE newType, int newTypeLen, int integrity);
+    int getIntegrities();
 
     void setTable(QString table){_table=table;};
     QString getTable(){return _table;};

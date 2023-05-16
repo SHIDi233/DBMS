@@ -15,6 +15,8 @@
 
 const int TABLEBYTE = 128 + 4 + 4 + 256 + 256 + 256 + 256 + 32 + 32;
 
+class DB;
+
 class Table
 {
 private:
@@ -37,6 +39,8 @@ private:
     QList<Row*> rows;//记录列表
     QList<Integrity*> integrities;//约束容器
 public:
+    friend class DB;
+
     Table(QString name, QString tdf, QString tic, QString trd, QString tid, QString crtime);//创建表时调用这个函数
     Table(QString name);//修改表时调用这个函数
 //    Table(char buf[]);//读取表时调用这个函数

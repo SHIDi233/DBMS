@@ -11,6 +11,7 @@
 #include "integrity.h"
 #include "table.h"
 #include "QList"
+#include "view.h"
 
 const int DBBYTE = 128 + 1 + 256 + 32;
 
@@ -23,6 +24,7 @@ private:
     char _crtime[32];//创建时间
 
     QList<Table*> tables;
+    QList<View*> views;
 public:
 
     DB(QString name, bool type, QString filePath, QString crtime);//创建数据库时调用
@@ -67,9 +69,20 @@ public:
     bool readTables(QString filePath);//从文件中读取表描述信息
     bool writeTables(QString filePath);//将表描述信息覆盖原信息
 
+    QString createView(QString viewName, bool isAll, //如果查询的是*则isAll为true, 此时column_name直接传空数组即可
+                       const QVector<QString>& column_names, //所有查询的列名
+                       const QVector<QString>& tableName, //表名
+                       QVector<BoolStat*> boolStats);//查询记录
+
+    bool writeView(View* v, QString filePath);//将表描述信息写入文件
+    bool readViews(QString filePath);//从文件中读取表描述信息
+    bool writeViews(QString filePath);//将表描述信息覆盖原信息
+
     //序列化与反序列化
     int serialize(char buf[]);
     int deSerialize(char buf[]);
+
+    Table* viewToTable(View *view);
 };
 
 #endif // DB_H

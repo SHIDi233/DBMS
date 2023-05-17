@@ -93,9 +93,6 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
    // SELECT 语句的正则表达式，包括可选的GROUP BY、HAVING和ORDER BY子句
    regex select_pattern(
            R"(SELECT\s+(.+)\s+FROM\s+(\w+)(?:\s+WHERE\s+(.+))?(?:\s+GROUP\s+BY\s+(.+))?(?:\s+HAVING\s+(.+))?(?:\s+ORDER\s+BY\s+(.+))?)");
-           //R"(SELECT\s+(.+)\s(?:\s+FROM\s+(.+))?(?:\s+WHERE\s+(.+))?(?:\s+GROUP\s+BY\s+(.+))?(?:\s+HAVING\s+(.+))?(?:\s+ORDER\s+BY\s+(.+))?)");
-           //R"(SELECT\.+from\.+(WHERE\.+)?((group by)?|(order by)?|(having)?)");
-           //R"(SELECT\s+(.+)\s+FROM\s+(.+))");
    // SELECT 语句的正则表达式，包括可选的GROUP BY、HAVING和ORDER BY子句
 
    smatch match;
@@ -107,20 +104,15 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        if(ns!=nullptr){
            ns->db_name = name;
        }
-       //cout << "CREATE TABLE statement" << "\ntable  name:" << table_name << "\ncolumn list:" <<" (" << columns_str << ")\n" << endl;
-
-       //......调用CREATE函数操作
-       //m->appendText(user.createDb(QString(QString::fromLocal8Bit(db_name.data()))));
 
    }
    else if (regex_match(sql, match, create_db_pattern)) {
        // 匹配 CREATE DB 语句
        string db_name = match[1];
 
-       //cout << "CREATE TABLE statement" << "\ntable  name:" << table_name << "\ncolumn list:" <<" (" << columns_str << ")\n" << endl;
-
        //......调用CREATE函数操作
        m->appendText(user.createDb(QString(QString::fromLocal8Bit(db_name.data()))));
+       QString log_reverse = "DROP DATABASE "+QString(QString::fromLocal8Bit(db_name.data()));
 
    }
    else if (regex_match(sql, match, create_table_pattern)) {
@@ -143,10 +135,11 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
                          ,(*output)[i],get_type((*output)[i+1]),get_size((*output)[i+1])));
        }
 
+       QString log_reverse = "DROP TABLE "+QString(QString::fromLocal8Bit(table_name.data()));
+
    }else if(regex_match(sql, match, desc_table_pattern)){
        //匹配 Desc 语句
        string table_name = match[1];
-       //db->
 
    }else if (regex_match(sql, match, insert_into_pattern)) {
        // 匹配 INSERT INTO 语句
@@ -162,6 +155,11 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        trim_insert(QString(QString::fromLocal8Bit(columns_str.data())),QString(QString::fromLocal8Bit(values_str.data())),columns,values);
 
        m->appendText(db->insertRecord(QString(QString::fromLocal8Bit(table_name.data())),*columns,*values));
+
+       QString log_reverse = "DELETE FROM "+QString(QString::fromLocal8Bit(table_name.data()))+" ";
+       for(int i=0;i<(*columns).length();i++){
+           log_reverse+= (*columns)[i]+"="+(*values)[i]+" ";
+       }
 
    } else if (regex_match(sql, match, delete_from_pattern)) {
        // 匹配 DELETE FROM 语句

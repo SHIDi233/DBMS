@@ -113,7 +113,7 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        //......调用CREATE函数操作
        m->appendText(user.createDb(QString(QString::fromLocal8Bit(db_name.data()))));
        QString log_reverse = "DROP DATABASE "+QString(QString::fromLocal8Bit(db_name.data()));
-
+        qDebug()<<log_reverse;
    }
    else if (regex_match(sql, match, create_table_pattern)) {
        // 匹配 CREATE TABLE 语句
@@ -136,6 +136,7 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        }
 
        QString log_reverse = "DROP TABLE "+QString(QString::fromLocal8Bit(table_name.data()));
+        qDebug()<<log_reverse;
 
    }else if(regex_match(sql, match, desc_table_pattern)){
        //匹配 Desc 语句
@@ -156,10 +157,12 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
 
        m->appendText(db->insertRecord(QString(QString::fromLocal8Bit(table_name.data())),*columns,*values));
 
-       QString log_reverse = "DELETE FROM "+QString(QString::fromLocal8Bit(table_name.data()))+" ";
-       for(int i=0;i<(*columns).length();i++){
-           log_reverse+= (*columns)[i]+"="+(*values)[i]+" ";
+       QString log_reverse = "DELETE FROM "+QString(QString::fromLocal8Bit(table_name.data()))+" WHERE ";
+       for(int i=0;i<(*columns).length()-1;i++){
+           log_reverse+= (*columns)[i]+"="+(*values)[i]+" AND ";
        }
+       log_reverse+= (*columns)[(*columns).length()-1]+"="+(*values)[(*columns).length()-1];
+       qDebug()<<log_reverse;
 
    } else if (regex_match(sql, match, delete_from_pattern)) {
        // 匹配 DELETE FROM 语句
@@ -171,6 +174,28 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        //......调用 DELETE 函数操作
 
 
+       QString log_reverse = "INSERT INTO "+QString(QString::fromLocal8Bit(table_name.data()))+"(";
+       QVector<QVector<QString>> last = parse_sql("SELECT * FROM "+QString(QString::fromLocal8Bit(table_name.data()))+" WHERE "+QString(QString::fromLocal8Bit(condition.data())));
+       for(int i=0;i<last.count();i++){
+            if(i==0){
+                for(int k=0;k<last[0].count();k++){
+                    log_reverse+=last[0][k];
+                    if(k!=last[0].count()-1)
+                        log_reverse+=",";
+                    else
+                        log_reverse+=") VALUES(";
+                }
+                continue;
+            }
+            for(int k=0;k<last[i].count();k++){
+                log_reverse+=last[i][k];
+                if(k!=last[i].count()-1)
+                    log_reverse+=",";
+                else
+                    log_reverse+=");";
+            }
+       }
+       qDebug()<<log_reverse;
 
    } else if (regex_match(sql, match, update_pattern)) {
        // 匹配 UPDATE 语句

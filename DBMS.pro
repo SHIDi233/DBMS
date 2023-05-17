@@ -23,6 +23,7 @@ SOURCES += \
     highlighter.cpp \
     index.cpp \
     integrity.cpp \
+    log.cpp \
     login.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -53,6 +54,7 @@ HEADERS += \
     highlighter.h \
     index.h \
     integrity.h \
+    log.h \
     login.h \
     mainwindow.h \
     newserver.h \

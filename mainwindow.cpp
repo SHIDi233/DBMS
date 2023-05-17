@@ -402,3 +402,45 @@ void MainWindow::on_action_CCN_triggered()
     a->show();
 }
 
+//备份功能
+void MainWindow::on_action_15_triggered()
+{
+    QProcess process(this);
+    process.setProgram("cmd");
+    QStringList argument;
+    argument<<"/c"<<"xcopy d:\\QTtest e:\\QTtest /e /s /q /i /y";
+    process.setArguments(argument);
+    process.start();
+    process.waitForStarted(); //等待程序启动
+    process.waitForFinished();//等待程序关闭
+    QString temp=QString::fromLocal8Bit(process.readAllStandardOutput()); //程序输出信息
+    qDebug()<<temp;
+}
+
+//恢复功能
+void MainWindow::on_action_16_triggered()
+{
+    QProcess process(this);
+    process.setProgram("cmd");
+    QStringList argument;
+    argument<<"/c"<<"xcopy e:\\QTtest d:\\QTtest /e /s /q /i /y";
+    process.setArguments(argument);
+    process.start();
+    process.waitForStarted(); //等待程序启动
+    process.waitForFinished();//等待程序关闭
+    QString temp=QString::fromLocal8Bit(process.readAllStandardOutput()); //程序输出信息
+    qDebug()<<temp;
+}
+
+//查看日志
+void MainWindow::on_action_12_triggered()
+{
+
+}
+
+//日志回滚
+void MainWindow::on_action_13_triggered()
+{
+
+}
+

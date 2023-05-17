@@ -7,6 +7,7 @@
 #include "QVector"
 
 static QDir rootPath("D:\\QTtest\\testDB");//数据库路径
+static QDir Path("D:\\QTtest");//数据库路径
 static User user;//当前用户
 
 

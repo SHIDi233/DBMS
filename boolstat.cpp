@@ -10,6 +10,14 @@ bool BoolStat::writeToFile(QDataStream &covOut) {
     return true;
 }
 
+void BoolStat::setValue(QString value) {
+
+}
+
+QString BoolStat::getValue() {
+
+}
+
 bool BoolStat::judge(Basic_Data *data) {
     return false;
 }
@@ -48,6 +56,14 @@ bool Compare::judge(Basic_Data *data) {
         return data->operator<(_value);
     }
     return false;
+}
+
+void Compare::setValue(QString value) {
+    _value = value;
+}
+
+QString Compare::getValue() {
+    return _value;
 }
 
 bool Compare::writeToFile(QDataStream &bovOut) {

@@ -188,7 +188,15 @@ bool Varchar::setValue(QString value) {
     bool isOk = false;
     if(value.at(0) == '\'' && value.at(value.size() - 1) == '\'') { isOk = true; }
     else if(value.at(0) == '\"' && value.at(value.size() - 1) == '\"') { isOk = true; }
-    if(!isOk) { return false; }
+    if(!isOk) {
+        //判断是否超过长度
+        if(value.size() > getSize() - 1) { return false; }
+
+        //赋值
+        memcpy(_value, value.toLatin1().data(), value.size());
+        setType(TYPE::VARCHAR);
+        return true;
+    }
 
     //判断是否超过长度
     if(value.size() - 2 > getSize() - 1) { return false; }

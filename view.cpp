@@ -16,6 +16,10 @@ View::View(QString name, bool isAll, const QVector<QString> &columnNames_a,
     strcpy(_cov, cov.toLatin1().data());
     strcpy(_tov, tov.toLatin1().data());
     strcpy(_bov, bov.toLatin1().data());
+
+    writeColumns();
+    writeTables();
+    writeBoolStats();
 }
 
 int View::serialize(char buf[]) {
@@ -27,6 +31,8 @@ int View::serialize(char buf[]) {
     offset += 1;
     memcpy(buf + offset, &_numOfTable, 4);
     offset += 4;
+    memcpy(buf + offset, _cov, 256);
+    offset += 256;
     memcpy(buf + offset, _tov, 256);
     offset += 256;
     memcpy(buf + offset, _bov, 256);
@@ -44,6 +50,8 @@ int View::deSerialize(char buf[]) {
     offset += 1;
     memcpy(&_numOfTable, buf + offset, 4);
     offset += 4;
+    memcpy(_cov, buf + offset, 256);
+    offset += 256;
     memcpy(_tov, buf + offset, 256);
     offset += 256;
     memcpy(_bov, buf + offset, 256);

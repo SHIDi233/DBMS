@@ -170,6 +170,7 @@ bool Table::readColumns() {
         dbOut.readRawData(buf, COLUMNBYTE);
         Column *c = new Column();
         c->deSerialize(buf);
+        c->setTable(getName());
         columns.append(c);
     }
     dbFile.close();
@@ -424,16 +425,35 @@ QVector<QVector<QString>> Table::select(bool isAll, const QVector<QString>& colu
             for(int j = 0; j < columns.size(); j++) {
                 QString columnName_tem;
                 if(b->getColumnName().contains('.')) {
-                    columnName_tem = columns[j]->getName()+"."+columns[i]->getTable();
+                    columnName_tem = columns[j]->getTable()+"."+columns[j]->getName();
                 } else {
                     columnName_tem = columns[j]->getName();
                 }
                 if(columnName_tem.compare(b->getColumnName()) == 0) {
+                    QString value_tem = b->getValue();
+                    if(b->getType() == BoolType::COMPARE) {
+                        if(value_tem.contains('.')) {
+                            for(int k = 0; k < columns.size(); k++) {
+                                if(value_tem == columns[k]->getTable() + "." + columns[k]->getName()) {
+                                    b->setValue(rows[i]->getValue(k));
+                                    break;
+                                }
+                            }
+                        } else {
+                            for(int k = 0; k < columns.size(); k++) {
+                                if(value_tem == columns[k]->getName()) {
+                                    b->setValue(rows[i]->getValue(k));
+                                    break;
+                                }
+                            }
+                        }
+                    }
                     if(b->getConnect()) {
                         isOk &= b->judge(rows[i]->getData(j));
                     } else {
                         isOk |= b->judge(rows[i]->getData(j));
                     }
+                    b->setValue(value_tem);
                     break;
                 }
             }
@@ -487,7 +507,7 @@ QVector<QVector<QString>> Table::select(bool isAll, const QVector<QString>& colu
         for(int i = 0; i < columns.size(); i++) {//在字段里寻找是否有同名的
             QString columnName_tem;
             if(column_names[j].contains('.')) {
-                columnName_tem = columns[i]->getName()+"."+columns[i]->getTable();
+                columnName_tem = columns[i]->getTable()+"."+columns[i]->getName();
             } else {
                 columnName_tem = columns[i]->getName();
             }
@@ -506,8 +526,8 @@ QVector<QVector<QString>> Table::select(bool isAll, const QVector<QString>& colu
 
     //第一行插入列名
     QVector<QString> columnName;
-    for(auto &c : columns) {
-        columnName.push_back(c->getName());
+    for(auto &c : column_names) {
+        columnName.push_back(c);
     }
     res.push_back(columnName);
     //将每一行插入

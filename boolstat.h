@@ -25,6 +25,8 @@ public:
     BoolStat(BoolType type, QString name, bool connect);
     BoolStat();
     virtual bool judge(Basic_Data *data);
+    virtual void setValue(QString value);
+    virtual QString getValue();
     QString getColumnName();
     void setConnect(bool connect);
     bool getConnect();
@@ -42,6 +44,8 @@ public:
     Compare(QString columnName, QString value, QString type, bool connect = true);//type："<", "<=", ">", ">=", "="
     bool judge(Basic_Data *data);
     bool writeToFile(QDataStream &bovOut);
+    void setValue(QString value);
+    QString getValue();
 };
 
 //between类

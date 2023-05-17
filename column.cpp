@@ -71,3 +71,7 @@ bool Column::modify(TYPE newType, int newTypeLen, int integrity) {
 int Column::getIntegrities() {
     return _integrities;
 }
+
+void Column::setTable(QString table) {
+    _table = table;
+}

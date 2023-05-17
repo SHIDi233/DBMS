@@ -33,7 +33,7 @@ public:
     bool modify(TYPE newType, int newTypeLen, int integrity);
     int getIntegrities();
 
-    void setTable(QString table){_table=table;};
+    void setTable(QString table);
     QString getTable(){return _table;};
 };
 

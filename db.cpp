@@ -220,6 +220,7 @@ int DB::deSerialize(char buf[]) {
     //加载table
     QDir path(_filePath);
     readTables(path.absoluteFilePath(QString(_name) + ".tb"));
+    readViews(path.absoluteFilePath(QString(_name) + ".viw"));
 
     return 0;
 }
@@ -354,34 +355,52 @@ bool DB::writeViews(QString filePath) {
 Table* DB::viewToTable(View *view) {
     Table *newTable = new Table(view->_name);
     QVector<QVector<QString>> values = select(view->_isAll, view->columnNames, view->tableNames, view->boolStats);
-    //添加列
-    for(auto &t : tables) {
+
+    if(view->_isAll) {
+        QVector<QString> columnNameAll;
         for(auto &tn : view->tableNames) {
-            if(t->_name == tn) {
-                for(auto &cn : view->columnNames) {
-                    if(cn.contains('.')) {
-                        if(cn.split('.')[0] == t->getName()) {
-                            for(auto & c : t->columns) {
-                                if(c->getName() == cn.split('.')[1]) {
-                                    newTable->addColumn(cn, c->getType(), c->getTypeLen(), c->getIntegrities());
+            for(auto &t : tables) {
+                if(t->_name == tn) {
+                    for(auto &c : t->columns) {
+                        newTable->addColumn(c->getName(), c->getType(), c->getTypeLen(), c->getIntegrities());
+                        columnNameAll.append(c->getName());
+                    }
+                }
+            }
+        }
+        //添加记录
+        for(int i = 1; i < values.size(); i++) {
+            newTable->insertRecord(columnNameAll, values[i]);
+        }
+    } else {
+        //添加列
+        for(auto &t : tables) {
+            for(auto &tn : view->tableNames) {
+                if(t->_name == tn) {
+                    for(auto &cn : view->columnNames) {
+                        if(cn.contains('.')) {
+                            if(cn.split('.')[0] == t->getName()) {
+                                for(auto & c : t->columns) {
+                                    if(c->getName() == cn.split('.')[1]) {
+                                        newTable->addColumn(cn, c->getType(), c->getTypeLen(), c->getIntegrities());
+                                    }
                                 }
                             }
-                        }
-                    } else {
-                        for(auto & c : t->columns) {
-                            if(c->getName() == cn) {
-                                newTable->addColumn(cn, c->getType(), c->getTypeLen(), c->getIntegrities());
+                        } else {
+                            for(auto & c : t->columns) {
+                                if(c->getName() == cn) {
+                                    newTable->addColumn(cn, c->getType(), c->getTypeLen(), c->getIntegrities());
+                                }
                             }
                         }
                     }
                 }
             }
         }
-    }
-
-    //添加记录
-    for(int i = 1; i < values.size(); i++) {
-        newTable->insertRecord(view->columnNames, values[i]);
+        //添加记录
+        for(int i = 1; i < values.size(); i++) {
+            newTable->insertRecord(view->columnNames, values[i]);
+        }
     }
     return newTable;
 }

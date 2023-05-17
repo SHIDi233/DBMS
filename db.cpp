@@ -3,6 +3,7 @@
 #include "QDir"
 #include "QDateTime"
 #include "QDataStream"
+#include "Control.h"
 
 DB::DB(QString name, bool type, QString filePath, QString crtime)
 {
@@ -97,6 +98,11 @@ bool DB::writeTables(QString filePath) {
 
 QString DB::createTable(QString tableName){
 
+    //判断用户权限
+    if(user.getPer() < Permission::AD) {
+        return "权限不足，无法删除字段";
+    }
+
     QDir path(_filePath);
 
     //创建表定义文件
@@ -137,6 +143,12 @@ QString DB::createTable(QString tableName){
 }
 
 QString DB::dropTable(QString tableName) {
+
+    //判断用户权限
+    if(user.getPer() < Permission::AD) {
+        return "权限不足，无法删除字段";
+    }
+
     //寻找数据库
     bool found = false;
     for(int i = 0; i < tables.size(); i++) {
@@ -156,6 +168,11 @@ QString DB::dropTable(QString tableName) {
 
 QString DB::addColumn(QString tableName, QString columnName, TYPE type, int typeLen, Integrity *integrity) {
     // TODO: 判断约束类型
+    //判断用户权限
+    if(user.getPer() < Permission::AD) {
+        return "权限不足，无法创建字段";
+    }
+
     int integ = 0;
     if(integrity == nullptr) {
         integ = 0;
@@ -179,7 +196,10 @@ QString DB::addColumn(QString tableName, QString columnName, TYPE type, int type
 }
 
 QString DB::dropColumn(QString tableName, QString columnName) {
-
+    //判断用户权限
+    if(user.getPer() < Permission::AD) {
+        return "权限不足，无法删除字段";
+    }
     bool found = false;//表示是否找指定表
     for(auto &t : tables) {
         if(t->getName().compare(tableName)) {
@@ -226,6 +246,12 @@ int DB::deSerialize(char buf[]) {
 }
 
 QString DB::insertRecord(QString tableName, const QVector<QString>& columnNameList, const QVector<QString>& valueList) {
+
+    //判断用户权限
+    if(user.getPer() < Permission::USER) {
+        return "权限不足，无法删除字段";
+    }
+
     for(auto &t : tables) {
         if(tableName.compare(t->getName()) == 0) {
             return t->insertRecord(columnNameList, valueList);
@@ -235,6 +261,12 @@ QString DB::insertRecord(QString tableName, const QVector<QString>& columnNameLi
 }
 
 QString DB::updateRecord(QString tableName, const QVector<QString>& columnNameList, const QVector<QString> valueList, QVector<BoolStat> boolStats) {
+
+    //判断用户权限
+    if(user.getPer() < Permission::USER) {
+        return "权限不足，无法删除字段";
+    }
+
     for(auto &t : tables) {
         if(tableName.compare(t->getName()) == 0) {
             return t->updateRecord(columnNameList, valueList, boolStats);
@@ -274,6 +306,11 @@ QString DB::createView(QString viewName, bool isAll, const QVector<QString>& col
                        const QVector<QString>& tableName, QVector<BoolStat*> boolStats) {
 
     QDir path(_filePath);
+
+    //判断用户权限
+    if(user.getPer() < Permission::AD) {
+        return "权限不足，无法删除字段";
+    }
 
     //创建视图列名记录文件
     QFile covFile(path.absoluteFilePath(viewName + ".cov"));

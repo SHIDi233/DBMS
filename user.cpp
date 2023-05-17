@@ -15,11 +15,19 @@ QVector<DB*>& User::getDbs() {
 
 QString User::createDb(QString name)
 {
-    // TODO: 判断权限
+    //判断用户权限
+    if(_permission != Permission::DBA) {
+        return "权限不足，无法创建数据库";
+    }
 
     if(name.size() > 127) { return "数据库名过长"; }//判断名字长度是否符合要求
 
-    // TODO: 判断数据库是否已经存在
+    //判断数据库是否已经存在
+    for(auto &d : dbs) {
+        if(name == d->getName()) {
+            return "数据库已存在";
+        }
+    }
 
     //获取当前时间
     QDateTime current_date_time =QDateTime::currentDateTime();
@@ -65,7 +73,11 @@ QString User::createDb(QString name)
 }
 
 QString User::dropDB(QString name) {
-    // TODO: 判断用户权限
+    //判断用户权限
+    if(_permission != Permission::DBA) {
+        return "权限不足，无法创建数据库";
+    }
+
     //寻找数据库
     bool found = false;
     for(int i = 0; i < dbs.size(); i++) {
@@ -114,4 +126,8 @@ bool User::loadDB() {
     }
 
     return isRead;
+}
+
+Permission User::getPer() {
+    return _permission;
 }

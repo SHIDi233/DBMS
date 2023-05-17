@@ -163,7 +163,7 @@ border:1px solid rgb(47, 49, 51);</string>
     <property name="geometry">
      <rect>
       <x>220</x>
-      <y>30</y>
+      <y>0</y>
       <width>191</width>
       <height>31</height>
      </rect>
@@ -179,7 +179,7 @@ border-style: solid;</string>
     <property name="geometry">
      <rect>
       <x>1300</x>
-      <y>30</y>
+      <y>0</y>
       <width>151</width>
       <height>31</height>
      </rect>
@@ -200,7 +200,7 @@ border-style: solid;
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>30</y>
+      <y>0</y>
       <width>131</width>
       <height>31</height>
      </rect>
@@ -284,7 +284,7 @@ border:1px solid rgb(47, 49, 51);</string>
     <property name="geometry">
      <rect>
       <x>1300</x>
-      <y>30</y>
+      <y>0</y>
       <width>151</width>
       <height>31</height>
      </rect>

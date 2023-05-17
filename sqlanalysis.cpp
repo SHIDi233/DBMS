@@ -113,7 +113,7 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        //......调用CREATE函数操作
        m->appendText(user.createDb(QString(QString::fromLocal8Bit(db_name.data()))));
        QString log_reverse = "DROP DATABASE "+QString(QString::fromLocal8Bit(db_name.data()));
-        qDebug()<<log_reverse;
+        qDebug()<<log_reverse;//可用
    }
    else if (regex_match(sql, match, create_table_pattern)) {
        // 匹配 CREATE TABLE 语句
@@ -136,7 +136,7 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        }
 
        QString log_reverse = "DROP TABLE "+QString(QString::fromLocal8Bit(table_name.data()));
-        qDebug()<<log_reverse;
+        qDebug()<<log_reverse;//可用
 
    }else if(regex_match(sql, match, desc_table_pattern)){
        //匹配 Desc 语句
@@ -162,7 +162,7 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
            log_reverse+= (*columns)[i]+"="+(*values)[i]+" AND ";
        }
        log_reverse+= (*columns)[(*columns).length()-1]+"="+(*values)[(*columns).length()-1];
-       qDebug()<<log_reverse;
+       qDebug()<<log_reverse;//可用
 
    } else if (regex_match(sql, match, delete_from_pattern)) {
        // 匹配 DELETE FROM 语句
@@ -195,7 +195,7 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
                     log_reverse+=");";
             }
        }
-       qDebug()<<log_reverse;
+       qDebug()<<log_reverse;//可用
 
    } else if (regex_match(sql, match, update_pattern)) {
        // 匹配 UPDATE 语句

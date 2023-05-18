@@ -90,6 +90,8 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
    // DROP TABLE 语句的正则表达式
    regex drop_table_pattern(R"(DROP\s+TABLE\s+(\w+))");
 
+
+
    // CREATE VIEW 语句的正则表达式
    //regex create_index_regex(R"(^\s*CREATE\s+(UNIQUE\s+)?(CLUSTERED|NONCLUSTERED\s+)?INDEX\s+(\w+)\s+ON\s+(\w+)\s*\((.*)\)\s*)");
    regex create_view_regex(R"(CREATE\s+VIEW\s+(\w+)\s+AS\s+SELECT\s+(.+)\s+FROM\s+(\w+)(?:\s+WHERE\s+(.+))?(?:\s+GROUP\s+BY\s+(.+))?(?:\s+HAVING\s+(.+))?(?:\s+ORDER\s+BY\s+(.+))?)");
@@ -179,6 +181,31 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        cout << "DELETE statement " << "\ntable  name:" << table_name << " \nWHERE " << condition << "\n" <<endl;
 
        //......调用 DELETE 函数操作
+
+       QVector<QString>* t=new QVector<QString>;
+       trim_where(QString(QString::fromLocal8Bit(condition.data())),t);
+       QVector<QString> s = *t;
+
+       QVector<BoolStat*> bs;
+       for(int i=0;i<s.count()-2;){
+           Compare* c;
+           if(i==0){
+               c=new Compare(s[i],s[i+2],s[i+1]);
+               i+=3;
+           }
+           else{
+               bool isTrue;
+               if(s[i]=="AND")
+                   isTrue=true;
+               else
+                   isTrue=false;
+               c=new Compare(s[i+1],s[i+3],s[i+2],isTrue);
+               i+=4;
+           }
+           bs.push_back(c);
+       }
+
+       m->appendText(db->deleteRecord(QString(QString::fromLocal8Bit(table_name.data())),bs));
 
 
        QString log_reverse = "INSERT INTO "+QString(QString::fromLocal8Bit(table_name.data()))+"(";

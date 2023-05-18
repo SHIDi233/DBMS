@@ -32,7 +32,6 @@ void NewServer::run(){
 
     user.loadDB();
 
-    //db = user.getDB("testDB");
 
 
 

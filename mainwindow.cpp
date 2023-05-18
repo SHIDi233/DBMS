@@ -1,4 +1,5 @@
 ﻿#include "mainwindow.h"
+#include "log.h"
 #include "ui_mainwindow.h"
 #include"sqlanalysis.h"
 #include "control.h"
@@ -152,6 +153,9 @@ void MainWindow::on_pushButton_7_clicked()
     //执行语句
     if(this->client==nullptr){//本地连接模式
 
+        Log log("D:\\QTtest\\testDB\\dba\\data\\root\\root.log");
+
+
 //        //检查错误
 //            SqlDebug sd;
 //        //        SqlAnalysis sa(db,this);
@@ -188,9 +192,11 @@ void MainWindow::on_pushButton_7_clicked()
         for(QString s : list){
             if(s=="")
                 continue;
+            log.insert(s,"");
             showTableAll(sa.parse_sql(s));
             showList();
         }
+        log.save();
     }
     else{//网络IP连接模式
         SqlAnalysis sa(db,this);
@@ -484,19 +490,13 @@ void MainWindow::on_action_16_triggered()
 void MainWindow::on_action_12_triggered()
 {
     QString displayString;
-    QFile file(fileName);
-    //目标文件路径
-    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        qDebug()<<"Can't open the file!";
-        return;
-    }
-    this->fileName = fileName;
-    QTextCodec *codec = QTextCodec::codecForName("utf-8");
-    QByteArray arr = file.readAll();
-    ui->textEdit->clear();
-    ui->textEdit->setPlainText(codec->toUnicode(arr));
-    file.close();
+    Log log("D:\\QTtest\\testDB\\dba\\data\\root\\root.log");
+
+//    QTextCodec *codec = QTextCodec::codecForName("utf-8");
+//    QByteArray arr = file.readAll();
+//    ui->textEdit->clear();
+    ui->textEdit->setPlainText(log.getAll());
+   // file.close();
 }
 
 //日志回滚

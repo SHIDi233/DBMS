@@ -26,6 +26,10 @@ public:
 
     void insert(QString recoder,QString reverse);
     void save();
+
+    QString getAll(){
+        return data;
+    }
 private:
     QString data="";
     QString path;

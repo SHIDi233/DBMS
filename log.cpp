@@ -5,7 +5,7 @@ void Log::insert(QString recoder,QString reverse){
 
     QDateTime current_date_time =QDateTime::currentDateTime();
     QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz ddd");
-    data+=recoder+current_date+"\n";
+    data+=recoder+"   "+current_date+"\n\n";
 }
 
 void Log::save(){

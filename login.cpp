@@ -59,29 +59,18 @@ Login::~Login()
 
 void Login::on_pushButton_clicked()
 {
-//    if(ui->lineEdit_2->text()==""){
-////        MainWindow* mw = new MainWindow;
-////        mw->show();
-//        CCNWindow* ccn = new CCNWindow;
-//        ccn->show();
-//        this->hide();
-//    }
-//    else{
-//        Client* c = new Client(ui->lineEdit_2->text());
-//        c->start();
-//        this->hide();
-//    }
-
-
-
-
-    if(login(ui->lineEdit_2->text(),ui->lineEdit->text())){
-        CCNWindow* ccn = new CCNWindow;
-        ccn->show();
+    if(ui->lineEdit_2->text().contains("\\")){//网络模式
+        Client* c = new Client(ui->lineEdit_2->text());
+        c->start();
         this->hide();
     }
-
-
+    else{//本地模式
+        if(login(ui->lineEdit_2->text(),ui->lineEdit->text())){
+            CCNWindow* ccn = new CCNWindow;
+            ccn->show();
+            this->hide();
+        }
+    }
 }
 
 

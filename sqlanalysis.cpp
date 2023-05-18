@@ -125,7 +125,7 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        string data = match[1];
 //       string user_name = match[1];
 //       string user_pass = match[2];
-       QStringList list = QString(QString::fromLocal8Bit(data.data())).split("");
+       QStringList list = QString(QString::fromLocal8Bit(data.data())).split(" ");
        QString user_name;
        QString user_pass;
        int flag = 0;

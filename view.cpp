@@ -140,22 +140,32 @@ bool View::readBoolStats() {
     QDataStream bovOut(&bovFile);
 
     while(!bovOut.atEnd()) {
-        BoolType type;
+        QString type;
         bovOut >> type;
-        if(type == BoolType::COMPARE) {
-            QString columnName, value, ctype;
+        if(type == "0") {
+            QString columnName, value, ctype, connect;
             bool con;
-            bovOut >> columnName >> value >> ctype >> con;
+            bovOut >> columnName >> value >> ctype >> connect;
+            if(connect == "0") {
+                con = false;
+            } else {
+                con = true;
+            }
             BoolStat *b = new Compare(columnName, value, ctype, con);
             boolStats.append(b);
-        } else if(type == BoolType::BETWEEN) {
-            QString columnName, value1, value2;
+        } else if(type == "1") {
+            QString columnName, value1, value2, connect;
             bool con;
-            bovOut >> columnName >> value1 >> value2 >> con;
+            bovOut >> columnName >> value1 >> value2 >> connect;
+            if(connect == "0") {
+                con = false;
+            } else {
+                con = true;
+            }
             BoolStat *b = new Between(columnName, value1, value2, con);
             boolStats.append(b);
-        } else if(type == BoolType::ISIN) {
-            QString columnName;
+        } else if(type == "2") {
+            QString columnName, connect;
             int size;
             bool con;
             bovOut >> columnName >> size;
@@ -163,7 +173,12 @@ bool View::readBoolStats() {
             for(int i = 0; i < size; i++) {
                 bovOut >> v[i];
             }
-            bovOut >> con;
+            bovOut >> connect;
+            if(connect == "0") {
+                con = false;
+            } else {
+                con = true;
+            }
             BoolStat *b = new IsIn(columnName, v, con);
             boolStats.append(b);
         }

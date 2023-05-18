@@ -167,7 +167,6 @@ QString DB::dropTable(QString tableName) {
 }
 
 QString DB::addColumn(QString tableName, QString columnName, TYPE type, int typeLen, Integrity *integrity) {
-    // TODO: 判断约束类型
     //判断用户权限
     if(user.getPer() < Permission::AD) {
         return "权限不足，无法创建字段";
@@ -490,4 +489,19 @@ QString DB::commit() {
     for(auto &t : tables) {
         t->commit();
     }
+    return "提交成功";
+}
+
+QString DB::addPK(QString tableName, QString columnName) {
+    //判断用户权限
+    if(user.getPer() < Permission::AD) {
+        return "权限不足，无法修改表属性";
+    }
+
+    for(auto &t : tables) {
+        if(t->getName() == tableName) {
+            return t->addIntegrity(QString("PK_") + columnName, columnName, ITGTYPE::PRIMARYKEY, "");
+        }
+    }
+    return "未找到表";
 }

@@ -16,7 +16,6 @@ enum Permission
     AD = 2,//管理员，可以插入删除数据并修改表结构
     USER = 1,//可以查询表，插入并删除数据
     VISITOR = 0//只可以查询表
-    // TODO: 设计权限并增加
 };
 
 class User

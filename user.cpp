@@ -157,6 +157,7 @@ int User::deSerialize(char buf[]) {
     memcpy(&_permission, buf + offset, 4);
     offset += 4;
 
+    rootPath.cd(_name);
     loadDB();
 
     return offset;

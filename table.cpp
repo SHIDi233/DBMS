@@ -307,12 +307,22 @@ QString Table::insertRecord(const QVector<QString>& columnNameList, const QVecto
     //先判断字段名是否都正确
     bool isIn;
     QVector<bool> isRead(columns.size(), false);//为防止传入字段名有重复
-    for(auto &c : columnNameList) {
+    for(int k = 0; k < columnNameList.size(); k++) {
         isIn = false;
         for(int i = 0; i < columns.size(); i++) {//在字段里寻找是否有同名的
-            if(columns[i]->getName().compare(c) == 0 && !isRead[i]) {//找到了就退出
+            if(columns[i]->getName().compare(columnNameList[k]) == 0 && !isRead[i]) {//找到了就退出
                 isIn = true;
                 isRead[i] = true;
+
+                //判断是否符合主键约束
+                if(columns[i]->getIntegrities() == ITGTYPE::PRIMARYKEY) {
+                    for(auto &r : rows) {
+                        if(valueList[k] == r->getValue(i)) {
+                            return "违反主键约束";
+                        }
+                    }
+                }
+
                 break;
             }
         }
@@ -410,6 +420,15 @@ QString Table::updateRecord(const QVector<QString>& columnNameList,
                 isIn = true;
                 isRead[i] = true;
                 columnIndex[j] = i;
+
+                //判断是否符合主键约束
+                if(columns[i]->getIntegrities() == ITGTYPE::PRIMARYKEY) {
+                    for(auto &r : rows) {
+                        if(valueList[j] == r->getValue(i)) {
+                            return "违反主键约束";
+                        }
+                    }
+                }
                 break;
             }
         }
@@ -642,6 +661,23 @@ QVector<QVector<QString>> Table::select(bool isAll, const QVector<QString>& colu
 
 //约束管理
 QString Table::addIntegrity(QString integName, QString filed, ITGTYPE type, QString param) {
+
+    bool isFound = false;
+    if(type == ITGTYPE::PRIMARYKEY) {
+        for(auto &c : columns) {
+            if(c->getName() == filed) {
+                c->setPK();
+                isFound = true;
+            }
+        }
+    } else {
+        for(auto &c : columns) {
+            if(c->getName() == filed) {
+                isFound = true;
+            }
+        }
+    }
+    if(!isFound) { return "未找到列"; }
     //创建column类
     Integrity *i = new Integrity(integName, filed, type, param);
 
@@ -661,5 +697,7 @@ QString Table::addIntegrity(QString integName, QString filed, ITGTYPE type, QStr
 
     //修改其他内容
     strcpy_s(_mtime, current_date.toLatin1().data());
+    integrities.append(i);
+
     return "增加约束成功";
 }

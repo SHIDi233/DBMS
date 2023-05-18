@@ -2,6 +2,7 @@
 #define COLUMN_H
 #include<QString>
 #include"basic_data.h"
+#include "integrity.h""
 
 const int COLUMNBYTE = 4 + 128 + 4 + 4 + 32 + 4;
 
@@ -32,6 +33,7 @@ public:
     QString getName();
     bool modify(TYPE newType, int newTypeLen, int integrity);
     int getIntegrities();
+    void setPK() { _integrities = ITGTYPE::PRIMARYKEY; };
 
     void setTable(QString table);
     QString getTable(){return _table;};

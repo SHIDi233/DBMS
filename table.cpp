@@ -386,7 +386,7 @@ QString Table::updateRecord(const QVector<QString>& columnNameList,
         bool isOk = true;
         for(auto &b : boolStats) {
             for(int j = 0; j < columns.size(); j++) {
-                if(columns[j]->getName().compare(b->getColumnName())) {
+                if(columns[j]->getName().compare(b->getColumnName()) == 0) {
                     if(b->getConnect()) {
                         isOk &= b->judge(rows[i]->getData(j));
                     } else {
@@ -475,7 +475,7 @@ QString Table::deleteRecord(QVector<BoolStat*> &boolStats) {
 //        }
         for(auto &b : boolStats) {
             for(int j = 0; j < columns.size(); j++) {
-                if(columns[j]->getName().compare(b->getColumnName())) {
+                if(columns[j]->getName().compare(b->getColumnName()) == 0) {
                     if(b->getConnect()) {
                         isOk &= b->judge(rows[i]->getData(j));
                     } else {

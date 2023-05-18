@@ -363,12 +363,12 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
 
        //暂时测试表搜索功能语句，非最终版本
        if((*columns)[0]=="*"){
-           for(Table* tb : db->getTable()){
+           //for(Table* tb : db->getTable()){
                db->createView(vn,true,QVector<QString>(),tin,bs);
-           }
+           //}
        }
        else{
-           db->createView(vn,false,QVector<QString>(),tin,bs);
+           db->createView(vn,false,*columns,tin,bs);
        }
 
    }

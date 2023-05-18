@@ -71,7 +71,7 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
    // CREATE TABLE 语句的正则表达式
    regex alter_table_add_pattern(R"(ALTER\s+TABLE\s+(\w+)\s+ADD+(.+))");
    // CREATE TABLE 语句的正则表达式
-   regex alter_table_midify_pattern(R"(ALTER\s+TABLE\s+(\w+)\s+MODIFY+(.+))");
+   regex alter_table_modify_pattern(R"(ALTER\s+TABLE\s+(\w+)\s+MODIFY+(.+))");
    // CREATE TABLE 语句的正则表达式
    regex alter_table_drop_pattern(R"(ALTER\s+TABLE\s+(\w+)\s+DROP+(.+))");
 
@@ -385,9 +385,24 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        string type = match[3];
 
        m->appendText(db->addColumn(QString(QString::fromLocal8Bit(table_name.data())),
-                                   QString(QString::fromLocal8Bit(table_name.data())),
+                                   QString(QString::fromLocal8Bit(columns_str.data())),
                                    get_type(QString::fromLocal8Bit(columns_str.data())),
                                    get_size(QString::fromLocal8Bit(columns_str.data()))));
+   }
+   else if (regex_match(sql, match, alter_table_modify_pattern)){
+       string table_name = match[1];
+       string columns_str = match[2];
+       string type = match[3];
+       m->appendText(db->modifyColumn(QString(QString::fromLocal8Bit(table_name.data())),
+                                      QString(QString::fromLocal8Bit(columns_str.data())),
+                                      get_type(QString::fromLocal8Bit(columns_str.data())),
+                                      get_size(QString::fromLocal8Bit(columns_str.data()))));
+   }
+   else if (regex_match(sql, match, alter_table_drop_pattern)){
+       string table_name = match[1];
+       string columns_str = match[2];
+       m->appendText(db->dropColumn(QString(QString::fromLocal8Bit(table_name.data())),
+                                    QString(QString::fromLocal8Bit(columns_str.data()))));
    }
    else {
        cout << "Invalid SQL statement" << endl;

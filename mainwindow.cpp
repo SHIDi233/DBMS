@@ -190,6 +190,8 @@ void MainWindow::showTable(QVector<QString> name,QVector<QVector<QString>> table
 }
 
 void MainWindow::showTableAll(QVector<QVector<QString>> table){
+    if(table.length()==0)
+        return;
     ui->tableView->setVisible(true);
     ui->textEdit_4->setVisible(false);
     QStandardItemModel *model = new QStandardItemModel(this);

@@ -2,6 +2,11 @@
 
 bool readUsers() {
     QFile dbFile(Path.absoluteFilePath("ruanko.usr"));
+    if(!dbFile.exists()) {
+        users.append(&user);
+        writeUsers();
+        return true;
+    }
     if(!dbFile.open(QIODevice::ReadOnly)) { return false; }
     QDataStream dbOut(&dbFile);
 

@@ -1,7 +1,11 @@
 ﻿#include "log.h"
+#include<QDateTime>
 
 void Log::insert(QString recoder,QString reverse){
-    data+=recoder;
+
+    QDateTime current_date_time =QDateTime::currentDateTime();
+    QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz ddd");
+    data+=recoder+current_date+"\n";
 }
 
 void Log::save(){

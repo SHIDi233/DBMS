@@ -139,6 +139,8 @@ void MainWindow::on_pushButton_7_clicked()
         return;
     }
 
+
+
     //记录所有语句
     QString all= ui->textEdit->toPlainText();
     all=all.replace("\n","");
@@ -149,6 +151,39 @@ void MainWindow::on_pushButton_7_clicked()
     //...
     //执行语句
     if(this->client==nullptr){//本地连接模式
+
+//        //检查错误
+//            SqlDebug sd;
+//        //        SqlAnalysis sa(db,this);
+//            int i=1;
+//            int isFalse[100]={0};
+//            bool isTrue = true;
+//            for(QString s : list){
+//                if(s=="")
+//                    continue;
+//                QString back = sd.parse_sql(s);
+//                if(back!=""){
+//                    //qDebug()<<s+" "+back;
+//                    qDebug()<<"第"+QString::number(i)+"句问题";
+//                    this->appendText("第"+QString::number(i)+"句问题");
+//                    isFalse[i]=1;
+//                    isTrue=false;
+//                }
+//                i++;
+//            }
+
+//            for(int k=1;k<=100;k++){
+//                if(isFalse[k]==1){
+//                    ui->textEdit_2->setText(ui->textEdit_2->toPlainText()+"→\n");
+//                }
+//                else{
+//                    ui->textEdit_2->setText(ui->textEdit_2->toPlainText()+"\n");
+//                }
+//            }
+
+//            if(!isTrue)
+//                return;
+
         SqlAnalysis sa(db,this);
         for(QString s : list){
             if(s=="")
@@ -219,7 +254,7 @@ void MainWindow::showTableAll(QVector<QVector<QString>> table){
 void MainWindow::appendText(QString output){
     ui->tableView->setVisible(false);
     ui->textEdit_4->setVisible(true);
-    ui->textEdit_4->setText(ui->textEdit->toPlainText()+"\n"+output);//附加输出
+    ui->textEdit_4->setText(ui->textEdit_4->toPlainText()+"\n"+output);//附加输出
 }
 
 void MainWindow::on_treeView_doubleClicked(const QModelIndex &index)
@@ -373,6 +408,7 @@ void MainWindow::on_action_7_triggered()
 //        SqlAnalysis sa(db,this);
         int i=1;
         int isFalse[100]={0};
+        bool isTrue = false;
         for(QString s : list){
             if(s=="")
                 continue;
@@ -380,7 +416,9 @@ void MainWindow::on_action_7_triggered()
             if(back!=""){
                 //qDebug()<<s+" "+back;
                 qDebug()<<"第"+QString::number(i)+"句问题";
+                this->appendText("第"+QString::number(i)+"句问题");
                 isFalse[i]=1;
+                isTrue=false;
             }
             i++;
         }

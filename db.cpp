@@ -288,7 +288,7 @@ QString DB::insertRecord(QString tableName, const QVector<QString>& columnNameLi
     return "未找到表";
 }
 
-QString DB::updateRecord(QString tableName, const QVector<QString>& columnNameList, const QVector<QString> valueList, QVector<BoolStat> boolStats) {
+QString DB::updateRecord(QString tableName, const QVector<QString>& columnNameList, const QVector<QString> &valueList, QVector<BoolStat*> &boolStats) {
 
     //判断用户权限
     if(user.getPer() < Permission::USER) {
@@ -298,6 +298,20 @@ QString DB::updateRecord(QString tableName, const QVector<QString>& columnNameLi
     for(auto &t : tables) {
         if(tableName.compare(t->getName()) == 0) {
             return t->updateRecord(columnNameList, valueList, boolStats);
+        }
+    }
+    return "未找到表";
+}
+
+QString DB::deleteRecord(QString tableName, QVector<BoolStat*>& boolStats) {
+    //判断用户权限
+    if(user.getPer() < Permission::USER) {
+        return "权限不足，无法删除字段";
+    }
+
+    for(auto &t : tables) {
+        if(tableName.compare(t->getName()) == 0) {
+            return t->deleteRecord(boolStats);
         }
     }
     return "未找到表";

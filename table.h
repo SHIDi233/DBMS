@@ -66,11 +66,13 @@ public:
     //数据管理
     QString insertRecord(const QVector<QString>& columnNameList, const QVector<QString>& valueList);//插入记录
 
-    QString updateRecord(const QVector<QString>& columnNameList, const QVector<QString> valueList, QVector<BoolStat>& boolStats);//更新记录
+    QString updateRecord(const QVector<QString>& columnNameList, const QVector<QString> valueList, QVector<BoolStat*>& boolStats);//更新记录
 
     QVector<QVector<QString>> select(bool isAll, //如果查询的是*则isAll为true, 此时column_name直接传空数组即可
                    const QVector<QString>& column_names, //所有查询的列名
                    QVector<BoolStat*>& boolStats);//查询记录
+
+    QString deleteRecord(QVector<BoolStat*> &boolStats);
 
     //约束管理
     QString addIntegrity(QString integName, QString filed, ITGTYPE type, QString param);

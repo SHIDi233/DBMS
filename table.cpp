@@ -227,6 +227,22 @@ QString Table::addColumn(QString columnName, TYPE type, int typeLen, int integri
     QDateTime current_date_time =QDateTime::currentDateTime();
     QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz ddd");
 
+    for(auto &r : rows) {
+        Basic_Data *b = nullptr;
+        if(type == TYPE::INTEGER) {
+            b = new Integer();
+        } else if(type == TYPE::VARCHAR) {
+            b = new Varchar(typeLen);
+        } else if(type == TYPE::BOOL) {
+            b = new Bool();
+        } else if(type == TYPE::DOUBLE) {
+            b = new Double();
+        } else {
+            b = new DateTime();
+        }
+        r->addData(b);
+    }
+
     //修改其他内容
     _fieldNum++;
     strcpy_s(_mtime, current_date.toLatin1().data());
@@ -363,18 +379,18 @@ QString Table::insertRecord(const QVector<QString>& columnNameList, const QVecto
 }
 
 QString Table::updateRecord(const QVector<QString>& columnNameList,
-                            const QVector<QString> valueList, QVector<BoolStat>& boolStats) {
+                            const QVector<QString> valueList, QVector<BoolStat*>& boolStats) {
     //寻找符合要求的行
     QVector<int> rowIndex;
     for(int i = 0; i < rows.size(); i++) {
         bool isOk = true;
         for(auto &b : boolStats) {
             for(int j = 0; j < columns.size(); j++) {
-                if(columns[j]->getName().compare(b.getColumnName())) {
-                    if(b.getConnect()) {
-                        isOk &= b.judge(rows[i]->getData(j));
+                if(columns[j]->getName().compare(b->getColumnName())) {
+                    if(b->getConnect()) {
+                        isOk &= b->judge(rows[i]->getData(j));
                     } else {
-                        isOk |= b.judge(rows[i]->getData(j));
+                        isOk |= b->judge(rows[i]->getData(j));
                     }
                     break;
                 }
@@ -410,6 +426,72 @@ QString Table::updateRecord(const QVector<QString>& columnNameList,
             res &= rows[r]->setData(columnIndex[i], valueList[i]);
         }
         if(!res) { return "数据类型错误, 修改失败"; }
+    }
+    return "修改成功";
+}
+
+QString Table::deleteRecord(QVector<BoolStat*> &boolStats) {
+
+    //判断该行是否符合要求
+    QVector<int> rowIndex;
+    for(int i = 0; i < rows.size(); i++) {
+        bool isOk = true;
+//        for(auto &b : boolStats) {
+//            for(int j = 0; j < columns.size(); j++) {
+//                QString columnName_tem;
+//                if(b->getColumnName().contains('.')) {
+//                    columnName_tem = columns[j]->getTable()+"."+columns[j]->getName();
+//                } else {
+//                    columnName_tem = columns[j]->getName();
+//                }
+//                if(columnName_tem.compare(b->getColumnName()) == 0) {
+//                    QString value_tem = b->getValue();
+//                    if(b->getType() == BoolType::COMPARE) {
+//                        if(value_tem.contains('.')) {
+//                            for(int k = 0; k < columns.size(); k++) {
+//                                if(value_tem == columns[k]->getTable() + "." + columns[k]->getName()) {
+//                                    b->setValue(rows[i]->getValue(k));
+//                                    break;
+//                                }
+//                            }
+//                        } else {
+//                            for(int k = 0; k < columns.size(); k++) {
+//                                if(value_tem == columns[k]->getName()) {
+//                                    b->setValue(rows[i]->getValue(k));
+//                                    break;
+//                                }
+//                            }
+//                        }
+//                    }
+//                    if(b->getConnect()) {
+//                        isOk &= b->judge(rows[i]->getData(j));
+//                    } else {
+//                        isOk |= b->judge(rows[i]->getData(j));
+//                    }
+//                    b->setValue(value_tem);
+//                    break;
+//                }
+//            }
+//        }
+        for(auto &b : boolStats) {
+            for(int j = 0; j < columns.size(); j++) {
+                if(columns[j]->getName().compare(b->getColumnName())) {
+                    if(b->getConnect()) {
+                        isOk &= b->judge(rows[i]->getData(j));
+                    } else {
+                        isOk |= b->judge(rows[i]->getData(j));
+                    }
+                    break;
+                }
+            }
+        }
+        if(isOk) {
+            rowIndex.push_back(i);
+        }
+    }
+
+    for(auto &i : rowIndex) {
+        rows.removeAt(i);
     }
     return "修改成功";
 }

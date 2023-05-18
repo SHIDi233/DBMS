@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/new/icon">
+        <file>image/link.png</file>
+        <file>image/list.png</file>
+        <file>image/lookfor.png</file>
+        <file>image/view.png</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>image/blue.png</file>
+        <file>image/top.png</file>
+        <file>image/exit.png</file>
+        <file>image/user.png</file>
+        <file>image/user_icon.png</file>
+    </qresource>
+</RCC>

@@ -1,11 +1,14 @@
-#include "mainwindow.h"
-
+﻿#include "mainwindow.h"
+#include"server.h"
 #include <QApplication>
 #include <QLocale>
 #include <QTranslator>
+#include "login.h"
 
 int main(int argc, char *argv[])
 {
+
+
     QApplication a(argc, argv);
 
     QTranslator translator;
@@ -17,7 +20,13 @@ int main(int argc, char *argv[])
             break;
         }
     }
-    MainWindow w;
-    w.show();
+//    MainWindow w;
+//    w.show();
+
+    Server* s = new Server();
+    s->start();
+
+    Login l;
+    l.show();
     return a.exec();
 }

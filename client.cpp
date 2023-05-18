@@ -70,6 +70,8 @@ void Client::run(){
             }
         }
 
+        socket_client->flush();
+        socket_client->readAll();
 
 
         while(isOnline){

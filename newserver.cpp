@@ -61,6 +61,7 @@ void NewServer::run(){
         qDebug()<<"有用户尝试登录，失败";
     }
 
+    socket_ser->flush();
     socket_ser->readAll();
     user.loadDB();
 
@@ -102,13 +103,8 @@ void NewServer::run(){
 //                socket_ser->flush();
 
             }
-            QString ss = "senhjsbfidsnfjiasenfjosdnfiodsnfedsfesfnuisnfdsjikfndsjkfnedsjifesuiofhesdiofdsuiofdsiovdsuiohdsiojfaskhduiashdashduiashduiashduiasdhsauihdasuidhsauid"
-                    "senhjsbfidsnfjiasenfjosdnfiodsnfedsfesfnuisnfdsjikfndsjkfnedsjifesuiofhesdiofdsuiofdsiovdsuiohdsiojfaskhduiashdashduiashduiashduiasdhsauihdasuidhsauid"
-                         "senhjsbfidsnfjiasenfjosdnfiodsnfedsfesfnuisnfdsjikfndsjkfnedsjifesuiofhesdiofdsuiofdsiovdsuiohdsiojfaskhduiashdashduiashduiashduiasdhsauihdasuidhsauid"
-                         "senhjsbfidsnfjiasenfjosdnfiodsnfedsfesfnuisnfdsjikfndsjkfnedsjifesuiofhesdiofdsuiofdsiovdsuiohdsiojfaskhduiashdashduiashduiashduiasdhsauihdasuidhsauid"
-                         "senhjsbfidsnfjiasenfjosdnfiodsnfedsfesfnuisnfdsjikfndsjkfnedsjifesuiofhesdiofdsuiofdsiovdsuiohdsiojfaskhduiashdashduiashduiashduiasdhsauihdasuidhsauid"
-                         "senhjsbfidsnfjiasenfjosdnfiodsnfedsfesfnuisnfdsjikfndsjkfnedsjifesuiofhesdiofdsuiofdsiovdsuiohdsiojfaskhduiashdashduiashduiashduiasdhsauihdasuidhsauid"
-                         "senhjsbfidsnfjiasenfjosdnfiodsnfedsfesfnuisnfdsjikfndsjkfnedsjifesuiofhesdiofdsuiofdsiovdsuiohdsiojfaskhduiashdashduiashduiashduiasdhsauihdasuidhsauid";
+            QString ss = "senhjsbfidsnfjiasenfjosdnfiodsnfedsfesfnuisnfdsjikfndsjkfnedsjifesuiofhesdiofdsuiofdsiovdsuiohdsiojfaskhduiashdashduiashduiashduiasdhsauihdasuidhsauid";
+
             socket_ser->write(ss.toUtf8().data(),ss.length());
             socket_ser->flush();
 

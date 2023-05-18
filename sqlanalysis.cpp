@@ -56,6 +56,9 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
 
    string sql = qsql.toStdString();
 
+   // CREATE USER 语句的正则表达式
+   regex create_user_pattern(R"(CREATE\s+USER\s+(.+))");
+
    // USE DATABASE 语句的正则表达式
    regex use_db_pattern(R"(USE\s+(\w+))");
 
@@ -113,6 +116,30 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        if(ns!=nullptr){
            ns->db_name = name;
        }
+
+   }
+   else if (regex_match(sql, match, create_user_pattern)) {
+       // 匹配 CREATE DB 语句
+       string data = match[1];
+//       string user_name = match[1];
+//       string user_pass = match[2];
+       QStringList list = QString(QString::fromLocal8Bit(data.data())).split("");
+       QString user_name;
+       QString user_pass;
+       int flag = 0;
+       for(QString s:list)
+       {
+           if(s!=""){
+               if(flag==0)
+                user_name = s;
+               if(flag==1)
+                user_pass = s;
+                flag++;
+           }
+       }
+
+       //......调用CREATE函数操作
+       m->appendText(user.createUser(user_name,user_pass));
 
    }
    else if (regex_match(sql, match, create_db_pattern)) {

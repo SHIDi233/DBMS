@@ -483,7 +483,20 @@ void MainWindow::on_action_16_triggered()
 //查看日志
 void MainWindow::on_action_12_triggered()
 {
-
+    QString displayString;
+    QFile file(fileName);
+    //目标文件路径
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        qDebug()<<"Can't open the file!";
+        return;
+    }
+    this->fileName = fileName;
+    QTextCodec *codec = QTextCodec::codecForName("utf-8");
+    QByteArray arr = file.readAll();
+    ui->textEdit->clear();
+    ui->textEdit->setPlainText(codec->toUnicode(arr));
+    file.close();
 }
 
 //日志回滚

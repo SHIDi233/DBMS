@@ -68,6 +68,8 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
    // DROP DATABASE 语句的正则表达式
    regex drop_db_pattern(R"(DROP\s+DATABASE\s+(\w+))");
 
+   regex grant_pattern(R"(GRANT\s+(\w+)\s+(\w+))");
+
    // CREATE TABLE 语句的正则表达式
    regex create_table_pattern(R"(CREATE\s+TABLE\s+(\w+)\s*\((.+)\))");
 
@@ -178,7 +180,28 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        //匹配 Desc 语句
        string table_name = match[1];
 
-   }else if (regex_match(sql, match, insert_into_pattern)) {
+   }else if(regex_match(sql, match, grant_pattern)){
+       //匹配 Desc 语句
+       string user_name = match[1];
+       string permission = match[2];
+       QString p =QString(QString::fromLocal8Bit(permission.data()));
+        if(p=="DBA"){
+            user.grant(QString(QString::fromLocal8Bit(user_name.data())),DBA);
+        }
+        else if(p=="AD"){
+            user.grant(QString(QString::fromLocal8Bit(user_name.data())),AD);
+        }
+        else if(p=="USER"){
+            user.grant(QString(QString::fromLocal8Bit(user_name.data())),USER);
+        }
+        else if(p=="VISITOR"){
+            user.grant(QString(QString::fromLocal8Bit(user_name.data())),VISITOR);
+        }
+
+
+
+   }
+   else if (regex_match(sql, match, insert_into_pattern)) {
        // 匹配 INSERT INTO 语句
        string table_name = match[1];
        string columns_str = match[2];

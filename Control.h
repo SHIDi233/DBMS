@@ -11,6 +11,8 @@ static QDir Path("D:\\QTtest\\testDB");//数据库路径
 static User user("dba", "");//当前用户
 static QDir rootPath("D:\\QTtest\\testDB\\dba");//数据库路径
 
+static QString current_db;//当前选中数据库
+
 static QVector<User*> users;
 
 bool readUsers();

@@ -24,7 +24,7 @@ Client::Client(QString& ip,QString& acc,QString& pass){
 void Client::run(){
     socket_client=new QTcpSocket();
     //有数据可读时，进行处理
-    socket_client->connectToHost("192.168.10.187",9559);
+    socket_client->connectToHost(ip,9559);
     qDebug()<<"连接服务器中";
 
         while(1){

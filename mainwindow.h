@@ -71,7 +71,5 @@ private:
 
     QString fileName;//当前打开的文件
 
-
-
 };
 #endif // MAINWINDOW_H

@@ -123,11 +123,9 @@ void MainWindow::showList(){
             QProcess::startDetached(qApp->applicationFilePath(), QStringList());
     }
 
-    //model->setHorizontalHeaderLabels(QStringList()<<"Manage");
     model->setHorizontalHeaderLabels(QStringList()<<"");
 
     //设置model
-
     ui->treeView->setModel(model);
 }
 
@@ -272,6 +270,7 @@ void MainWindow::on_treeView_doubleClicked(const QModelIndex &index)
        QString qs_db = db_name.toString();
        db = user.getDB(qs_db);
        ui->label->setText(qs_db);
+       current_db = qs_db;
     }
     return;
 }
@@ -492,11 +491,7 @@ void MainWindow::on_action_12_triggered()
     QString displayString;
     Log log("D:\\QTtest\\testDB\\dba\\data\\root\\root.log");
 
-//    QTextCodec *codec = QTextCodec::codecForName("utf-8");
-//    QByteArray arr = file.readAll();
-//    ui->textEdit->clear();
     ui->textEdit->setPlainText(log.getAll());
-   // file.close();
 }
 
 //日志回滚

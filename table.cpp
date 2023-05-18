@@ -420,6 +420,15 @@ QString Table::updateRecord(const QVector<QString>& columnNameList,
                 isIn = true;
                 isRead[i] = true;
                 columnIndex[j] = i;
+
+                //判断是否符合主键约束
+                if(columns[i]->getIntegrities() == ITGTYPE::PRIMARYKEY) {
+                    for(auto &r : rows) {
+                        if(valueList[j] == r->getValue(i)) {
+                            return "违反主键约束";
+                        }
+                    }
+                }
                 break;
             }
         }

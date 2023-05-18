@@ -83,6 +83,8 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
    // CREATE TABLE 语句的正则表达式
    regex alter_table_drop_pattern(R"(ALTER\s+TABLE\s+(\w+)\s+DROP+(.+))");
 
+   regex alter_table_add_primary_pattern(R"(ALTER\s+TABLE\s+(\w+)\s+ADD\s+PRIMARY\s+KEY\s+(.+))");
+
    // DESC TABLE 语句的正则表达式
    regex desc_table_pattern(R"(DESC\s+(\w+))");
 
@@ -122,6 +124,14 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
 //           ns->db_name = name;
 //       }
 
+   }
+   else if (regex_match(sql, match, alter_table_add_primary_pattern)) {
+       string table = match[1];
+       string pk = match[2];
+       if(m!=nullptr)
+            m->appendText(db->addPK(QString(QString::fromLocal8Bit(table.data())),QString(QString::fromLocal8Bit(pk.data()))));
+       else
+           db->addPK(QString(QString::fromLocal8Bit(table.data())),QString(QString::fromLocal8Bit(pk.data())));
    }
    else if (regex_match(sql, match, create_user_pattern)) {
        // 匹配 CREATE DB 语句
@@ -533,16 +543,30 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        string columns_str = match[2];
        string type = match[3];
 
-       if(m!=nullptr)
-            m->appendText(db->addColumn(QString(QString::fromLocal8Bit(table_name.data())),
-                                   QString(QString::fromLocal8Bit(columns_str.data())),
-                                   get_type(QString::fromLocal8Bit(columns_str.data())),
-                                   get_size(QString::fromLocal8Bit(columns_str.data()))));
-       else
-           db->addColumn(QString(QString::fromLocal8Bit(table_name.data())),
-                                              QString(QString::fromLocal8Bit(columns_str.data())),
-                                              get_type(QString::fromLocal8Bit(columns_str.data())),
-                                              get_size(QString::fromLocal8Bit(columns_str.data())));
+       if(QString(QString::fromLocal8Bit(columns_str.data())).contains("PRIMARY")){
+            QString res = QString(QString::fromLocal8Bit(columns_str.data())).replace("KEY(","");
+            res = res.replace(")","");
+            res= res.replace("PRIMARY","");
+            res= res.replace(" ","");
+            if(m!=nullptr)
+                m->appendText(db->addPK(QString(QString::fromLocal8Bit(table_name.data())),res));
+            else
+                db->addPK(QString(QString::fromLocal8Bit(table_name.data())),res);
+       }
+       else{
+           if(m!=nullptr)
+                m->appendText(db->addColumn(QString(QString::fromLocal8Bit(table_name.data())),
+                                       QString(QString::fromLocal8Bit(columns_str.data())),
+                                       get_type(QString::fromLocal8Bit(columns_str.data())),
+                                       get_size(QString::fromLocal8Bit(columns_str.data()))));
+           else
+               db->addColumn(QString(QString::fromLocal8Bit(table_name.data())),
+                                                  QString(QString::fromLocal8Bit(columns_str.data())),
+                                                  get_type(QString::fromLocal8Bit(columns_str.data())),
+                                                  get_size(QString::fromLocal8Bit(columns_str.data())));
+       }
+
+
    }
    else if (regex_match(sql, match, alter_table_modify_pattern)){
        string table_name = match[1];

@@ -463,7 +463,7 @@ void SqlAnalysis::trim_insert(QString columns,QString values,QVector<QString>* o
 
 //sql语句预处理-表搜索
 void SqlAnalysis::trim_select(QString input,QVector<QString>* output){
-   input = input.replace(QRegExp(",")," ");
+   input = input.replace(QRegExp("_")," ");
    QStringList list = input.split(" ");
    for(auto &s : list){
        if(s=="")
@@ -474,7 +474,7 @@ void SqlAnalysis::trim_select(QString input,QVector<QString>* output){
 
 //sql语句预处理-表更改
 void SqlAnalysis::trim_update(QString input,QVector<QString>* cnames,QVector<QString>* values){
-   input = input.replace(QRegExp(",")," ");
+   input = input.replace(QRegExp("_")," ");
    QStringList list = input.split(" ");
    int num=0;
    for(auto &s : list){

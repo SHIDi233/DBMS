@@ -34,3 +34,12 @@ bool writeUsers() {
 
     return true;
 }
+
+bool login(QString name, QString pwd) {
+    for(auto &u : users) {
+        if(u->log(name, pwd)) {
+            return true;
+        }
+    }
+    return false;
+}

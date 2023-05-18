@@ -41,6 +41,8 @@ public:
     Permission getPer();
     QString getName();
 
+    bool log(QString name, QString pwd);
+
     int serialize(char buf[]);
     int deSerialize(char buf[]);
 };

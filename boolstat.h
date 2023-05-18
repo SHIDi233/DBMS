@@ -10,9 +10,9 @@
 #include <QVector>
 
 enum BoolType {
-    COMPARE,
-    BETWEEN,
-    ISIN
+    COMPARE = 0,
+    BETWEEN = 1,
+    ISIN = 2
 };
 
 class BoolStat

@@ -67,7 +67,7 @@ QString Compare::getValue() {
 }
 
 bool Compare::writeToFile(QDataStream &bovOut) {
-    bovOut << BoolType::COMPARE << getColumnName() << _value << _ctype << getConnect();
+    bovOut << QString::number(0) << getColumnName() << _value << _ctype << QString::number(getConnect());
     return true;
 }
 
@@ -81,7 +81,7 @@ bool Between::judge(Basic_Data *data) {
 }
 
 bool Between::writeToFile(QDataStream &bovOut) {
-    bovOut << BoolType::BETWEEN << getColumnName() << _value1 << _value2 << getConnect();
+    bovOut << QString::number(1) << getColumnName() << _value1 << _value2 << QString::number(getConnect());
     return true;
 }
 
@@ -91,11 +91,11 @@ IsIn::IsIn(QString columnName, const QVector<QString> &values, bool connect) :
 }
 
 bool IsIn::writeToFile(QDataStream &bovOut) {
-    bovOut << BoolType::ISIN << getColumnName() << _values.size();
+    bovOut << QString::number(2) << getColumnName() << _values.size();
     for(auto & v : _values) {
         bovOut << v;
     }
-    bovOut << getConnect();
+    bovOut << QString::number(getConnect());
     return true;
 }
 

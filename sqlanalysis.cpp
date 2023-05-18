@@ -212,8 +212,51 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
 
        cout << "UPDATE statement" << "\ntable  name:" << table_name << " \nSET clause:" << set_clause << " \nWHERE " << condition << "\n" << endl;
 
+       QVector<QString>* columns = new QVector<QString>;
+       trim_select(QString(QString::fromLocal8Bit(set_clause.data())),columns);
+       QVector<QString>* ct=new QVector<QString>;
+       trim_where(QString::fromLocal8Bit(set_clause.data()),ct);
+       QVector<QString> setname;
+       QVector<QString> setvalue;
+       for(int i=0;i<(*ct).count();i++){
+           if((i+1)%3==1){
+                setname.push_back((*ct)[i]);
+           }
+           if((i+1)%3==2){
+
+           }
+           if((i+1)%3==0){
+                setvalue.push_back((*ct)[i]);
+           }
+       }
+//       QVector<QString>* ct=new QVector<QString>;
+//       trim_where(QString(QString::fromLocal8Bit(condition.data())),ct);
+
+
+       QVector<QString>* t=new QVector<QString>;
+       trim_where(QString(QString::fromLocal8Bit(condition.data())),t);
+       QVector<QString> s = *t;
+
+       QVector<BoolStat*> bs;
+       for(int i=0;i<s.count()-2;){
+           Compare* c;
+           if(i==0){
+               c=new Compare(s[i],s[i+2],s[i+1]);
+               i+=3;
+           }
+           else{
+               bool isTrue;
+               if(s[i]=="AND")
+                   isTrue=true;
+               else
+                   isTrue=false;
+               c=new Compare(s[i+1],s[i+3],s[i+2],isTrue);
+               i+=4;
+           }
+           bs.push_back(c);
+       }
        //......调用 UPDATE 函数操作
-       //db->updateRecord();
+       db->updateRecord(QString(QString::fromLocal8Bit(table_name.data())),setname,setvalue,bs);
 
 
    } else if (regex_match(sql, match, drop_table_pattern)) {
@@ -410,57 +453,6 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
    return QVector<QVector<QString>>();
 }
 
-//int main() {
-//    string sql;
-//    cout << "input SQL statement:";
-//    getline(cin, sql);
-//    parse_sql(sql);
-//    // 测试 CREATE TABLE 语句
-//    /*sql = "CREATE TABLE students (id INT, name VARCHAR(20), age INT)";
-//    parse_sql(sql);
-
-//    // 测试 INSERT INTO 语句
-//    sql = "INSERT INTO students (id, name, age) VALUES (1, 'Alice', 18)";
-//    parse_sql(sql);
-
-//    // 测试 DELETE FROM 语句
-//    sql = "DELETE FROM students WHERE id = 1";
-//    parse_sql(sql);
-
-//    // 测试 UPDATE 语句
-//    sql = "UPDATE students SET name = 'Bob', age = 20 WHERE id = 2";
-//    parse_sql(sql);
-
-//    // 测试 DROP TABLE 语句
-//    sql = "DROP TABLE students";
-//    parse_sql(sql);
-
-//    // 测试 CREATE INDEX 语句
-//    sql = "CREATE INDEX idx_name ON table_name (column1, column2) INCLUDE (column3)";
-//    parse_sql(sql);
-
-//    // 测试 CREATE INDEX 语句
-//    sql = "CREATE INDEX idx_name ON table_name (column1, column2)";
-//    parse_sql(sql);
-
-//    // 测试 DROP INDEX 语句
-//    sql = "DROP INDEX idx_name ON table_name";
-//    parse_sql(sql);
-
-//    // 测试 SELECT 语句，包括 WHERE、GROUP BY、HAVING和ORDER BY 子句
-//    sql = "SELECT name, age FROM students WHERE age >= 18 GROUP BY age HAVING COUNT(*) > 1 ORDER BY name";
-//    parse_sql(sql);
-
-//    // 测试 SELECT 语句，不包括 WHERE、GROUP BY、HAVING和ORDER BY 子句
-//    sql = "SELECT * FROM students";
-//    parse_sql(sql);
-
-//    // 测试无效的 SQL 语句
-//    sql = "INVALID SQL ";
-//    parse_sql(sql);
-//*/
-//    return 0;
-//}
 
 
 //sql语句预处理-表建立
@@ -506,24 +498,24 @@ void SqlAnalysis::trim_select(QString input,QVector<QString>* output){
 
 //sql语句预处理-表更改
 void SqlAnalysis::trim_update(QString input,QVector<QString>* cnames,QVector<QString>* values){
-   input = input.replace(QRegExp("_")," ");
-   QStringList list = input.split(" ");
-   int num=0;
-   for(auto &s : list){
-       if(s=="")
-           continue;
+//   input = input.replace(QRegExp("_")," ");
+//   QStringList list = input.split(" ");
+//   int num=0;
+//   for(auto &s : list){
+//       if(s=="")
+//           continue;
 
-       if(num%3==0){
-           cnames->append(s);
-       }
-       else if(num%3==1){
+//       if(num%3==0){
+//           cnames->append(s);
+//       }
+//       else if(num%3==1){
 
-       }
-       else if(num%3==2){
-           values->append(s);
-       }
-       num++;
-   }
+//       }
+//       else if(num%3==2){
+//           values->append(s);
+//       }
+//       num++;
+//   }
 
 }
 

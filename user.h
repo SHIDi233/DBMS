@@ -7,6 +7,8 @@
 #include "QString"
 #include "db.h"
 
+const int USERBYTE = 128 + 128 + 4;
+
 //权限
 enum Permission
 {
@@ -22,21 +24,25 @@ class User
 private:
     char _name[128];//用户名
     char _pwd[128];//密码
-    bool _UserType;//用户类型, true:管理员, false:普通用户
     Permission _permission;//权限
 
     QVector<DB*> dbs;
 public:
-    User();
+    User() {};
+    User(QString name, QString pwd);
     QString createDb(QString name);//创建数据库
     QString dropDB(QString name);//删除数据库
     QString createUser(QString name, QString pwd);//创建普通用户
-    QString grant(Permission);//给予权限
+    QString grant(QString name, Permission p);//给予权限
 
     DB* getDB(QString dbName);
     bool loadDB();//加载数据库
     QVector<DB*>& getDbs();
     Permission getPer();
+    QString getName();
+
+    int serialize(char buf[]);
+    int deSerialize(char buf[]);
 };
 
 #endif // USER_H

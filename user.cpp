@@ -4,9 +4,11 @@
 #include "QDateTime"
 #include "QDataStream"
 
-User::User()
+User::User(QString name, QString pwd)
 {
     _permission = Permission::DBA;
+    strcpy(_name, name.toLatin1().data());
+    strcpy(_pwd, pwd.toLatin1().data());
 }
 
 QVector<DB*>& User::getDbs() {
@@ -97,6 +99,7 @@ QString User::dropDB(QString name) {
         int len = d->serialize(buf);
         dbOut.writeRawData(buf, len);
     }
+    return "数据库删除成功";
 }
 
 DB* User::getDB(QString name) {
@@ -105,6 +108,7 @@ DB* User::getDB(QString name) {
             return d;
         }
     }
+    return nullptr;
 }
 
 bool User::loadDB() {
@@ -130,4 +134,63 @@ bool User::loadDB() {
 
 Permission User::getPer() {
     return _permission;
+}
+
+int User::serialize(char buf[]) {
+    int offset = 0;
+    memcpy(buf + offset, _name, 128);
+    offset += 128;
+    memcpy(buf + offset, _pwd, 128);
+    offset += 128;
+    memcpy(buf + offset, &_permission, 4);
+    offset += 4;
+
+    return offset;
+}
+
+int User::deSerialize(char buf[]) {
+    int offset = 0;
+    memcpy(_name, buf + offset, 128);
+    offset += 128;
+    memcpy(_pwd, buf + offset, 128);
+    offset += 128;
+    memcpy(&_permission, buf + offset, 4);
+    offset += 4;
+
+    loadDB();
+
+    return offset;
+}
+
+QString User::createUser(QString name, QString pwd) {
+    User* newUser = new User(name, pwd);
+    newUser->_permission = Permission::VISITOR;
+
+    //写入文件
+    QFile dbFile(Path.absoluteFilePath("ruanko.usr"));
+    dbFile.open(QIODevice::Append);
+    QDataStream dbOut(&dbFile);
+    char buf[USERBYTE];
+    int len = newUser->serialize(buf);
+    dbOut.writeRawData(buf, len);
+
+    return "创建用户成功";
+}
+
+QString User::grant(QString name, Permission p) {
+    //判断权限
+    if(_permission < Permission::DBA) {
+        return "权限不足，无法赋予权限";
+    }
+    for(auto &u : users) {
+        if(name == u->getName()) {
+            u->_permission = p;
+            return "权限赋予成功";
+        }
+    }
+    return "未找到用户";
+}
+
+QString User::getName() {
+    return _name;
 }

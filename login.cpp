@@ -7,6 +7,7 @@
 #include"mainwindow.h"
 #include"client.h"
 #include"ccnwindow.h"
+#include"Control.h"
 
 
 QString button_start = "QPushButton{color:white;background-color:rgb(14 , 150 , 254);border-radius:5px;}";
@@ -46,6 +47,9 @@ Login::Login(QWidget *parent) :
     ui->pushButton->setEnter(button_hover);
     ui->pushButton->setLeave(button_start);
 
+    readUsers();
+
+
 }
 
 Login::~Login()
@@ -55,19 +59,27 @@ Login::~Login()
 
 void Login::on_pushButton_clicked()
 {
-    if(ui->lineEdit_2->text()==""){
-//        MainWindow* mw = new MainWindow;
-//        mw->show();
+//    if(ui->lineEdit_2->text()==""){
+////        MainWindow* mw = new MainWindow;
+////        mw->show();
+//        CCNWindow* ccn = new CCNWindow;
+//        ccn->show();
+//        this->hide();
+//    }
+//    else{
+//        Client* c = new Client(ui->lineEdit_2->text());
+//        c->start();
+//        this->hide();
+//    }
+
+
+
+
+    if(login(ui->lineEdit_2->text(),ui->lineEdit->text())){
         CCNWindow* ccn = new CCNWindow;
         ccn->show();
         this->hide();
     }
-    else{
-        Client* c = new Client(ui->lineEdit_2->text());
-        c->start();
-        this->hide();
-    }
-
 
 
 }

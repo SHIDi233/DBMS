@@ -1,4 +1,4 @@
-#include "Control.h"
+﻿#include "Control.h"
 
 bool readUsers() {
     QFile dbFile(Path.absoluteFilePath("ruanko.usr"));
@@ -38,6 +38,7 @@ bool writeUsers() {
 bool login(QString name, QString pwd) {
     for(auto &u : users) {
         if(u->log(name, pwd)) {
+            user = *u;
             return true;
         }
     }

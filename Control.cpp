@@ -11,6 +11,7 @@ bool readUsers() {
     QDataStream dbOut(&dbFile);
 
     //循环将表信息读入列表中
+    rootPath.cd("..");
     char buf[USERBYTE + 128];
     while(!dbOut.atEnd()) {
         dbOut.readRawData(buf, USERBYTE);

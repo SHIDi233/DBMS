@@ -312,6 +312,7 @@ QVector<QVector<QString>> DB::select(bool isAll, const QVector<QString>& column_
             if(t.compare(t2->getName()) == 0) {
                 isFound = true;
                 table_tem = table_tem->operator+(t2);
+                break;
             }
         }
         if(!isFound) {
@@ -319,6 +320,7 @@ QVector<QVector<QString>> DB::select(bool isAll, const QVector<QString>& column_
                 if(t.compare(v->getName()) == 0) {
                     isFound = true;
                     table_tem = table_tem->operator+(viewToTable(v));
+                    break;
                 }
             }
             if(!isFound) {

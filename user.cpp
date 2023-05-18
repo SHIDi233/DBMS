@@ -6,7 +6,7 @@
 
 User::User()
 {
-
+    _permission = Permission::DBA;
 }
 
 QVector<DB*>& User::getDbs() {

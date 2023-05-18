@@ -374,7 +374,6 @@ QString Table::insertRecord(const QVector<QString>& columnNameList, const QVecto
         newRow->addData(data);
     }
     rows.push_back(newRow);
-    commit();
     return "插入成功";
 }
 

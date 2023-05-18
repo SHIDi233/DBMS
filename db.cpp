@@ -485,3 +485,9 @@ Table* DB::viewToTable(View *view) {
     }
     return newTable;
 }
+
+QString DB::commit() {
+    for(auto &t : tables) {
+        t->commit();
+    }
+}

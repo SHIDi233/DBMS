@@ -146,7 +146,7 @@ QString DB::dropTable(QString tableName) {
 
     //判断用户权限
     if(user.getPer() < Permission::AD) {
-        return "权限不足，无法删除字段";
+        return "权限不足，无法删除表";
     }
 
     //寻找数据库
@@ -192,7 +192,35 @@ QString DB::addColumn(QString tableName, QString columnName, TYPE type, int type
     if(!found) { return "未找到表"; }
 
     writeTables(path.absoluteFilePath(QString(_name) + ".tb"));//将表信息重新写入
-    return "修改表成功";
+    return "增加字段成功";
+}
+
+QString DB::modifyColumn(QString tableName, QString columnName, TYPE type, int typeLen, Integrity *integrity) {
+    //判断用户权限
+    if(user.getPer() < Permission::AD) {
+        return "权限不足，无法创建字段";
+    }
+
+    int integ = 0;
+    if(integrity == nullptr) {
+        integ = 0;
+    }
+//    QDir path(_filePath);
+    bool found = false;//表示是否找指定表
+
+    //readTables(path.absoluteFilePath(QString(_name) + ".tb"));//读取表信息
+    for(auto &t : tables) {
+        if(t->getName().compare(tableName) == 0) {
+            found = true;
+            t->modifyColumn(columnName, type, typeLen, integ);
+            break;
+        }
+    }
+
+    if(!found) { return "未找到表"; }
+
+//    writeTables(path.absoluteFilePath(QString(_name) + ".tb"));//将表信息重新写入
+    return "修改字段成功";
 }
 
 QString DB::dropColumn(QString tableName, QString columnName) {

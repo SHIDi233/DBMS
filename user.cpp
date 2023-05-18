@@ -75,7 +75,7 @@ QString User::createDb(QString name)
 QString User::dropDB(QString name) {
     //判断用户权限
     if(_permission != Permission::DBA) {
-        return "权限不足，无法创建数据库";
+        return "权限不足，无法删除数据库";
     }
 
     //寻找数据库

@@ -40,7 +40,7 @@ public:
     //字段管理
     QString addColumn(QString tableName, QString columnName, TYPE type, int typeLen = 0, Integrity *integrity = nullptr);//增加列
 
-    QString modifyColumn(QString tableName, QString columnName, TYPE type, Integrity *integrity = nullptr);//修改列类型
+    QString modifyColumn(QString tableName, QString columnName, TYPE type, int typeLen = 0, Integrity *integrity = nullptr);//修改列类型
 
     QString dropColumn(QString tableName, QString columnName);//删除列
 

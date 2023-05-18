@@ -257,6 +257,7 @@ QString Table::modifyColumn(QString columnName, TYPE newType, int newTypeLen, in
         }
     }
     if(!found) { return "未找到字段"; }
+    writeColumns();//重新写入字段到文件
     return "字段修改成功";
 }
 

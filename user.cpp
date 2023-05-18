@@ -1,4 +1,4 @@
-#include "user.h"
+﻿#include "user.h"
 #include "Control.h"
 #include "db.h"
 #include "QDateTime"
@@ -175,6 +175,7 @@ QString User::createUser(QString name, QString pwd) {
     dbOut.writeRawData(buf, len);
 
     Path.mkdir(name);
+    users.push_back(newUser);
 
     return "创建用户成功";
 }

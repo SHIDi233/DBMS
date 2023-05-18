@@ -174,6 +174,8 @@ QString User::createUser(QString name, QString pwd) {
     int len = newUser->serialize(buf);
     dbOut.writeRawData(buf, len);
 
+    Path.mkdir(name);
+
     return "创建用户成功";
 }
 

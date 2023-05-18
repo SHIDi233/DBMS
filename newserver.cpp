@@ -23,17 +23,46 @@ void NewServer::run(){
 
     socket_ser->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
 
-    QString ip=socket_ser->peerAddress().toString();
-    qint16 port  =socket_ser->peerPort();
-    QString temp = QString("端口是%1，ip地址是%2").arg(port).arg(ip);
     isSet=true;
     isOnline=true;
 
+    QString acc;
+    int len_acc;
+    QString pass;
+    int len_pass;
 
+    if(socket_ser->waitForReadyRead()){//接收账户密码
+        socket_ser->read((char*)&len_acc,sizeof(int));
+        char rec[len_acc+1];
+        socket_ser->read(rec,len_acc);//读取字符串
+        rec[len_acc]='\0';
+        acc = QString(rec);
+
+        socket_ser->read((char*)&len_pass,sizeof(int));
+        char p[len_pass+1];
+        socket_ser->read(p,len_pass);//读取字符串
+        p[len_pass]='\0';
+        pass = QString(p);
+    }
+    else{
+
+    }
+
+    if(user.log(acc,pass)){
+        int back = 1;
+        socket_ser->write((char*)&back,sizeof(int));
+        socket_ser->flush();
+        qDebug()<<"有用户成功登录";
+    }
+    else{
+        int back = 0;
+        socket_ser->write((char*)&back,sizeof(int));
+        socket_ser->flush();
+        qDebug()<<"有用户尝试登录，失败";
+    }
+
+    socket_ser->readAll();
     user.loadDB();
-
-
-
 
     while(isOnline){
         if(socket_ser->waitForReadyRead()){

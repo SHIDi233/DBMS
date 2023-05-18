@@ -59,8 +59,10 @@ Login::~Login()
 
 void Login::on_pushButton_clicked()
 {
-    if(ui->lineEdit_2->text().contains("\\")){//网络模式
-        Client* c = new Client(ui->lineEdit_2->text());
+    if(ui->lineEdit_2->text().contains("/")){//网络模式
+        QStringList list = ui->lineEdit_2->text().split("/");
+        QString temp = ui->lineEdit->text();
+        Client* c = new Client(list[0],list[1],temp);
         c->start();
         this->hide();
     }

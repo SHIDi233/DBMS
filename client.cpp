@@ -9,7 +9,7 @@
 
 CCNWindow* mw;
 
-Client::Client(QString ip){
+Client::Client(QString& ip,QString& acc,QString& pass){
     qRegisterMetaType<QVector<QVector<QString>>>("QVector<QVector<QString>>");//注册diskInformation类型
 
     mw = new CCNWindow(this);
@@ -17,41 +17,60 @@ Client::Client(QString ip){
     connect(this,SIGNAL(back(QVector<QVector<QString>>)),mw,SLOT(showTableAll(QVector<QVector<QString>>)));
 
     this->ip = ip;
+    this->acc = acc;
+    this->pass = pass;
 }
 
 void Client::run(){
     socket_client=new QTcpSocket();
-
-        //有数据可读时，进行处理
-
-    socket_client->connectToHost(ip,9559);
+    //有数据可读时，进行处理
+    socket_client->connectToHost("192.168.10.187",9559);
     qDebug()<<"连接服务器中";
 
         while(1){
             if(socket_client->waitForConnected()){
                 qDebug()<<"成功和服务器建立连接";
-                //登录代码
-//                int target = 0;//目标
-//                socket_client->write((char*)&target,sizeof(int));//0
-//               //socket_client->flush();
-//                target = number;//目标
-//                socket_client->write((char*)&target,sizeof(int));//发送自己账号
-//                socket_client->write(pass.toUtf8().data());
-//                socket_client->flush();
-//                cout<<target;
+                socket_client->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
                 isOnline = true;
-                //send("test");
-//                //t->start();
-                break;
+                //验证秘钥
+//                QString acc;
+//                QString pass;
+                if(socket_client->isWritable()){
+                    int len = acc.length();
+                    socket_client->write((char*)&len,sizeof(int));
+                    socket_client->write(acc.toUtf8().data());
+                    socket_client->flush();
+
+                    len = pass.length();
+                    socket_client->write((char*)&len,sizeof(int));
+                    socket_client->write(pass.toUtf8().data());
+                    socket_client->flush();
+                }
+                else{
+
+                }
+
+                if(socket_client->waitForReadyRead()){
+                    int rec = 0;
+                    socket_client->read((char*)&rec,sizeof(int));
+                    if(rec==0){//错误
+                        qDebug()<<"登录失败";
+                        //delete this;
+                    }
+                    else if(rec==1){//正确
+                        qDebug()<<"登录成功";
+                        break;
+                    }
+                }
+                else{
+                    //delete this;
+                }
+                //break;
+                //delete this;
             }
-
-
-
-
-
         }
 
-        socket_client->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
+
 
         while(isOnline){
             if(socket_client->waitForReadyRead()){

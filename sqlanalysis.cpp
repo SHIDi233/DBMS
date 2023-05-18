@@ -52,12 +52,15 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
            qsql[num]=qsql[num].toUpper();
        num++;
    }
-   qsql.replace(",","_");
+   qsql.replace(",","_");//满足正则化
 
    string sql = qsql.toStdString();
 
    // CREATE USER 语句的正则表达式
    regex create_user_pattern(R"(CREATE\s+USER\s+(.+))");
+
+   regex commit_pattern(R"(COMMIT\s)");
+   regex roll_pattern(R"(ROLLBACK\s)");
 
    // USE DATABASE 语句的正则表达式
    regex use_db_pattern(R"(USE\s+(\w+))");
@@ -152,6 +155,10 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        m->appendText(user.createDb(QString(QString::fromLocal8Bit(db_name.data()))));
        QString log_reverse = "DROP DATABASE "+QString(QString::fromLocal8Bit(db_name.data()));
         qDebug()<<log_reverse;//可用
+   }
+   else if (regex_match(sql, match, commit_pattern)) {
+       // 匹配 CREATE DB 语句
+       m->appendText(db->commit());
    }
    else if (regex_match(sql, match, create_table_pattern)) {
        // 匹配 CREATE TABLE 语句
@@ -523,6 +530,12 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        string columns_str = match[2];
        m->appendText(db->dropColumn(QString(QString::fromLocal8Bit(table_name.data())),
                                     QString(QString::fromLocal8Bit(columns_str.data()))));
+   }
+   else if(QString(QString::fromLocal8Bit(sql.data()))=="COMMIT"){
+        m->appendText(db->commit());
+   }
+   else if(QString(QString::fromLocal8Bit(sql.data()))=="ROLLBACK"){
+        //m->appendText(db->commit());
    }
    else {
        cout << "Invalid SQL statement" << endl;

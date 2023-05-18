@@ -102,7 +102,13 @@ void NewServer::run(){
 //                socket_ser->flush();
 
             }
-            QString ss = "senhjsbfidsnfjiasenfjosdnfiodsnfedsfesfnuisnfdsjikfndsjkfnedsjifesuiofhesdiofdsuiofdsiovdsuiohdsiojfaskhduiashdashduiashduiashduiasdhsauihdasuidhsauid";
+            QString ss = "senhjsbfidsnfjiasenfjosdnfiodsnfedsfesfnuisnfdsjikfndsjkfnedsjifesuiofhesdiofdsuiofdsiovdsuiohdsiojfaskhduiashdashduiashduiashduiasdhsauihdasuidhsauid"
+                    "senhjsbfidsnfjiasenfjosdnfiodsnfedsfesfnuisnfdsjikfndsjkfnedsjifesuiofhesdiofdsuiofdsiovdsuiohdsiojfaskhduiashdashduiashduiashduiasdhsauihdasuidhsauid"
+                         "senhjsbfidsnfjiasenfjosdnfiodsnfedsfesfnuisnfdsjikfndsjkfnedsjifesuiofhesdiofdsuiofdsiovdsuiohdsiojfaskhduiashdashduiashduiashduiasdhsauihdasuidhsauid"
+                         "senhjsbfidsnfjiasenfjosdnfiodsnfedsfesfnuisnfdsjikfndsjkfnedsjifesuiofhesdiofdsuiofdsiovdsuiohdsiojfaskhduiashdashduiashduiashduiasdhsauihdasuidhsauid"
+                         "senhjsbfidsnfjiasenfjosdnfiodsnfedsfesfnuisnfdsjikfndsjkfnedsjifesuiofhesdiofdsuiofdsiovdsuiohdsiojfaskhduiashdashduiashduiashduiasdhsauihdasuidhsauid"
+                         "senhjsbfidsnfjiasenfjosdnfiodsnfedsfesfnuisnfdsjikfndsjkfnedsjifesuiofhesdiofdsuiofdsiovdsuiohdsiojfaskhduiashdashduiashduiashduiasdhsauihdasuidhsauid"
+                         "senhjsbfidsnfjiasenfjosdnfiodsnfedsfesfnuisnfdsjikfndsjkfnedsjifesuiofhesdiofdsuiofdsiovdsuiohdsiojfaskhduiashdashduiashduiashduiasdhsauihdasuidhsauid";
             socket_ser->write(ss.toUtf8().data(),ss.length());
             socket_ser->flush();
 

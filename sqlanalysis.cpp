@@ -16,18 +16,18 @@
 using namespace std;
 
 
-SqlAnalysis::SqlAnalysis(DB* db,NewServer* ns)
+SqlAnalysis::SqlAnalysis(DB* db)
 {
    this->db = db;
    m = nullptr;
-   this->ns = ns;
+   //this->ns = ns;
 }
 
 SqlAnalysis::SqlAnalysis(DB* db,MainWindow* m)
 {
    this->db = db;
    this->m = m;
-   this->ns =  nullptr;
+   //this->ns =  nullptr;
 }
 
 QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
@@ -118,9 +118,9 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        string db_name = match[1];
        QString name = QString(QString::fromLocal8Bit(db_name.data()));
 
-       if(ns!=nullptr){
-           ns->db_name = name;
-       }
+//       if(ns!=nullptr){
+//           ns->db_name = name;
+//       }
 
    }
    else if (regex_match(sql, match, create_user_pattern)) {
@@ -144,21 +144,29 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        }
 
        //......调用CREATE函数操作
-       m->appendText(user.createUser(user_name,user_pass));
-
+       if(m!=nullptr)
+            m->appendText(user.createUser(user_name,user_pass));
+       else
+           user.createUser(user_name,user_pass);
    }
    else if (regex_match(sql, match, create_db_pattern)) {
        // 匹配 CREATE DB 语句
        string db_name = match[1];
 
        //......调用CREATE函数操作
-       m->appendText(user.createDb(QString(QString::fromLocal8Bit(db_name.data()))));
+       if(m!=nullptr)
+            m->appendText(user.createDb(QString(QString::fromLocal8Bit(db_name.data()))));
+       else
+           user.createDb(QString(QString::fromLocal8Bit(db_name.data())));
        QString log_reverse = "DROP DATABASE "+QString(QString::fromLocal8Bit(db_name.data()));
         qDebug()<<log_reverse;//可用
    }
    else if (regex_match(sql, match, commit_pattern)) {
        // 匹配 CREATE DB 语句
-       m->appendText(db->commit());
+       if(m!=nullptr)
+            m->appendText(db->commit());
+       else
+           db->commit();
    }
    else if (regex_match(sql, match, create_table_pattern)) {
        // 匹配 CREATE TABLE 语句
@@ -168,7 +176,10 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        cout << "CREATE TABLE statement" << "\ntable  name:" << table_name << "\ncolumn list:" <<" (" << columns_str << ")\n" << endl;
 
        //......调用CREATE函数操作
-       m->appendText(db->createTable(QString(QString::fromLocal8Bit(table_name.data()))));//根据表名创建表
+       if(m!=nullptr)
+            m->appendText(db->createTable(QString(QString::fromLocal8Bit(table_name.data()))));//根据表名创建表
+       else
+           db->createTable(QString(QString::fromLocal8Bit(table_name.data())));
        QVector<QString>* output = new QVector<QString>;
        trim_create(QString(QString::fromLocal8Bit(columns_str.data())),output);
        qDebug()<<output;
@@ -176,8 +187,12 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        //重复调用添加列
 
        for(int i=0;i<output->count();i+=2){
-           m->appendText(db->addColumn(QString(QString::fromLocal8Bit(table_name.data()))
+           if(m!=nullptr)
+                m->appendText(db->addColumn(QString(QString::fromLocal8Bit(table_name.data()))
                          ,(*output)[i],get_type((*output)[i+1]),get_size((*output)[i+1])));
+           else
+               db->addColumn(QString(QString::fromLocal8Bit(table_name.data()))
+                                        ,(*output)[i],get_type((*output)[i+1]),get_size((*output)[i+1]));
        }
 
        QString log_reverse = "DROP TABLE "+QString(QString::fromLocal8Bit(table_name.data()));
@@ -221,7 +236,10 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        QVector<QString>* values = new QVector<QString>;
        trim_insert(QString(QString::fromLocal8Bit(columns_str.data())),QString(QString::fromLocal8Bit(values_str.data())),columns,values);
 
-       m->appendText(db->insertRecord(QString(QString::fromLocal8Bit(table_name.data())),*columns,*values));
+       if(m!=nullptr)
+            m->appendText(db->insertRecord(QString(QString::fromLocal8Bit(table_name.data())),*columns,*values));
+       else
+           db->insertRecord(QString(QString::fromLocal8Bit(table_name.data())),*columns,*values);
 
        QString log_reverse = "DELETE FROM "+QString(QString::fromLocal8Bit(table_name.data()))+" WHERE ";
        for(int i=0;i<(*columns).length()-1;i++){
@@ -262,7 +280,10 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
            bs.push_back(c);
        }
 
-       m->appendText(db->deleteRecord(QString(QString::fromLocal8Bit(table_name.data())),bs));
+       if(m!=nullptr)
+            m->appendText(db->deleteRecord(QString(QString::fromLocal8Bit(table_name.data())),bs));
+       else
+           db->deleteRecord(QString(QString::fromLocal8Bit(table_name.data())),bs);
 
 
        QString log_reverse = "INSERT INTO "+QString(QString::fromLocal8Bit(table_name.data()))+"(";
@@ -340,6 +361,7 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
            bs.push_back(c);
        }
        //......调用 UPDATE 函数操作
+
        db->updateRecord(QString(QString::fromLocal8Bit(table_name.data())),setname,setvalue,bs);
 
 
@@ -511,28 +533,47 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        string columns_str = match[2];
        string type = match[3];
 
-       m->appendText(db->addColumn(QString(QString::fromLocal8Bit(table_name.data())),
+       if(m!=nullptr)
+            m->appendText(db->addColumn(QString(QString::fromLocal8Bit(table_name.data())),
                                    QString(QString::fromLocal8Bit(columns_str.data())),
                                    get_type(QString::fromLocal8Bit(columns_str.data())),
                                    get_size(QString::fromLocal8Bit(columns_str.data()))));
+       else
+           db->addColumn(QString(QString::fromLocal8Bit(table_name.data())),
+                                              QString(QString::fromLocal8Bit(columns_str.data())),
+                                              get_type(QString::fromLocal8Bit(columns_str.data())),
+                                              get_size(QString::fromLocal8Bit(columns_str.data())));
    }
    else if (regex_match(sql, match, alter_table_modify_pattern)){
        string table_name = match[1];
        string columns_str = match[2];
        string type = match[3];
-       m->appendText(db->modifyColumn(QString(QString::fromLocal8Bit(table_name.data())),
+       if(m!=nullptr)
+            m->appendText(db->modifyColumn(QString(QString::fromLocal8Bit(table_name.data())),
                                       QString(QString::fromLocal8Bit(columns_str.data())),
                                       get_type(QString::fromLocal8Bit(columns_str.data())),
                                       get_size(QString::fromLocal8Bit(columns_str.data()))));
+       else
+           db->modifyColumn(QString(QString::fromLocal8Bit(table_name.data())),
+                                                 QString(QString::fromLocal8Bit(columns_str.data())),
+                                                 get_type(QString::fromLocal8Bit(columns_str.data())),
+                                                 get_size(QString::fromLocal8Bit(columns_str.data())));
    }
    else if (regex_match(sql, match, alter_table_drop_pattern)){
        string table_name = match[1];
        string columns_str = match[2];
-       m->appendText(db->dropColumn(QString(QString::fromLocal8Bit(table_name.data())),
+       if(m!=nullptr)
+            m->appendText(db->dropColumn(QString(QString::fromLocal8Bit(table_name.data())),
                                     QString(QString::fromLocal8Bit(columns_str.data()))));
+       else
+           db->dropColumn(QString(QString::fromLocal8Bit(table_name.data())),
+                                               QString(QString::fromLocal8Bit(columns_str.data())));
    }
    else if(QString(QString::fromLocal8Bit(sql.data()))=="COMMIT"){
-        m->appendText(db->commit());
+       if(m!=nullptr)
+            m->appendText(db->commit());
+       else
+           db->commit();
    }
    else if(QString(QString::fromLocal8Bit(sql.data()))=="ROLLBACK"){
         //m->appendText(db->commit());

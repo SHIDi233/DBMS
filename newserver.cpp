@@ -76,10 +76,20 @@ void NewServer::run(){
             rec[len]='\0';
             qDebug()<<rec;
 
-            db = user.getDB(db_name);
+
+
 
             QString s(rec);
-            SqlAnalysis sa(db,this);
+
+            if(s.contains("use")){
+                s.replace(";","");
+                QStringList list = s.split(" ");
+                db_name=list[1];
+            }
+
+            db = user.getDB(db_name.toUpper());
+
+            SqlAnalysis sa(db);
             QVector<QVector<QString>> out = sa.parse_sql(s);
             socket_ser->flush();
 

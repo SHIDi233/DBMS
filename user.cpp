@@ -113,6 +113,7 @@ DB* User::getDB(QString name) {
 
 bool User::loadDB() {
 
+    dbs.clear();
     //加载数据库
     //创建文件操作对象
     bool isRead = true;

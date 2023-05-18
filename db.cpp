@@ -42,8 +42,8 @@ bool DB::writeTable(Table* t, QString filePath) {
 bool DB::readTables(QString filePath) {
 
     //清空表并释放空间
-    //for(auto &t : tables) { delete t; }
-    //tables.clear();
+    for(auto &t : tables) { delete t; }
+    tables.clear();
 
     //创建文件操作对象
     QFile dbFile(filePath);
@@ -396,6 +396,7 @@ bool DB::writeView(View* v, QString filePath) {
 
 bool DB::readViews(QString filePath) {
 
+    views.clear();
     //创建文件操作对象
     QFile viewFile(filePath);
     if(!viewFile.open(QIODevice::ReadOnly)) { return false; }

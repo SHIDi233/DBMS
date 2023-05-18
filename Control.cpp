@@ -16,6 +16,7 @@ bool readUsers() {
         dbOut.readRawData(buf, USERBYTE);
         User *u = new User();
         u->deSerialize(buf);
+        rootPath.cd("..");
         users.push_back(u);
     }
 

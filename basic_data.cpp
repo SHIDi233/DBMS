@@ -59,6 +59,7 @@ Double::Double(double value) : Basic_Data(8, TYPE::DOUBLE), _value(value) {}
 
 Varchar::Varchar(int len) : Basic_Data(len + 1, TYPE::NULLDATA) {
     _value = new char[len + 1];
+    memset(_value, 0, sizeof(char) * (len + 1));
 }
 
 Varchar::Varchar(QString value) : Basic_Data(value.size() + 1, TYPE::VARCHAR) {

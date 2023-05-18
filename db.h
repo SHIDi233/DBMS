@@ -85,6 +85,9 @@ public:
     //提交
     QString commit();
 
+    //约束管理
+    QString addPK(QString tableName, QString columnName);
+
     Table* viewToTable(View *view);
 };
 

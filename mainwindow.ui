@@ -156,7 +156,8 @@ color: rgb(204, 204, 204);</string>
     <property name="styleSheet">
      <string notr="true">color: rgb(255, 255, 255);
 gridline-color: rgb(204, 204, 204);
-border:1px solid rgb(47, 49, 51);</string>
+border:1px solid rgb(47, 49, 51);
+selection-background-color: rgb(0, 170, 255);</string>
     </property>
    </widget>
    <widget class="QComboBox" name="comboBox_2">
@@ -310,11 +311,17 @@ background-color: rgb(0, 170, 255);</string>
    <widget class="QTextEdit" name="textEdit_4">
     <property name="geometry">
      <rect>
-      <x>260</x>
-      <y>490</y>
-      <width>1141</width>
-      <height>341</height>
+      <x>250</x>
+      <y>480</y>
+      <width>1161</width>
+      <height>361</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border:1px solid rgb(47, 49, 51);
+color: rgb(255, 255, 255);
+gridline-color: rgb(204, 204, 204);
+selection-background-color: rgb(0, 170, 255);</string>
     </property>
    </widget>
    <zorder>textEdit_5</zorder>

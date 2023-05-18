@@ -132,6 +132,7 @@ void MainWindow::on_pushButton_7_clicked()
 {
     if(db==nullptr&&this->client==nullptr){
         qDebug()<<"未选定数据库";
+        this->appendText("未选定数据库");
         return;
     }
 
@@ -186,6 +187,8 @@ void MainWindow::showTable(QVector<QString> name,QVector<QVector<QString>> table
 }
 
 void MainWindow::showTableAll(QVector<QVector<QString>> table){
+    ui->tableView->setVisible(true);
+    ui->textEdit_4->setVisible(false);
     QStandardItemModel *model = new QStandardItemModel(this);
 
     int j=0,k=0;
@@ -209,7 +212,9 @@ void MainWindow::showTableAll(QVector<QVector<QString>> table){
 
 //命令执行后的输出
 void MainWindow::appendText(QString output){
-    ui->textEdit->setText(ui->textEdit->toPlainText()+"\n"+output);//附加输出
+    ui->tableView->setVisible(false);
+    ui->textEdit_4->setVisible(true);
+    ui->textEdit_4->setText(ui->textEdit->toPlainText()+"\n"+output);//附加输出
 }
 
 void MainWindow::on_treeView_doubleClicked(const QModelIndex &index)
@@ -442,5 +447,19 @@ void MainWindow::on_action_12_triggered()
 void MainWindow::on_action_13_triggered()
 {
 
+}
+
+
+void MainWindow::on_action_9_triggered()
+{
+    ui->tableView->setVisible(false);
+    ui->textEdit_4->setVisible(true);
+}
+
+
+void MainWindow::on_action_10_triggered()
+{
+    ui->tableView->setVisible(true);
+    ui->textEdit_4->setVisible(false);
 }
 

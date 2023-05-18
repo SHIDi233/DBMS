@@ -82,6 +82,9 @@ public:
     int serialize(char buf[]);
     int deSerialize(char buf[]);
 
+    //提交
+    QString commit();
+
     Table* viewToTable(View *view);
 };
 

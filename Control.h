@@ -5,10 +5,15 @@
 #include "user.h"
 #include "qdir.h"
 #include "QVector"
+#include "QDataStream"
 
-static QDir rootPath("D:\\QTtest\\testDB");//数据库路径
-static QDir Path("D:\\QTtest");//数据库路径
-static User user;//当前用户
+static QDir Path("D:\\QTtest\\testDB");//数据库路径
+static User user("dba", "");//当前用户
+static QDir rootPath(Path.absolutePath() + QString("\\") + user.getName());//数据库路径
 
+static QVector<User*> users;
+
+bool readUsers();
+bool writeUsers();
 
 #endif // CONTROL_H

@@ -28,6 +28,9 @@ MainWindow::MainWindow(Client* c,QWidget *parent)
     QMenuBar *mBar=menuBar();
     mBar->setGeometry(10,25,1300,769);
 
+    ui->tableView->setVisible(false);
+    ui->textEdit_4->setVisible(false);
+
     client = c;
     if(c!=nullptr){
         connect(this,SIGNAL(send_table(QString)),c,SLOT(send(QString)));

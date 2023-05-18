@@ -68,6 +68,13 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
    // CREATE TABLE 语句的正则表达式
    regex create_table_pattern(R"(CREATE\s+TABLE\s+(\w+)\s*\((.+)\))");
 
+   // CREATE TABLE 语句的正则表达式
+   regex alter_table_add_pattern(R"(ALTER\s+TABLE\s+(\w+)\s+ADD+(.+))");
+   // CREATE TABLE 语句的正则表达式
+   regex alter_table_midify_pattern(R"(ALTER\s+TABLE\s+(\w+)\s+MODIFY+(.+))");
+   // CREATE TABLE 语句的正则表达式
+   regex alter_table_drop_pattern(R"(ALTER\s+TABLE\s+(\w+)\s+DROP+(.+))");
+
    // DESC TABLE 语句的正则表达式
    regex desc_table_pattern(R"(DESC\s+(\w+))");
 
@@ -206,7 +213,7 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        cout << "UPDATE statement" << "\ntable  name:" << table_name << " \nSET clause:" << set_clause << " \nWHERE " << condition << "\n" << endl;
 
        //......调用 UPDATE 函数操作
-       //db->
+       //db->updateRecord();
 
 
    } else if (regex_match(sql, match, drop_table_pattern)) {
@@ -371,6 +378,16 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
            db->createView(vn,false,*columns,tin,bs);
        }
 
+   }
+   else if (regex_match(sql, match, alter_table_add_pattern)){
+       string table_name = match[1];
+       string columns_str = match[2];
+       string type = match[3];
+
+       m->appendText(db->addColumn(QString(QString::fromLocal8Bit(table_name.data())),
+                                   QString(QString::fromLocal8Bit(table_name.data())),
+                                   get_type(QString::fromLocal8Bit(columns_str.data())),
+                                   get_size(QString::fromLocal8Bit(columns_str.data()))));
    }
    else {
        cout << "Invalid SQL statement" << endl;

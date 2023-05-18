@@ -194,3 +194,10 @@ QString User::grant(QString name, Permission p) {
 QString User::getName() {
     return _name;
 }
+
+bool User::log(QString name, QString pwd) {
+    if(name == _name && pwd == _pwd) {
+        return true;
+    }
+    return false;
+}

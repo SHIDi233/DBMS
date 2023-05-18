@@ -15,5 +15,6 @@ static QVector<User*> users;
 
 bool readUsers();
 bool writeUsers();
+bool login(QString name, QString pwd);
 
 #endif // CONTROL_H

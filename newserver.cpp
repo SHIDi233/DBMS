@@ -98,6 +98,7 @@ void NewServer::run(){
             socket_ser->flush();
             //传回
             for(QVector<QString> v : out){
+                if(!socket_ser->waitForBytesWritten());
                 int sn = v.length();
                 socket_ser->write((char*)&sn,sizeof(int));
                 socket_ser->flush();
@@ -109,9 +110,6 @@ void NewServer::run(){
                     socket_ser->flush();
                     socket_ser->waitForBytesWritten();
                 }
-//            if(socket_ser->waitForBytesWritten())
-//                socket_ser->flush();
-
             }
             QString ss = "senhjsbfidsnfjiasenfjosdnfiodsnfedsfesfnuisnfdsjikfndsjkfnedsjifesuiofhesdiofdsuiofdsiovdsuiohdsiojfaskhduiashdashduiashduiashduiasdhsauihdasuidhsauid";
 

@@ -11,19 +11,18 @@ class Log
 public:
     Log() : path(""){};
     Log(QString path1) {
-        Path.cd(user.getName());
-        Path.cd("data");
-        Path.cd(current_db);
-        path = Path.absoluteFilePath(current_db+".log");
-        Path.cd("..");
-        Path.cd("..");
-        Path.cd("..");
+        //Path.cd(User::getUser()->getName());
+        QDir path2(Path);
+        path2.cd("data");
+        path2.cd(current_db);
+        path = path2.absoluteFilePath(current_db+".log");
+        //Path.cd("..");
         //QString displayString;
         QFile file(path);
         //目标文件路径
         if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
         {
-            delete this;
+            //delete this;
             return;
         }
         QTextCodec *codec = QTextCodec::codecForName("utf-8");

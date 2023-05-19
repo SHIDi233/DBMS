@@ -48,7 +48,7 @@ void NewServer::run(){
 
     }
 
-    if(user.log(acc,pass)){
+    if(User::getUser()->log(acc,pass)){
         int back = 1;
         socket_ser->write((char*)&back,sizeof(int));
         socket_ser->flush();
@@ -63,7 +63,7 @@ void NewServer::run(){
 
     socket_ser->flush();
     socket_ser->readAll();
-    user.loadDB();
+    User::getUser()->loadDB();
 
     while(isOnline){
         if(socket_ser->waitForReadyRead()){
@@ -87,7 +87,7 @@ void NewServer::run(){
                 db_name=list[1];
             }
 
-            db = user.getDB(db_name.toUpper());
+            db = User::getUser()->getDB(db_name.toUpper());
 
             SqlAnalysis sa(db);
             QVector<QVector<QString>> out = sa.parse_sql(s);

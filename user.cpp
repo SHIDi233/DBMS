@@ -4,6 +4,8 @@
 #include "QDateTime"
 #include "QDataStream"
 
+User* User::user_one1 = nullptr;
+
 User::User(QString name, QString pwd)
 {
     _permission = Permission::DBA;
@@ -36,7 +38,7 @@ QString User::createDb(QString name)
     QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz ddd");
 
     //创建数据库路径
-    QDir path(rootPath);
+    QDir path(Path);
     if(!path.cd("data")) {
         path.mkdir("data");
         path.cd("data");
@@ -158,8 +160,8 @@ int User::deSerialize(char buf[]) {
     memcpy(&_permission, buf + offset, 4);
     offset += 4;
 
-    rootPath.cd(_name);
-    loadDB();
+//    rootPath.cd(_name);
+//    loadDB();
 
     return offset;
 }
@@ -176,8 +178,9 @@ QString User::createUser(QString name, QString pwd) {
     int len = newUser->serialize(buf);
     dbOut.writeRawData(buf, len);
 
-    Path.mkdir(name);
+//    Path.mkdir(name);
     users.push_back(newUser);
+//    newUser->createDb("root");
 
     return "创建用户成功";
 }
@@ -187,13 +190,7 @@ QString User::grant(QString name, Permission p) {
     if(_permission < Permission::DBA) {
         return "权限不足，无法赋予权限";
     }
-    for(auto &u : users) {
-        if(name == u->getName()) {
-            u->_permission = p;
-            return "权限赋予成功";
-        }
-    }
-    return "未找到用户";
+    return grantTo(name, p);
 }
 
 QString User::getName() {

@@ -99,7 +99,7 @@ bool DB::writeTables(QString filePath) {
 QString DB::createTable(QString tableName){
 
     //判断用户权限
-    if(user.getPer() < Permission::AD) {
+    if(User::getUser()->getPer() < Permission::AD) {
         return "权限不足，无法删除字段";
     }
 
@@ -145,7 +145,7 @@ QString DB::createTable(QString tableName){
 QString DB::dropTable(QString tableName) {
 
     //判断用户权限
-    if(user.getPer() < Permission::AD) {
+    if(User::getUser()->getPer() < Permission::AD) {
         return "权限不足，无法删除表";
     }
 
@@ -168,7 +168,7 @@ QString DB::dropTable(QString tableName) {
 
 QString DB::addColumn(QString tableName, QString columnName, TYPE type, int typeLen, Integrity *integrity) {
     //判断用户权限
-    if(user.getPer() < Permission::AD) {
+    if(User::getUser()->getPer() < Permission::AD) {
         return "权限不足，无法创建字段";
     }
 
@@ -196,7 +196,7 @@ QString DB::addColumn(QString tableName, QString columnName, TYPE type, int type
 
 QString DB::modifyColumn(QString tableName, QString columnName, TYPE type, int typeLen, Integrity *integrity) {
     //判断用户权限
-    if(user.getPer() < Permission::AD) {
+    if(User::getUser()->getPer() < Permission::AD) {
         return "权限不足，无法创建字段";
     }
 
@@ -224,7 +224,7 @@ QString DB::modifyColumn(QString tableName, QString columnName, TYPE type, int t
 
 QString DB::dropColumn(QString tableName, QString columnName) {
     //判断用户权限
-    if(user.getPer() < Permission::AD) {
+    if(User::getUser()->getPer() < Permission::AD) {
         return "权限不足，无法删除字段";
     }
     bool found = false;//表示是否找指定表
@@ -275,7 +275,7 @@ int DB::deSerialize(char buf[]) {
 QString DB::insertRecord(QString tableName, const QVector<QString>& columnNameList, const QVector<QString>& valueList) {
 
     //判断用户权限
-    if(user.getPer() < Permission::USER) {
+    if(User::getUser()->getPer() < Permission::USER) {
         return "权限不足，无法删除字段";
     }
 
@@ -290,7 +290,7 @@ QString DB::insertRecord(QString tableName, const QVector<QString>& columnNameLi
 QString DB::updateRecord(QString tableName, const QVector<QString>& columnNameList, const QVector<QString> &valueList, QVector<BoolStat*> &boolStats) {
 
     //判断用户权限
-    if(user.getPer() < Permission::USER) {
+    if(User::getUser()->getPer() < Permission::USER) {
         return "权限不足，无法删除字段";
     }
 
@@ -304,7 +304,7 @@ QString DB::updateRecord(QString tableName, const QVector<QString>& columnNameLi
 
 QString DB::deleteRecord(QString tableName, QVector<BoolStat*>& boolStats) {
     //判断用户权限
-    if(user.getPer() < Permission::USER) {
+    if(User::getUser()->getPer() < Permission::USER) {
         return "权限不足，无法删除字段";
     }
 
@@ -351,7 +351,7 @@ QString DB::createView(QString viewName, bool isAll, const QVector<QString>& col
     QDir path(_filePath);
 
     //判断用户权限
-    if(user.getPer() < Permission::AD) {
+    if(User::getUser()->getPer() < Permission::AD) {
         return "权限不足，无法删除字段";
     }
 
@@ -495,7 +495,7 @@ QString DB::commit() {
 
 QString DB::addPK(QString tableName, QString columnName) {
     //判断用户权限
-    if(user.getPer() < Permission::AD) {
+    if(User::getUser()->getPer() < Permission::AD) {
         return "权限不足，无法修改表属性";
     }
 

@@ -155,9 +155,9 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
 
        //......调用CREATE函数操作
        if(m!=nullptr)
-            m->appendText(user.createUser(user_name,user_pass));
+            m->appendText(User::getUser()->createUser(user_name,user_pass));
        else
-           user.createUser(user_name,user_pass);
+           User::getUser()->createUser(user_name,user_pass);
    }
    else if (regex_match(sql, match, create_db_pattern)) {
        // 匹配 CREATE DB 语句
@@ -165,9 +165,9 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
 
        //......调用CREATE函数操作
        if(m!=nullptr)
-            m->appendText(user.createDb(QString(QString::fromLocal8Bit(db_name.data()))));
+            m->appendText(User::getUser()->createDb(QString(QString::fromLocal8Bit(db_name.data()))));
        else
-           user.createDb(QString(QString::fromLocal8Bit(db_name.data())));
+           User::getUser()->createDb(QString(QString::fromLocal8Bit(db_name.data())));
        QString log_reverse = "DROP DATABASE "+QString(QString::fromLocal8Bit(db_name.data()));
         qDebug()<<log_reverse;//可用
    }
@@ -218,16 +218,16 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        string permission = match[2];
        QString p =QString(QString::fromLocal8Bit(permission.data()));
         if(p=="DBA"){
-            user.grant(QString(QString::fromLocal8Bit(user_name.data())),DBA);
+            User::getUser()->grant(QString(QString::fromLocal8Bit(user_name.data())),DBA);
         }
         else if(p=="AD"){
-            user.grant(QString(QString::fromLocal8Bit(user_name.data())),AD);
+            User::getUser()->grant(QString(QString::fromLocal8Bit(user_name.data())),AD);
         }
         else if(p=="USER"){
-            user.grant(QString(QString::fromLocal8Bit(user_name.data())),USER);
+            User::getUser()->grant(QString(QString::fromLocal8Bit(user_name.data())),USER);
         }
         else if(p=="VISITOR"){
-            user.grant(QString(QString::fromLocal8Bit(user_name.data())),VISITOR);
+            User::getUser()->grant(QString(QString::fromLocal8Bit(user_name.data())),VISITOR);
         }
 
 

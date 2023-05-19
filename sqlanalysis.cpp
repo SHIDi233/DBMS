@@ -600,6 +600,7 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
            db->commit();
    }
    else if(QString(QString::fromLocal8Bit(sql.data()))=="ROLLBACK"){
+       db = User::getUser()->getDB(db->getName());
        User::getUser()->loadDB();
    }
    else {

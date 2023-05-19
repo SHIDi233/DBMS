@@ -40,7 +40,7 @@ MainWindow::MainWindow(Client* c,QWidget *parent)
     //user.createDb("testDB");
     ui->label->setText("未选定数据库");
 
-    user.loadDB();
+    User::getUser()->loadDB();
 
     if(c==nullptr){
         showList();
@@ -52,7 +52,7 @@ MainWindow::MainWindow(Client* c,QWidget *parent)
     QFont font;
     font.setFamily("Courier");
     font.setFixedPitch(true);
-    font.setPointSize(10);
+    font.setPointSize(11);
 
     ui->textEdit->setFont(font);
     highlighter = new Highlighter(ui->textEdit->document());
@@ -90,7 +90,7 @@ void MainWindow::on_pushButton_6_clicked()
 
 void MainWindow::showList(){
     QStandardItemModel *model = new QStandardItemModel(this);
-    QVector<DB*> dbs = user.getDbs();
+    QVector<DB*> dbs = User::getUser()->getDbs();
     int i=0;
     for(DB* temp : dbs){
         QStandardItem *db = new QStandardItem(temp->getName());
@@ -117,7 +117,7 @@ void MainWindow::showList(){
     }
 
     if(i==0){//首次使用创建root数据库
-        user.createDb("root");
+        User::getUser()->createDb("root");
         int ret2 = QMessageBox::information(nullptr, tr("CCN"),tr("首次使用，需要重启程序完成配置!"), QMessageBox::Ok);
         qApp->quit();
             QProcess::startDetached(qApp->applicationFilePath(), QStringList());
@@ -132,6 +132,8 @@ void MainWindow::showList(){
 
 void MainWindow::on_pushButton_7_clicked()
 {
+    ui->textEdit_4->setText("\n");
+
     if(db==nullptr&&this->client==nullptr){
         qDebug()<<"未选定数据库";
         this->appendText("未选定数据库");
@@ -268,7 +270,7 @@ void MainWindow::on_treeView_doubleClicked(const QModelIndex &index)
     if(parent.column()==-1){//选定为数据库
        QVariant db_name = inp.data();
        QString qs_db = db_name.toString();
-       db = user.getDB(qs_db);
+       db = User::getUser()->getDB(qs_db);
        ui->label->setText(qs_db);
        current_db = qs_db;
     }
@@ -397,6 +399,12 @@ void MainWindow::on_action_5_triggered()
 //检查
 void MainWindow::on_action_7_triggered()
 {
+    QFont font;
+    font.setFamily("Courier");
+    font.setFixedPitch(true);
+    font.setPointSize(11);
+
+    ui->textEdit_2->setFont(font);
     ui->textEdit_2->setText("");
 
     //记录所有语句

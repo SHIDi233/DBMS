@@ -321,7 +321,8 @@ background-color: rgb(0, 170, 255);</string>
      <string notr="true">border:1px solid rgb(47, 49, 51);
 color: rgb(255, 255, 255);
 gridline-color: rgb(204, 204, 204);
-selection-background-color: rgb(0, 170, 255);</string>
+selection-background-color: rgb(0, 170, 255);
+font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
     </property>
    </widget>
    <zorder>textEdit_5</zorder>

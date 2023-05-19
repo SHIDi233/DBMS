@@ -48,7 +48,7 @@ void NewServer::run(){
 
     }
 
-    if(user.log(acc,pass)){
+    if(User::getUser()->log(acc,pass)){
         int back = 1;
         socket_ser->write((char*)&back,sizeof(int));
         socket_ser->flush();
@@ -63,7 +63,7 @@ void NewServer::run(){
 
     socket_ser->flush();
     socket_ser->readAll();
-    user.loadDB();
+    User::getUser()->loadDB();
 
     while(isOnline){
         if(socket_ser->waitForReadyRead()){
@@ -87,7 +87,7 @@ void NewServer::run(){
                 db_name=list[1];
             }
 
-            db = user.getDB(db_name.toUpper());
+            db = User::getUser()->getDB(db_name.toUpper());
 
             SqlAnalysis sa(db);
             QVector<QVector<QString>> out = sa.parse_sql(s);
@@ -98,6 +98,7 @@ void NewServer::run(){
             socket_ser->flush();
             //传回
             for(QVector<QString> v : out){
+                //if(!socket_ser->waitForBytesWritten());
                 int sn = v.length();
                 socket_ser->write((char*)&sn,sizeof(int));
                 socket_ser->flush();
@@ -109,9 +110,6 @@ void NewServer::run(){
                     socket_ser->flush();
                     socket_ser->waitForBytesWritten();
                 }
-//            if(socket_ser->waitForBytesWritten())
-//                socket_ser->flush();
-
             }
             QString ss = "senhjsbfidsnfjiasenfjosdnfiodsnfedsfesfnuisnfdsjikfndsjkfnedsjifesuiofhesdiofdsuiofdsiovdsuiohdsiojfaskhduiashdashduiashduiashduiasdhsauihdasuidhsauid";
 

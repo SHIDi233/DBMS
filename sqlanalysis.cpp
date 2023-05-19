@@ -155,9 +155,9 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
 
        //......调用CREATE函数操作
        if(m!=nullptr)
-            m->appendText(user.createUser(user_name,user_pass));
+            m->appendText(User::getUser()->createUser(user_name,user_pass));
        else
-           user.createUser(user_name,user_pass);
+           User::getUser()->createUser(user_name,user_pass);
    }
    else if (regex_match(sql, match, create_db_pattern)) {
        // 匹配 CREATE DB 语句
@@ -165,9 +165,9 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
 
        //......调用CREATE函数操作
        if(m!=nullptr)
-            m->appendText(user.createDb(QString(QString::fromLocal8Bit(db_name.data()))));
+            m->appendText(User::getUser()->createDb(QString(QString::fromLocal8Bit(db_name.data()))));
        else
-           user.createDb(QString(QString::fromLocal8Bit(db_name.data())));
+           User::getUser()->createDb(QString(QString::fromLocal8Bit(db_name.data())));
        QString log_reverse = "DROP DATABASE "+QString(QString::fromLocal8Bit(db_name.data()));
         qDebug()<<log_reverse;//可用
    }
@@ -218,16 +218,16 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
        string permission = match[2];
        QString p =QString(QString::fromLocal8Bit(permission.data()));
         if(p=="DBA"){
-            user.grant(QString(QString::fromLocal8Bit(user_name.data())),DBA);
+            User::getUser()->grant(QString(QString::fromLocal8Bit(user_name.data())),DBA);
         }
         else if(p=="AD"){
-            user.grant(QString(QString::fromLocal8Bit(user_name.data())),AD);
+            User::getUser()->grant(QString(QString::fromLocal8Bit(user_name.data())),AD);
         }
         else if(p=="USER"){
-            user.grant(QString(QString::fromLocal8Bit(user_name.data())),USER);
+            User::getUser()->grant(QString(QString::fromLocal8Bit(user_name.data())),USER);
         }
         else if(p=="VISITOR"){
-            user.grant(QString(QString::fromLocal8Bit(user_name.data())),VISITOR);
+            User::getUser()->grant(QString(QString::fromLocal8Bit(user_name.data())),VISITOR);
         }
 
 
@@ -554,16 +554,20 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
                 db->addPK(QString(QString::fromLocal8Bit(table_name.data())),res);
        }
        else{
-           if(m!=nullptr)
+           if(m!=nullptr){
+               QStringList tel= QString(QString::fromLocal8Bit(columns_str.data())).split(" ");
                 m->appendText(db->addColumn(QString(QString::fromLocal8Bit(table_name.data())),
-                                       QString(QString::fromLocal8Bit(columns_str.data())),
+                                       tel[1],
                                        get_type(QString::fromLocal8Bit(columns_str.data())),
                                        get_size(QString::fromLocal8Bit(columns_str.data()))));
-           else
+           }
+           else{
+               QStringList tel= QString(QString::fromLocal8Bit(columns_str.data())).split(" ");
                db->addColumn(QString(QString::fromLocal8Bit(table_name.data())),
-                                                  QString(QString::fromLocal8Bit(columns_str.data())),
+                                                  tel[1],
                                                   get_type(QString::fromLocal8Bit(columns_str.data())),
                                                   get_size(QString::fromLocal8Bit(columns_str.data())));
+           }
        }
 
 
@@ -600,7 +604,8 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
            db->commit();
    }
    else if(QString(QString::fromLocal8Bit(sql.data()))=="ROLLBACK"){
-        //m->appendText(db->commit());
+       db = User::getUser()->getDB(db->getName());
+       User::getUser()->loadDB();
    }
    else {
        cout << "Invalid SQL statement" << endl;

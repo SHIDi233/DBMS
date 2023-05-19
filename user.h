@@ -21,6 +21,8 @@ enum Permission
 class User
 {
 private:
+    static User* user_one1;
+
     char _name[128];//用户名
     char _pwd[128];//密码
     Permission _permission;//权限
@@ -39,11 +41,24 @@ public:
     QVector<DB*>& getDbs();
     Permission getPer();
     QString getName();
+    void setPer(Permission p){ _permission = p; };
 
     bool log(QString name, QString pwd);
 
     int serialize(char buf[]);
     int deSerialize(char buf[]);
+
+    static User* getUser()
+            {
+            if(user_one1 == nullptr)
+                user_one1 = new User("dba", "");
+            return user_one1;
+        }
+    void set(User* u) {
+        strcpy(_name, u->_name);
+        _permission = u->_permission;
+//        user_one1 = u;
+    }
 };
 
 #endif // USER_H

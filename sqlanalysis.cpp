@@ -554,16 +554,20 @@ QVector<QVector<QString>> SqlAnalysis::parse_sql(QString qsql) {
                 db->addPK(QString(QString::fromLocal8Bit(table_name.data())),res);
        }
        else{
-           if(m!=nullptr)
+           if(m!=nullptr){
+               QStringList tel= QString(QString::fromLocal8Bit(columns_str.data())).split(" ");
                 m->appendText(db->addColumn(QString(QString::fromLocal8Bit(table_name.data())),
-                                       QString(QString::fromLocal8Bit(columns_str.data())),
+                                       tel[1],
                                        get_type(QString::fromLocal8Bit(columns_str.data())),
                                        get_size(QString::fromLocal8Bit(columns_str.data()))));
-           else
+           }
+           else{
+               QStringList tel= QString(QString::fromLocal8Bit(columns_str.data())).split(" ");
                db->addColumn(QString(QString::fromLocal8Bit(table_name.data())),
-                                                  QString(QString::fromLocal8Bit(columns_str.data())),
+                                                  tel[1],
                                                   get_type(QString::fromLocal8Bit(columns_str.data())),
                                                   get_size(QString::fromLocal8Bit(columns_str.data())));
+           }
        }
 
 

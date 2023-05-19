@@ -14,7 +14,8 @@ Highlighter::Highlighter(QTextDocument *parent)
         QStringLiteral("\\bcreate\\b"), QStringLiteral("\\btable\\b"), QStringLiteral("\\bdatabase\\b"),
         QStringLiteral("\\binsert\\b"), QStringLiteral("\\binto\\b"), QStringLiteral("\\bdelete\\b"),
         QStringLiteral("\\bselect\\b"), QStringLiteral("\\bwhere\\b"),QStringLiteral("\\buse\\b"),
-        QStringLiteral("\\bdrop\\b"),QStringLiteral("\\bupdate\\b"),QStringLiteral("\\bset\\b")
+        QStringLiteral("\\bdrop\\b"),QStringLiteral("\\bupdate\\b"),QStringLiteral("\\bset\\b"),
+        QStringLiteral("\\balter\\b"),QStringLiteral("\\badd\\b")
     };
     for (const QString &pattern : keywordPatterns) {
         rule.pattern = QRegularExpression(pattern);

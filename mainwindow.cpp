@@ -52,7 +52,7 @@ MainWindow::MainWindow(Client* c,QWidget *parent)
     QFont font;
     font.setFamily("Courier");
     font.setFixedPitch(true);
-    font.setPointSize(10);
+    font.setPointSize(11);
 
     ui->textEdit->setFont(font);
     highlighter = new Highlighter(ui->textEdit->document());
@@ -132,6 +132,8 @@ void MainWindow::showList(){
 
 void MainWindow::on_pushButton_7_clicked()
 {
+    ui->textEdit_4->setText("\n");
+
     if(db==nullptr&&this->client==nullptr){
         qDebug()<<"未选定数据库";
         this->appendText("未选定数据库");
@@ -397,6 +399,12 @@ void MainWindow::on_action_5_triggered()
 //检查
 void MainWindow::on_action_7_triggered()
 {
+    QFont font;
+    font.setFamily("Courier");
+    font.setFixedPitch(true);
+    font.setPointSize(11);
+
+    ui->textEdit_2->setFont(font);
     ui->textEdit_2->setText("");
 
     //记录所有语句
